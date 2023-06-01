@@ -9,12 +9,20 @@ export const authOptions = {
         }),
     ],
     secret: process.env.JWT_SECRET,
+    session: {
+        strategy: "jwt",
+    },
     pages: {
-        signIn: "/",
+        signIn: "/login",
     },
     callbacks: {
         async signIn({ profile }) {
             return profile.email.endsWith("@heavyconnect.com");
+        },
+        async redirect({ url, baseUrl }) {
+            console.log(url);
+            console.log(baseUrl);
+            return baseUrl;
         },
     },
 };

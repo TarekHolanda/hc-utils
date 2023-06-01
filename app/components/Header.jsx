@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,11 +10,10 @@ import Container from "@mui/material/Container";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
-import LoginIcon from "@mui/icons-material/Login";
+import SignInButton from "./SignInButton";
 
 const Header = () => {
     const { data: session } = useSession();
-    const callbackUrl = process.env.NEXTAUTH_URL;
 
     return (
         <AppBar position="static" style={{ background: "#2A63B2" }}>
@@ -22,10 +21,7 @@ const Header = () => {
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="HeavyConnect">
-                            <a
-                                href="https://www.heavyconnect.com/"
-                                target="_blank"
-                            >
+                            <a href="/">
                                 <img
                                     src="/hc-icon-white.png"
                                     className="logo"
@@ -55,15 +51,7 @@ const Header = () => {
                                 <LogoutIcon />
                             </IconButton>
                         ) : (
-                            <IconButton
-                                aria-label="sign out"
-                                style={{ color: "#fff" }}
-                                onClick={() =>
-                                    signIn("google", { callbackUrl })
-                                }
-                            >
-                                <LoginIcon />
-                            </IconButton>
+                            <SignInButton />
                         )}
                     </Box>
                 </Toolbar>
