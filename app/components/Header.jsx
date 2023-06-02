@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SignInButton from "./SignInButton";
+import { MyTooltip } from "./MyTooltip";
 
 const Header = () => {
     const { data: session } = useSession();
@@ -43,13 +44,15 @@ const Header = () => {
 
                     <Box sx={{ flexGrow: 0 }}>
                         {session ? (
-                            <IconButton
-                                aria-label="sign out"
-                                style={{ color: "#fff" }}
-                                onClick={() => signOut()}
-                            >
-                                <LogoutIcon />
-                            </IconButton>
+                            <MyTooltip title="Sign out" placement="left">
+                                <IconButton
+                                    aria-label="sign out"
+                                    style={{ color: "#fff" }}
+                                    onClick={() => signOut()}
+                                >
+                                    <LogoutIcon />
+                                </IconButton>
+                            </MyTooltip>
                         ) : (
                             <SignInButton />
                         )}

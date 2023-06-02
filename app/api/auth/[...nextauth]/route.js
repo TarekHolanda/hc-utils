@@ -1,5 +1,18 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+// import { NextResponse } from "next/server";
+// import sprintViewer from "../../sprint-viewer";
+
+// export async function GET() {
+//     return NextResponse.json(sprintViewer);
+// }
+
+// export async function POST(request) {
+//     const body = await request.json();
+//     console.log(body);
+
+//     return NextResponse.json({ id: "new_id" });
+// }
 
 export const authOptions = {
     providers: [
@@ -19,11 +32,11 @@ export const authOptions = {
         async signIn({ profile }) {
             return profile.email.endsWith("@heavyconnect.com");
         },
-        async redirect({ url, baseUrl }) {
-            console.log(url);
-            console.log(baseUrl);
-            return baseUrl;
-        },
+        // async redirect({ url, baseUrl }) {
+        //     console.log(url);
+        //     console.log(baseUrl);
+        //     return baseUrl;
+        // },
     },
 };
 

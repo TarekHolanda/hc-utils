@@ -1,0 +1,21 @@
+main {
+    margin: auto;
+    text-align: center;
+}
+
+.logo {
+    will-change: filter;
+    transition: filter 300ms;
+}
+
+.logo:hover, .logo.react:hover {
+    filter: drop-shadow(0 0 1em #fff);
+}
+
+.card {
+    padding: 1em;
+}
+
+.display-none {
+    display: none;
+}
