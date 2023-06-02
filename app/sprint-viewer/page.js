@@ -37,7 +37,7 @@ import React, { useState, useEffect } from "react";
 
 export default function Page() {
     const { data: session, status } = useSession();
-    getServerSideProps();
+    // getServerSideProps();
     const [data, setData] = useState([
         {
             id: 1,
