@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, use } from "react";
 import { useSession } from "next-auth/react";
 import styles from "./page.module.css";
 import Typography from "@mui/material/Typography";
@@ -23,6 +23,29 @@ export default function Home() {
     const router = useRouter();
     const [toast, setToast] = React.useState(false);
     const [loading, setLoading] = useState(false);
+
+    // Get list of sprints from API
+    const [sprints, setSprints] = useState([]);
+    useEffect(() => {
+        fetch("http://localhost:8000/hc/test")
+            // fetch("http://127.0.0.1:8000/hc/test")
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status !== 404) {
+                    // Showw toast error
+                    console.log("Deu ruim!!!");
+                    console.log(data);
+                }
+
+                console.log("Deu bom!!!");
+                console.log(data);
+                setSprints(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+    console.log(sprints);
 
     const redirect = (path) => () => {
         if (session) {
