@@ -1,129 +1,103 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React from "react";
 import { useSession } from "next-auth/react";
-import styles from "./page.module.css";
+import styles from "./styles/page.module.css";
 import Typography from "@mui/material/Typography";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { useRouter } from "next/navigation";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import Slide from "@mui/material/Slide";
 import Fade from "@mui/material/Fade";
-
-function Transition(props) {
-    return <Slide {...props} direction="down" />;
-}
+import { redirect } from "next/navigation";
+import { MyLoading } from "./components/MyLoading";
+import Link from "next/link";
+import CardMedia from "@mui/material/CardMedia";
+import CardActionArea from "@mui/material/CardActionArea";
 
 export default function Home() {
     const { data: session, status } = useSession();
-    const router = useRouter();
-    const [toast, setToast] = React.useState(false);
-    const [loading, setLoading] = useState(false);
 
-    // Get list of sprints from API
-    const [sprints, setSprints] = useState([]);
-    useEffect(() => {
-        fetch("http://localhost:8000/hc/test")
-            // fetch("http://127.0.0.1:8000/hc/test")
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status !== 404) {
-                    // Showw toast error
-                    console.log("Deu ruim!!!");
-                    console.log(data);
-                }
+    if (status === "loading") {
+        return <>{MyLoading}</>;
+    }
 
-                console.log("Deu bom!!!");
-                console.log(data);
-                setSprints(data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, []);
-    console.log(sprints);
-
-    const redirect = (path) => () => {
-        if (session) {
-            setLoading(true);
-            router.push(`/${path}`);
-        } else {
-            setToast(true);
-            setTimeout(() => {
-                setToast(false);
-            }, 1500);
-        }
-    };
+    if (status === "unauthenticated" || !session) {
+        redirect("/signin");
+    }
 
     return (
         <Fade in={status !== null}>
             <main className={styles.main}>
-                <Card
-                    className="pointer home-card"
-                    onClick={redirect("employee-generator")}
-                >
-                    <CardContent>
-                        <Typography variant="h6" component="div">
-                            Employee
-                        </Typography>
-                        <Typography variant="h6" component="div">
-                            Generator
-                        </Typography>
-                    </CardContent>
-                </Card>
+                <Link href="/employee-generator">
+                    <Card className="pointer home-card">
+                        <CardActionArea>
+                            <CardMedia
+                                component="img"
+                                height="152"
+                                image="./farm-worker.jpg"
+                                alt="farm worker"
+                            />
+                            <CardContent>
+                                <Typography variant="h6">
+                                    Employee Generator
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    QR Codes with Names and IDs for Employees
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </Link>
 
-                <Card
-                    className="pointer home-card"
-                    onClick={redirect("scan-and-go")}
-                >
-                    <CardContent>
-                        <Typography variant="h6" component="div">
-                            Scan & Go
-                        </Typography>
-                        <Typography variant="h6" component="div">
-                            QR Code Generator
-                        </Typography>
-                    </CardContent>
-                </Card>
+                <Link href="/scan-and-go">
+                    <Card className="pointer home-card">
+                        <CardActionArea>
+                            <CardMedia
+                                component="img"
+                                height="152"
+                                image="./qrcode.jpg"
+                                alt="qr code"
+                            />
+                            <CardContent>
+                                <Typography variant="h6">Scan & Go</Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    QR Codes to auto populate checklists,
+                                    locations, and more
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </Link>
 
-                <Card
-                    className="pointer home-card"
-                    onClick={redirect("sprint-viewer")}
-                >
-                    <CardContent>
-                        <Typography variant="h6" component="div">
-                            Sprints History
-                        </Typography>
-                        <Typography variant="h6" component="div">
-                            Viewer
-                        </Typography>
-                    </CardContent>
-                </Card>
-
-                <Backdrop
-                    sx={{
-                        color: "#fff",
-                        zIndex: (theme) => theme.zIndex.drawer + 1,
-                    }}
-                    open={status === "loading" || loading}
-                >
-                    <CircularProgress color="inherit" />
-                </Backdrop>
-
-                <Snackbar
-                    open={toast}
-                    onClick={() => setToast(false)}
-                    severity="warning"
-                    className="pointer"
-                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                    TransitionComponent={Transition}
-                >
-                    <Alert severity="warning">You need to sign in first.</Alert>
-                </Snackbar>
+                <Link href="/sprint-viewer">
+                    <Card className="pointer home-card">
+                        <CardActionArea>
+                            <CardMedia
+                                component="img"
+                                height="152"
+                                image="./chart.jpg"
+                                alt="chart"
+                            />
+                            <CardContent>
+                                <Typography variant="h6" component="div">
+                                    Sprints History
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    Review past sprints and their details, and
+                                    plan the next one
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </Link>
             </main>
         </Fade>
     );

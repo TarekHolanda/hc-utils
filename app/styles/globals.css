@@ -1,0 +1,48 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    color-scheme: light;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.home-card {
+    width: 256px;
+    height: 256px;
+    /* text-align: center; */
+}
+
+/*
+.home-card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+@media (prefers-color-scheme: dark) {
+    html {
+        color-scheme: dark;
+    }
+}
+filter: invert(1);
+filter: invert(1) drop-shadow(0 0 0.3rem #ffffff70);
+.card:hover {
+        background: rgba(var(--card-rgb), 0.1);
+        border: 1px solid rgba(var(--card-border-rgb), 0.15);
+    }
+
+    .card:hover span {
+        transform: translateX(4px);
+    }
+*/

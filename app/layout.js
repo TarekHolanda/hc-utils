@@ -1,8 +1,8 @@
-import "./globals.css";
+import "./styles/globals.css";
 import { Inter, Exo_2 } from "next/font/google";
 
 import Provider from "./components/Provider";
-import Header from "./components/Header";
+import MyHeader from "./components/MyHeader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
         <html lang="en">
             <body className={inter.className}>
                 <Provider>
-                    <Header />
+                    <MyHeader />
                     <main className="grow">{children}</main>
                 </Provider>
             </body>
