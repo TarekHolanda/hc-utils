@@ -2,8 +2,8 @@
 
 import { useSession, getSession } from "next-auth/react";
 import Fade from "@mui/material/Fade";
-import { Unauthenticated } from "../components/Unauthenticated";
-import { Loading } from "../components/Loading";
+import { MyUnauthenticated } from "../components/MyUnauthenticated";
+import { MyLoading } from "../components/MyLoading";
 
 import React, { useState, useRef } from "react";
 import { QRCodeCanvas } from "qrcode.react";
@@ -24,7 +24,7 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 import UploadIcon from "@mui/icons-material/Upload";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
-import "../components/old_index.css";
+import "../styles/old_index.css";
 
 function PageContent(props) {
     return (
@@ -84,11 +84,13 @@ export default function Page() {
     const qrRef = useRef(null);
 
     if (status === "loading") {
-        return <>{Loading}</>;
+        return <>{MyLoading}</>;
     }
 
     if (status === "unauthenticated" || !session) {
-        return <Fade in={status === "unauthenticated"}>{Unauthenticated}</Fade>;
+        return (
+            <Fade in={status === "unauthenticated"}>{MyUnauthenticated}</Fade>
+        );
     }
 
     const downloadQrCodes = async () => {

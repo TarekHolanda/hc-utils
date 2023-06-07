@@ -2,8 +2,8 @@
 
 import { useSession, getSession } from "next-auth/react";
 import Fade from "@mui/material/Fade";
-import { Unauthenticated } from "../components/Unauthenticated";
-import { Loading } from "../components/Loading";
+import { MyUnauthenticated } from "../components/MyUnauthenticated";
+import { MyLoading } from "../components/MyLoading";
 import React, { useState, useEffect } from "react";
 
 // Vercel Token
@@ -61,6 +61,29 @@ export default function Page() {
         },
     ]);
 
+    // Get list of sprints from API
+    // const [sprints, setSprints] = useState([]);
+    // useEffect(() => {
+    //     fetch("http://localhost:8000/hc/test")
+    //         // fetch("http://127.0.0.1:8000/hc/test")
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             if (data.status !== 404) {
+    //                 // Showw toast error
+    //                 console.log("Deu ruim!!!");
+    //                 console.log(data);
+    //             }
+
+    //             console.log("Deu bom!!!");
+    //             console.log(data);
+    //             setSprints(data);
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // }, []);
+    // console.log(sprints);
+
     // useEffect(() => {
     //     const fetchData = async () => {
     //         const res = await fetch("/api/scan-and-go");
@@ -72,11 +95,13 @@ export default function Page() {
     // }, []);
 
     if (status === "loading") {
-        return <>{Loading}</>;
+        return <>{MyLoading}</>;
     }
 
     if (status === "unauthenticated" || !session) {
-        return <Fade in={status === "unauthenticated"}>{Unauthenticated}</Fade>;
+        return (
+            <Fade in={status === "unauthenticated"}>{MyUnauthenticated}</Fade>
+        );
     }
 
     return (

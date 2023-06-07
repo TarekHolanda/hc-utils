@@ -1,8 +1,8 @@
 "use client";
 
 import { useSession, getSession } from "next-auth/react";
-import { Unauthenticated } from "../components/Unauthenticated";
-import { Loading } from "../components/Loading";
+import { MyUnauthenticated } from "../components/MyUnauthenticated";
+import { MyLoading } from "../components/MyLoading";
 
 import React, { useState, useRef } from "react";
 import Papa from "papaparse";
@@ -17,7 +17,7 @@ import {
     Image,
 } from "@react-pdf/renderer";
 
-import "../components/old_index.css";
+import "../styles/old_index.css";
 import { formatData } from "./formatData";
 import { Spacer } from "../components/Spacer";
 
@@ -34,7 +34,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PdfIcon from "@mui/icons-material/PictureAsPdf";
 import { darkTheme } from "../components/darkTheme";
 import { styles } from "./styles";
-import { MyDocument } from "../components/MyDocument";
+import { MyPdfPreview } from "../components/MyPdfPreview";
 
 export default function Page() {
     const { data: session, status } = useSession();
@@ -45,11 +45,13 @@ export default function Page() {
     const qrRef = useRef();
 
     if (status === "loading") {
-        return <>{Loading}</>;
+        return <>{MyLoading}</>;
     }
 
     if (status === "unauthenticated" || !session) {
-        return <Fade in={status === "unauthenticated"}>{Unauthenticated}</Fade>;
+        return (
+            <Fade in={status === "unauthenticated"}>{MyUnauthenticated}</Fade>
+        );
     }
 
     const generatePDF = (qrCodes) => {
@@ -404,7 +406,7 @@ export default function Page() {
                             className="pdf-button"
                         >
                             <PDFDownloadLink
-                                document={<MyDocument data={qrCodesPDF} />}
+                                document={<MyPdfPreview data={qrCodesPDF} />}
                                 fileName="QR Codes.pdf"
                             >
                                 {({ blob, url, loading, error }) =>
@@ -432,7 +434,7 @@ export default function Page() {
                             <PDFViewer
                                 style={{ width: "100%", height: "1192px" }}
                             >
-                                <MyDocument data={qrCodesPDF} />
+                                <MyPdfPreview data={qrCodesPDF} />
                             </PDFViewer>
                         </Box>
                     </Fade>
