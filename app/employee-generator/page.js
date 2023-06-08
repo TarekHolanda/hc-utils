@@ -12,7 +12,7 @@ import saveAs from "file-saver";
 import Papa from "papaparse";
 
 import "./index.css";
-import { Spacer } from "../components/Spacer";
+import { MySpacer } from "../components/MySpacer";
 import { darkTheme } from "../components/darkTheme";
 
 import { ThemeProvider } from "@mui/material/styles";

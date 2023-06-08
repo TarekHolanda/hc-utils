@@ -19,7 +19,7 @@ import {
 
 import "../styles/old_index.css";
 import { formatData } from "./formatData";
-import { Spacer } from "../components/Spacer";
+import { Spacer } from "../components/MySpacer";
 
 import { Backdrop, CircularProgress } from "@mui/material";
 import Grid from "@mui/material/Grid";

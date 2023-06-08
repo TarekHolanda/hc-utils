@@ -13,6 +13,9 @@ import Link from "next/link";
 import CardMedia from "@mui/material/CardMedia";
 import CardActionArea from "@mui/material/CardActionArea";
 
+// Redirect if not authenticated
+// https://stackoverflow.com/questions/68527682/how-to-redirect-in-nextjs-if-not-logged-using-nextauth
+
 export default function Home() {
     const { data: session, status } = useSession();
 
