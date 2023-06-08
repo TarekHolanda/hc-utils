@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 
-export const Spacer = ({ horizontal, size }) => {
+export const MySpacer = ({ horizontal, size }) => {
     const defaultValue = "auto";
 
     return (
@@ -10,6 +10,7 @@ export const Spacer = ({ horizontal, size }) => {
                 width: horizontal ? size : defaultValue,
                 height: !horizontal ? size : defaultValue,
                 display: "inline-block",
-            }} />
+            }}
+        />
     );
 };
