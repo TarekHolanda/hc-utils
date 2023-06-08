@@ -28,9 +28,11 @@ export default function Page() {
     const [phone, setPhone] = useState("");
     const [toast, setToast] = useState(false);
 
-    if (typeof window === "undefined") {
-        dompurify = DOMPurify(window);
-    }
+    useEffect(() => {
+        if (typeof window === "undefined") {
+            dompurify = DOMPurify(window);
+        }
+    }, []);
 
     const rawHTML = MyEmailSignature(name, role, email, phone);
 
@@ -55,31 +57,29 @@ export default function Page() {
         const text = doc.getElementById("signature");
         let range;
         let selection;
+        // console.log(doc);
+        // console.log(doc.body);
+        // console.log(window);
 
-        if (doc.body.createTextRange) {
-            range = doc.body.createTextRange();
-            range.moveToElement(text);
-            range.select();
-        } else if (typeof window !== "undefined") {
-            if (window.getSelection) {
-                selection = window.getSelection();
-                range = doc.createRange();
-                range.selectNodeContents(text);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        }
+        if (typeof window === "undefined") {
+            dompurify = DOMPurify(window);
 
-        document.execCommand("copy");
-
-        if (typeof window !== "undefined") {
+            setTimeout(() => {
+                CopyToClipboard();
+            }, 1000);
+        } else {
+            selection = window.getSelection();
+            range = doc.createRange();
+            range.selectNodeContents(text);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand("copy");
             window.getSelection().removeAllRanges();
+            setToast(true);
+            setTimeout(() => {
+                setToast(false);
+            }, 1500);
         }
-
-        setToast(true);
-        setTimeout(() => {
-            setToast(false);
-        }, 1500);
     };
 
     if (status === "loading") {
