@@ -113,7 +113,6 @@ export default function Page() {
 
                 <Box component="form" sx={{ display: "flex" }}>
                     <TextField
-                        id="outlined-basic"
                         label="Name"
                         variant="outlined"
                         size="small"
@@ -124,7 +123,6 @@ export default function Page() {
                     <MySpacer horizontal size={32} />
 
                     <TextField
-                        id="outlined-basic"
                         label="Role"
                         variant="outlined"
                         size="small"
@@ -137,7 +135,6 @@ export default function Page() {
 
                 <Box component="form" sx={{ display: "flex" }}>
                     <TextField
-                        id="outlined-basic"
                         label="Email"
                         variant="outlined"
                         size="small"
@@ -148,7 +145,6 @@ export default function Page() {
                     <MySpacer horizontal size={32} />
 
                     <TextField
-                        id="outlined-basic"
                         label="Phone"
                         variant="outlined"
                         size="small"

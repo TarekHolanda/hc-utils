@@ -1,7 +1,7 @@
 import { signIn } from "next-auth/react";
 import IconButton from "@mui/material/IconButton";
 import LoginIcon from "@mui/icons-material/Login";
-import { MyTooltip } from "./MyTooltip";
+import { MyTooltip } from "../components/MyTooltip";
 
 const SignInButton = () => {
     const callbackUrl = process.env.NEXTAUTH_URL;

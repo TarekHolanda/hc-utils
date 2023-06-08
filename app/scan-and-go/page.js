@@ -4,7 +4,7 @@ import { useSession, getSession } from "next-auth/react";
 import { MyUnauthenticated } from "../components/MyUnauthenticated";
 import { MyLoading } from "../components/MyLoading";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Papa from "papaparse";
 import QRCodeCanvas from "qrcode.react";
 import JSZip from "jszip";
@@ -19,7 +19,7 @@ import {
 
 import "../styles/old_index.css";
 import { formatData } from "./formatData";
-import { Spacer } from "../components/MySpacer";
+import { MySpacer } from "../components/MySpacer";
 
 import { Backdrop, CircularProgress } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -32,7 +32,7 @@ import UploadIcon from "@mui/icons-material/UploadFile";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PdfIcon from "@mui/icons-material/PictureAsPdf";
-import { darkTheme } from "../components/darkTheme";
+import { darkTheme } from "../styles/darkTheme";
 import { styles } from "./styles";
 import { MyPdfPreview } from "../components/MyPdfPreview";
 
@@ -43,6 +43,10 @@ export default function Page() {
     const [qrCodesLoaded, setQrCodesLoaded] = useState(false);
     const [loading, setLoading] = useState(false);
     const qrRef = useRef();
+
+    // useEffect(() => {
+    //     document.title = "HC Utils - Scan & Go";
+    // });
 
     if (status === "loading") {
         return <>{MyLoading}</>;
@@ -365,7 +369,7 @@ export default function Page() {
                     <Box>
                         <h1>Scan & Go - QR Code Generator (Inspector)</h1>
 
-                        <Spacer size={24} horizontal={false} />
+                        <MySpacer size={24} horizontal={false} />
 
                         <Button
                             variant="contained"
@@ -384,7 +388,7 @@ export default function Page() {
                             />
                         </Button>
 
-                        <Spacer size={24} horizontal />
+                        <MySpacer size={24} horizontal />
 
                         <Button
                             variant="contained"
@@ -396,7 +400,7 @@ export default function Page() {
                             Download ZIP
                         </Button>
 
-                        <Spacer size={20} horizontal />
+                        <MySpacer size={20} horizontal />
 
                         <Button
                             variant="contained"
@@ -415,7 +419,7 @@ export default function Page() {
                             </PDFDownloadLink>
                         </Button>
 
-                        <Spacer size={20} horizontal />
+                        <MySpacer size={20} horizontal />
 
                         <Button
                             variant="contained"
@@ -427,7 +431,7 @@ export default function Page() {
                         </Button>
                     </Box>
 
-                    <Spacer size={20} horizontal />
+                    <MySpacer size={20} horizontal />
 
                     <Fade in={qrCodesLoaded} timeout={500}>
                         <Box>

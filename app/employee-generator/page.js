@@ -5,7 +5,7 @@ import Fade from "@mui/material/Fade";
 import { MyUnauthenticated } from "../components/MyUnauthenticated";
 import { MyLoading } from "../components/MyLoading";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import JSZip from "jszip";
 import saveAs from "file-saver";
@@ -13,7 +13,7 @@ import Papa from "papaparse";
 
 import "./index.css";
 import { MySpacer } from "../components/MySpacer";
-import { darkTheme } from "../components/darkTheme";
+import { darkTheme } from "../styles/darkTheme";
 
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -47,7 +47,7 @@ function PageContent(props) {
                     />
                 </Button>
 
-                <Spacer size={24} horizontal={true} />
+                <MySpacer size={24} horizontal />
 
                 <Button
                     size="large"
@@ -58,7 +58,7 @@ function PageContent(props) {
                     Download
                 </Button>
 
-                <Spacer size={24} horizontal />
+                <MySpacer size={24} horizontal />
 
                 <Button
                     size="large"
