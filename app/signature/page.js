@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import createDOMPurify from "dompurify";
+import DOMPurify from "dompurify";
 import { useSession, getSession } from "next-auth/react";
 import Fade from "@mui/material/Fade";
 import Container from "@mui/material/Container";
@@ -18,7 +18,7 @@ import { MySpacer } from "../components/MySpacer";
 import { MyEmailSignature } from "./MyEmailSignature";
 import "../styles/general.css";
 
-const DOMPurify = createDOMPurify(window);
+let dompurify = DOMPurify();
 
 export default function Page() {
     const { data: session, status } = useSession();
@@ -27,6 +27,10 @@ export default function Page() {
     const [email, setEmail] = useState("tarek@heavyconnect.com");
     const [phone, setPhone] = useState("");
     const [toast, setToast] = useState(false);
+
+    if (typeof window === "undefined") {
+        dompurify = DOMPurify(window);
+    }
 
     const rawHTML = MyEmailSignature(name, role, email, phone);
 
@@ -56,16 +60,21 @@ export default function Page() {
             range = doc.body.createTextRange();
             range.moveToElement(text);
             range.select();
-        } else if (window.getSelection) {
-            selection = window.getSelection();
-            range = doc.createRange();
-            range.selectNodeContents(text);
-            selection.removeAllRanges();
-            selection.addRange(range);
+        } else if (typeof window !== "undefined") {
+            if (window.getSelection) {
+                selection = window.getSelection();
+                range = doc.createRange();
+                range.selectNodeContents(text);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
         }
 
         document.execCommand("copy");
-        window.getSelection().removeAllRanges();
+
+        if (typeof window !== "undefined") {
+            window.getSelection().removeAllRanges();
+        }
 
         setToast(true);
         setTimeout(() => {
