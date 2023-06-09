@@ -1,10 +1,8 @@
 "use client";
 
-import { useSession, getSession } from "next-auth/react";
-import { MyUnauthenticated } from "../components/MyUnauthenticated";
-import { MyLoading } from "../components/MyLoading";
-
 import React, { useState, useRef, useEffect } from "react";
+import { useSession, getSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import Papa from "papaparse";
 import QRCodeCanvas from "qrcode.react";
 import JSZip from "jszip";
@@ -16,11 +14,6 @@ import {
     PDFViewer,
     Image,
 } from "@react-pdf/renderer";
-
-import "../styles/old_index.css";
-import { formatData } from "./formatData";
-import { MySpacer } from "../components/MySpacer";
-
 import { Backdrop, CircularProgress } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -32,7 +25,11 @@ import UploadIcon from "@mui/icons-material/UploadFile";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PdfIcon from "@mui/icons-material/PictureAsPdf";
-import { darkTheme } from "../styles/darkTheme";
+
+import "../styles/old_index.css";
+import { formatData } from "./formatData";
+import { MySpacer } from "../components/MySpacer";
+import { MyLoading } from "../components/MyLoading";
 import { styles } from "./styles";
 import { MyPdfPreview } from "../components/MyPdfPreview";
 
@@ -44,18 +41,12 @@ export default function Page() {
     const [loading, setLoading] = useState(false);
     const qrRef = useRef();
 
-    // useEffect(() => {
-    //     document.title = "HC Utils - Scan & Go";
-    // });
-
     if (status === "loading") {
         return <>{MyLoading}</>;
     }
 
     if (status === "unauthenticated" || !session) {
-        return (
-            <Fade in={status === "unauthenticated"}>{MyUnauthenticated}</Fade>
-        );
+        redirect("/signin");
     }
 
     const generatePDF = (qrCodes) => {
@@ -362,158 +353,151 @@ export default function Page() {
     };
 
     return (
-        <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <Fade in={status !== null}>
-                <main>
-                    <Box>
-                        <h1>Scan & Go - QR Code Generator (Inspector)</h1>
+        <Fade in={status !== null}>
+            <main>
+                <Box>
+                    <h1>Scan & Go - QR Code Generator (Inspector)</h1>
 
-                        <MySpacer size={24} horizontal={false} />
+                    <MySpacer size={24} horizontal={false} />
 
-                        <Button
-                            variant="contained"
-                            size="large"
-                            component="label"
-                            startIcon={<UploadIcon />}
-                        >
-                            Upload
-                            <input
-                                hidden
-                                accept=".csv"
-                                name="file"
-                                type="file"
-                                id="file"
-                                onChange={onFileUploaded}
-                            />
-                        </Button>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        component="label"
+                        startIcon={<UploadIcon />}
+                    >
+                        Upload
+                        <input
+                            hidden
+                            accept=".csv"
+                            name="file"
+                            type="file"
+                            id="file"
+                            onChange={onFileUploaded}
+                        />
+                    </Button>
 
-                        <MySpacer size={24} horizontal />
+                    <MySpacer size={24} horizontal />
 
-                        <Button
-                            variant="contained"
-                            size="large"
-                            onClick={downloadQRCode}
-                            disabled={!qrCodesLoaded}
-                            startIcon={<DownloadIcon />}
-                        >
-                            Download ZIP
-                        </Button>
-
-                        <MySpacer size={20} horizontal />
-
-                        <Button
-                            variant="contained"
-                            size="large"
-                            component="label"
-                            startIcon={<PdfIcon />}
-                            className="pdf-button"
-                        >
-                            <PDFDownloadLink
-                                document={<MyPdfPreview data={qrCodesPDF} />}
-                                fileName="QR Codes.pdf"
-                            >
-                                {({ blob, url, loading, error }) =>
-                                    "Download PDF"
-                                }
-                            </PDFDownloadLink>
-                        </Button>
-
-                        <MySpacer size={20} horizontal />
-
-                        <Button
-                            variant="contained"
-                            size="large"
-                            onClick={clearQRCode}
-                            startIcon={<DeleteIcon />}
-                        >
-                            Clear
-                        </Button>
-                    </Box>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        onClick={downloadQRCode}
+                        disabled={!qrCodesLoaded}
+                        startIcon={<DownloadIcon />}
+                    >
+                        Download ZIP
+                    </Button>
 
                     <MySpacer size={20} horizontal />
 
-                    <Fade in={qrCodesLoaded} timeout={500}>
-                        <Box>
-                            <PDFViewer
-                                style={{ width: "100%", height: "1192px" }}
-                            >
-                                <MyPdfPreview data={qrCodesPDF} />
-                            </PDFViewer>
-                        </Box>
-                    </Fade>
-
-                    <Box sx={{ display: "none", marginTop: "96px" }}>
-                        <Fade in={qrCodesLoaded} timeout={500}>
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="space-evenly"
-                                alignItems="baseline"
-                                className="bg-white color-black padding-bottom-32 qr-code-wrapper"
-                                spacing={6}
-                            >
-                                {qrCodes.map((qrCode, index) => (
-                                    <Grid
-                                        key={"grid-preview" + index}
-                                        item
-                                        xs={12}
-                                        sm={6}
-                                        md={2}
-                                    >
-                                        <QRCodeCanvas
-                                            value={qrCode["data"]}
-                                            id={"qrCode" + index}
-                                            key={"qrcode-preview" + index}
-                                            size={256}
-                                            level={"H"}
-                                            imageSettings={{
-                                                src: "./hc-icon-black.png",
-                                                height: 38,
-                                                width: 48,
-                                                excavate: true,
-                                            }}
-                                        />
-                                        <span className="display-block padding-side-4 line-break-any font-size-24">
-                                            {qrCode["description"]}
-                                        </span>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </Fade>
-                    </Box>
-
-                    <Box sx={{ display: "none" }} ref={qrRef}>
-                        {qrCodes.map((qrCode, index) => (
-                            <div key={"div-pdf" + index}>
-                                <QRCodeCanvas
-                                    value={qrCode["data"]}
-                                    key={"qrcode-pdf" + index}
-                                    id={"qrCode" + index}
-                                    size={512}
-                                    level={"H"}
-                                    imageSettings={{
-                                        src: "./hc-icon-black.png",
-                                        height: 103,
-                                        width: 128,
-                                        excavate: true,
-                                    }}
-                                />
-                            </div>
-                        ))}
-                    </Box>
-
-                    <Backdrop
-                        sx={{
-                            color: "#fff",
-                            zIndex: (theme) => theme.zIndex.drawer + 1,
-                        }}
-                        open={loading}
+                    <Button
+                        variant="contained"
+                        size="large"
+                        component="label"
+                        startIcon={<PdfIcon />}
+                        className="pdf-button"
                     >
-                        <CircularProgress color="inherit" />
-                    </Backdrop>
-                </main>
-            </Fade>
-        </ThemeProvider>
+                        <PDFDownloadLink
+                            document={<MyPdfPreview data={qrCodesPDF} />}
+                            fileName="QR Codes.pdf"
+                        >
+                            {({ blob, url, loading, error }) => "Download PDF"}
+                        </PDFDownloadLink>
+                    </Button>
+
+                    <MySpacer size={20} horizontal />
+
+                    <Button
+                        variant="contained"
+                        size="large"
+                        onClick={clearQRCode}
+                        startIcon={<DeleteIcon />}
+                    >
+                        Clear
+                    </Button>
+                </Box>
+
+                <MySpacer size={20} horizontal />
+
+                <Fade in={qrCodesLoaded} timeout={500}>
+                    <Box>
+                        <PDFViewer style={{ width: "100%", height: "1192px" }}>
+                            <MyPdfPreview data={qrCodesPDF} />
+                        </PDFViewer>
+                    </Box>
+                </Fade>
+
+                <Box sx={{ display: "none", marginTop: "96px" }}>
+                    <Fade in={qrCodesLoaded} timeout={500}>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="space-evenly"
+                            alignItems="baseline"
+                            className="bg-white color-black padding-bottom-32 qr-code-wrapper"
+                            spacing={6}
+                        >
+                            {qrCodes.map((qrCode, index) => (
+                                <Grid
+                                    key={"grid-preview" + index}
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                    md={2}
+                                >
+                                    <QRCodeCanvas
+                                        value={qrCode["data"]}
+                                        id={"qrCode" + index}
+                                        key={"qrcode-preview" + index}
+                                        size={256}
+                                        level={"H"}
+                                        imageSettings={{
+                                            src: "./hc-icon-black.png",
+                                            height: 38,
+                                            width: 48,
+                                            excavate: true,
+                                        }}
+                                    />
+                                    <span className="display-block padding-side-4 line-break-any font-size-24">
+                                        {qrCode["description"]}
+                                    </span>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Fade>
+                </Box>
+
+                <Box sx={{ display: "none" }} ref={qrRef}>
+                    {qrCodes.map((qrCode, index) => (
+                        <div key={"div-pdf" + index}>
+                            <QRCodeCanvas
+                                value={qrCode["data"]}
+                                key={"qrcode-pdf" + index}
+                                id={"qrCode" + index}
+                                size={512}
+                                level={"H"}
+                                imageSettings={{
+                                    src: "./hc-icon-black.png",
+                                    height: 103,
+                                    width: 128,
+                                    excavate: true,
+                                }}
+                            />
+                        </div>
+                    ))}
+                </Box>
+
+                <Backdrop
+                    sx={{
+                        color: "#fff",
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                    }}
+                    open={loading}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+            </main>
+        </Fade>
     );
 }

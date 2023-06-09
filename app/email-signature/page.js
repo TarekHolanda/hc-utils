@@ -1,22 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import DOMPurify from "dompurify";
-import { useSession, getSession } from "next-auth/react";
-import Fade from "@mui/material/Fade";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { Snackbar } from "@mui/material";
-import { Alert } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import DOMPurify from "dompurify";
 
-import { MyUnauthenticated } from "../components/MyUnauthenticated";
 import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
 import { MyEmailSignature } from "./MyEmailSignature";
-import "../styles/general.css";
 
 let dompurify = DOMPurify();
 
@@ -57,9 +55,6 @@ export default function Page() {
         const text = doc.getElementById("signature");
         let range;
         let selection;
-        // console.log(doc);
-        // console.log(doc.body);
-        // console.log(window);
 
         if (typeof window === "undefined") {
             dompurify = DOMPurify(window);
@@ -87,9 +82,7 @@ export default function Page() {
     }
 
     if (status === "unauthenticated" || !session) {
-        return (
-            <Fade in={status === "unauthenticated"}>{MyUnauthenticated}</Fade>
-        );
+        redirect("/signin");
     }
 
     return (
