@@ -8,41 +8,103 @@ html,
 body {
     max-width: 100vw;
     overflow-x: hidden;
-    color-scheme: light;
+    /* color-scheme: dark; */
 }
 
 a {
-    color: inherit;
     text-decoration: none;
+    color: inherit;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.display-none {
+    display: none;
+}
+
+.justify-around {
+    justify-content: space-around;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.align-center {
+    align-items: center;
 }
 
 .pointer {
     cursor: pointer;
 }
 
+.signin-card {
+    width: 512px;
+    height: 356px;
+}
+
 .home-card {
     width: 256px;
     height: 256px;
-    /* text-align: center; */
 }
 
-/*
-.home-card:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+.padding-2rem {
+    padding: 2rem;
 }
-@media (prefers-color-scheme: dark) {
-    html {
-        color-scheme: dark;
-    }
-}
-filter: invert(1);
-filter: invert(1) drop-shadow(0 0 0.3rem #ffffff70);
-.card:hover {
-        background: rgba(var(--card-rgb), 0.1);
-        border: 1px solid rgba(var(--card-border-rgb), 0.15);
-    }
 
-    .card:hover span {
-        transform: translateX(4px);
-    }
-*/
+.padding-1rem {
+    padding: 1rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+body {
+    text-align: center;
+}
+
+button,
+label {
+    border: 1px solid white !important;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.color-black {
+    color: black;
+}
+
+.padding-side-4 {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.padding-bottom-32 {
+    padding-bottom: 32px;
+}
+
+.display-none {
+    display: none;
+}
+
+.display-block {
+    display: block;
+}
+
+.line-break-any {
+    line-break: anywhere;
+}
+
+.font-size-24 {
+    font-size: 24px;
+}
+
+.pdf-button a {
+    text-decoration: none;
+    color: white;
+}

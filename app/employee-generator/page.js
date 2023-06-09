@@ -1,22 +1,9 @@
 "use client";
 
-import { useSession, getSession } from "next-auth/react";
+import React, { useState, useRef } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import Fade from "@mui/material/Fade";
-import { MyUnauthenticated } from "../components/MyUnauthenticated";
-import { MyLoading } from "../components/MyLoading";
-
-import React, { useState, useRef, useEffect } from "react";
-import { QRCodeCanvas } from "qrcode.react";
-import JSZip from "jszip";
-import saveAs from "file-saver";
-import Papa from "papaparse";
-
-import "./index.css";
-import { MySpacer } from "../components/MySpacer";
-import { darkTheme } from "../styles/darkTheme";
-
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import Button from "@mui/material/Button";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -24,12 +11,20 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 import UploadIcon from "@mui/icons-material/Upload";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Container from "@mui/material/Container";
+import { QRCodeCanvas } from "qrcode.react";
+import JSZip from "jszip";
+import saveAs from "file-saver";
+import Papa from "papaparse";
+
+import { MyLoading } from "../components/MyLoading";
+import { MySpacer } from "../components/MySpacer";
 import "../styles/old_index.css";
 
 function PageContent(props) {
     return (
         <div>
-            <div className="card">
+            <div className="padding-1rem">
                 <Button
                     variant="contained"
                     size="large"
@@ -88,9 +83,7 @@ export default function Page() {
     }
 
     if (status === "unauthenticated" || !session) {
-        return (
-            <Fade in={status === "unauthenticated"}>{MyUnauthenticated}</Fade>
-        );
+        redirect("/signin");
     }
 
     const downloadQrCodes = async () => {
@@ -204,7 +197,6 @@ export default function Page() {
                 skipEmptyLines: true,
                 complete: function (results) {
                     let dataFormatted = [];
-                    console.log(results);
 
                     for (let i = 0; i < results.data.length; i++) {
                         dataFormatted.push(formatData(results.data[i]));
@@ -225,87 +217,72 @@ export default function Page() {
         setMax(event.target.value);
     };
 
-    const updateTab = (event, newTab) => {
-        if (newTab !== null) {
-            setTab(newTab);
-            clearQrCodes();
-        }
-    };
-
     return (
-        <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <Fade in={status !== null}>
-                <main>
-                    <h1>Employee QR Code Generator</h1>
+        <Fade in={true} timeout={1000}>
+            <Container>
+                <PageContent
+                    min={min}
+                    max={max}
+                    updateMin={updateMin}
+                    updateMax={updateMax}
+                    generateQrCodes={generateQrCodes}
+                    downloadQrCodes={downloadQrCodes}
+                    clearQrCodes={clearQrCodes}
+                    validCodes={validCodes}
+                    onFileUploaded={onFileUploaded}
+                />
 
-                    <PageContent
-                        min={min}
-                        max={max}
-                        updateMin={updateMin}
-                        updateMax={updateMax}
-                        generateQrCodes={generateQrCodes}
-                        downloadQrCodes={downloadQrCodes}
-                        clearQrCodes={clearQrCodes}
-                        validCodes={validCodes}
-                        onFileUploaded={onFileUploaded}
-                    />
+                <Fade in={validCodes} timeout={1000}>
+                    <ImageList
+                        sx={{ width: "auto", height: "auto" }}
+                        cols={3}
+                        gap={64}
+                    >
+                        {qrCodes.map((qrCode, index) => (
+                            <ImageListItem key={index} sx={{ margin: "auto" }}>
+                                <QRCodeCanvas
+                                    value={qrCode["data"]}
+                                    id={"qrCode" + index}
+                                    size={352}
+                                    level={"H"}
+                                    imageSettings={{
+                                        src: "./hc-icon-black.png",
+                                        height: 38,
+                                        width: 48,
+                                        excavate: true,
+                                    }}
+                                />
 
-                    <Fade in={validCodes} timeout={1000}>
-                        <ImageList
-                            sx={{ width: "auto", height: "auto" }}
-                            cols={3}
-                            gap={64}
-                        >
-                            {qrCodes.map((qrCode, index) => (
-                                <ImageListItem
-                                    key={index}
-                                    sx={{ margin: "auto" }}
-                                >
-                                    <QRCodeCanvas
-                                        value={qrCode["data"]}
-                                        id={"qrCode" + index}
-                                        size={352}
-                                        level={"H"}
-                                        imageSettings={{
-                                            src: "./hc-icon-black.png",
-                                            height: 38,
-                                            width: 48,
-                                            excavate: true,
-                                        }}
-                                    />
+                                <ImageListItemBar
+                                    title={qrCode["description"]}
+                                    position="bottom"
+                                />
+                            </ImageListItem>
+                        ))}
+                    </ImageList>
+                </Fade>
 
-                                    <ImageListItemBar
-                                        title={qrCode["description"]}
-                                        position="bottom"
-                                    />
-                                </ImageListItem>
-                            ))}
-                        </ImageList>
-                    </Fade>
-
-                    <div ref={qrRef} className="display-none">
-                        {qrCodes.map((qrCode, index) => {
-                            return (
-                                <div key={index}>
-                                    <QRCodeCanvas
-                                        value={qrCode["data"]}
-                                        id={"qrCode" + index}
-                                        size={512}
-                                        level={"H"}
-                                        imageSettings={{
-                                            src: "./hc-icon-black.png",
-                                            height: 103,
-                                            width: 128,
-                                            excavate: true,
-                                        }}
-                                    />
-                                </div>
-                            );
-                        })}
-                    </div>
-                </main>
-            </Fade>
-        </ThemeProvider>
+                <div ref={qrRef} className="display-none">
+                    {qrCodes.map((qrCode, index) => {
+                        return (
+                            <div key={index}>
+                                <QRCodeCanvas
+                                    value={qrCode["data"]}
+                                    id={"qrCode" + index}
+                                    size={512}
+                                    level={"H"}
+                                    imageSettings={{
+                                        src: "./hc-icon-black.png",
+                                        height: 103,
+                                        width: 128,
+                                        excavate: true,
+                                    }}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            </Container>
+        </Fade>
     );
 }
