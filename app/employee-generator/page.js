@@ -5,14 +5,9 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import UploadIcon from "@mui/icons-material/Upload";
-import DownloadIcon from "@mui/icons-material/Download";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 
 import { QRCodeCanvas } from "qrcode.react";
@@ -22,73 +17,15 @@ import Papa from "papaparse";
 
 import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
+import { MyUploadPageCenter } from "../components/MyUploadPageCenter";
+import { MyUploadBar } from "../components/MyUploadBar";
 
 function PageContent(props) {
     if (!props.validCodes) {
-        return (
-            <Box className="display-flex justify-around padding-1rem align-center box-center-page">
-                <Button
-                    variant="outlined"
-                    size="large"
-                    component="label"
-                    startIcon={<UploadIcon />}
-                >
-                    Upload
-                    <input
-                        hidden
-                        accept=".csv"
-                        name="file"
-                        type="file"
-                        id="employee-qr-code-file"
-                        onChange={props.onFileUploaded}
-                    />
-                </Button>
-            </Box>
-        );
+        return MyUploadPageCenter(props);
     }
 
-    return (
-        <Box className="display-flex justify-around padding-1rem align-center">
-            <Button
-                variant="outlined"
-                size="large"
-                component="label"
-                startIcon={<UploadIcon />}
-            >
-                Upload
-                <input
-                    hidden
-                    accept=".csv"
-                    name="file"
-                    type="file"
-                    id="employee-qr-code-file"
-                    onChange={props.onFileUploaded}
-                />
-            </Button>
-
-            <MySpacer size={24} horizontal />
-
-            <Button
-                variant="outlined"
-                size="large"
-                onClick={props.downloadQrCodes}
-                startIcon={<DownloadIcon />}
-            >
-                Download
-            </Button>
-
-            <MySpacer size={24} horizontal />
-
-            <Button
-                variant="outlined"
-                size="large"
-                onClick={props.clearQrCodes}
-                startIcon={<DeleteIcon />}
-            >
-                Clear
-            </Button>
-        </Box>
-    );
+    return MyUploadBar(props);
 }
 
 export default function Page() {

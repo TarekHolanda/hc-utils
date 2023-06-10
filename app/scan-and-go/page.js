@@ -9,117 +9,27 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import UploadIcon from "@mui/icons-material/Upload";
-import DownloadIcon from "@mui/icons-material/Download";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PdfIcon from "@mui/icons-material/PictureAsPdf";
-import Container from "@mui/material/Container";
 
 import Papa from "papaparse";
 import QRCodeCanvas from "qrcode.react";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
-import {
-    PDFDownloadLink,
-    View,
-    Text,
-    PDFViewer,
-    Image,
-} from "@react-pdf/renderer";
+import { View, Text, PDFViewer, Image } from "@react-pdf/renderer";
 
 import { formatData } from "./formatData";
 import { MySpacer } from "../components/MySpacer";
 import { MyLoading } from "../components/MyLoading";
 import { MyPdfPreview } from "../components/MyPdfPreview";
 import { styles } from "./styles";
-// import teststyles from "../styles/Test.module.css";
+import { MyUploadPageCenter } from "../components/MyUploadPageCenter";
+import { MyUploadBar } from "../components/MyUploadBar";
 
 function PageContent(props) {
     if (!props.validCodes) {
-        return (
-            <Box className="display-flex justify-around padding-1rem align-center box-center-page">
-                <Button
-                    variant="outlined"
-                    size="large"
-                    component="label"
-                    startIcon={<UploadIcon />}
-                >
-                    Upload
-                    <input
-                        hidden
-                        accept=".csv"
-                        name="file"
-                        type="file"
-                        id="scan-and-go-file"
-                        onChange={props.onFileUploaded}
-                    />
-                </Button>
-            </Box>
-        );
+        return MyUploadPageCenter(props);
     }
 
-    return (
-        <Box className="display-flex justify-around padding-1rem align-center">
-            <MySpacer size={20} vertical />
-
-            <Button
-                variant="outlined"
-                size="large"
-                component="label"
-                startIcon={<UploadIcon />}
-            >
-                Upload
-                <input
-                    hidden
-                    accept=".csv"
-                    name="file"
-                    type="file"
-                    id="scan-and-go-file"
-                    onChange={props.onFileUploaded}
-                />
-            </Button>
-
-            <MySpacer size={24} horizontal />
-
-            <Button
-                variant="outlined"
-                size="large"
-                onClick={props.downloadQRCodes}
-                startIcon={<DownloadIcon />}
-            >
-                Download ZIP
-            </Button>
-
-            <MySpacer size={20} horizontal />
-
-            <Button
-                variant="outlined"
-                size="large"
-                component="label"
-                startIcon={<PdfIcon />}
-                className="pdf-button"
-            >
-                <PDFDownloadLink
-                    document={<MyPdfPreview data={props.qrCodesPDF} />}
-                    fileName="QR Codes.pdf"
-                >
-                    {({ blob, url, loading, error }) => "Download PDF"}
-                </PDFDownloadLink>
-            </Button>
-
-            <MySpacer size={20} horizontal />
-
-            <Button
-                variant="outlined"
-                size="large"
-                onClick={props.clearQRCodes}
-                startIcon={<DeleteIcon />}
-            >
-                Clear
-            </Button>
-        </Box>
-    );
+    return MyUploadBar(props);
 }
 
 export default function Page() {
