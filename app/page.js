@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import Link from "next/link";
 
+import { authOptions } from "./api/auth/[...nextauth]/route";
 import { MyLink } from "./home/MyLink";
 
 // Redirect if not authenticated

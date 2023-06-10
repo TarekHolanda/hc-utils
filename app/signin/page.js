@@ -4,10 +4,11 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
-import { MyLoading } from "../components/MyLoading";
-import SignInCard from "../core/SignInCard";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
+
+import { MyLoading } from "../components/MyLoading";
+import SignInCard from "../core/SignInCard";
 
 export default function Page() {
     const { data: session, status } = useSession();

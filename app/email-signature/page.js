@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -10,6 +11,7 @@ import Button from "@mui/material/Button";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+
 import DOMPurify from "dompurify";
 
 import { MyLoading } from "../components/MyLoading";
@@ -88,11 +90,11 @@ export default function Page() {
     return (
         <>
             <Box sx={{ width: "100%", height: 64 }}>
-                <MySpacer vertical size={48} />
+                <MySpacer vertical size={8} />
 
                 <Container fixed sx={{ textAlign: "right" }}>
                     <Button
-                        variant="contained"
+                        variant="outlined"
                         onClick={() => CopyToClipboard()}
                         startIcon={<ContentCopyIcon />}
                     >
@@ -108,6 +110,7 @@ export default function Page() {
                             __html: DOMPurify.sanitize(rawHTML),
                         }}
                         id="signature"
+                        style={{ background: "white", padding: "16px" }}
                     />
                 }
 
@@ -161,7 +164,9 @@ export default function Page() {
                 autoHideDuration={2000}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-                <Alert severity="success">Copied to clipboard</Alert>
+                <Alert severity="info" variant="filled">
+                    Copied to clipboard
+                </Alert>
             </Snackbar>
         </>
     );
