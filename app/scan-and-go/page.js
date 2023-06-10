@@ -1,14 +1,24 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import UploadIcon from "@mui/icons-material/Upload";
+import Divider from "@mui/material/Divider";
+
+import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
+import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
+import ReorderIcon from "@mui/icons-material/Reorder";
+import DragHandleIcon from "@mui/icons-material/DragHandle";
+import ImageIcon from "@mui/icons-material/Image";
+import HideImageIcon from "@mui/icons-material/HideImage";
 
 import Papa from "papaparse";
 import QRCodeCanvas from "qrcode.react";
@@ -23,6 +33,7 @@ import { MyPdfPreview } from "../components/MyPdfPreview";
 import { styles } from "./styles";
 import { MyUploadPageCenter } from "../components/MyUploadPageCenter";
 import { MyUploadBar } from "../components/MyUploadBar";
+import { Typography } from "@mui/material";
 
 function PageContent(props) {
     if (!props.validCodes) {
@@ -32,13 +43,56 @@ function PageContent(props) {
     return MyUploadBar(props);
 }
 
+const QR_LOGO = {
+    src: "./hc-icon-black.png",
+    height: 103,
+    width: 128,
+    excavate: true,
+};
+
 export default function Page() {
     const { data: session, status } = useSession();
     const [qrCodes, setQrCodes] = useState([]);
     const [qrCodesPDF, setQrCodesPDF] = useState(<View></View>);
     const [validCodes, setValidCodes] = useState(false);
+    const [quality, setQuality] = useState("Q");
+    const [logoOn, setLogoOn] = useState(true);
     const [loading, setLoading] = useState(false);
     const qrRef = useRef();
+
+    const updateLogoOn = (event, newLogoOn) => {
+        if (newLogoOn && newLogoOn !== logoOn) {
+            setLogoOn(newLogoOn);
+
+            if (validCodes) {
+                setLoading(true);
+                setTimeout(() => {
+                    generatePDF();
+                }, 250);
+            }
+        }
+    };
+
+    const updateQuality = (event, newQuality) => {
+        if (newQuality && newQuality !== quality) {
+            setQuality(newQuality);
+
+            if (validCodes) {
+                setLoading(true);
+                setTimeout(() => {
+                    generatePDF();
+                }, 250);
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (qrCodes.length > 0) {
+            setTimeout(() => {
+                generatePDF();
+            }, 1000);
+        }
+    }, [qrCodes]);
 
     if (status === "loading") {
         return <>{MyLoading}</>;
@@ -48,9 +102,11 @@ export default function Page() {
         redirect("/signin");
     }
 
-    const generatePDF = (qrCodes) => {
+    const generatePDF = () => {
         let aux = [];
         console.log("Foi... 0");
+        console.log(qrCodes);
+        console.log("Foi... 00");
 
         for (let i = 0; i < qrCodes.length; i++) {
             const canvas = qrRef?.current?.querySelector("#qrCode" + i);
@@ -329,10 +385,6 @@ export default function Page() {
                     }
 
                     setQrCodes(dataFormatted);
-
-                    setTimeout(() => {
-                        generatePDF(dataFormatted);
-                    }, 1000);
                 },
             });
         }
@@ -341,12 +393,12 @@ export default function Page() {
     const clearQRCodes = () => {
         startLoading();
         setValidCodes(false);
+        setQrCodes([]);
 
         setTimeout(() => {
-            document.getElementById("file").value = "";
-            setQrCodes([]);
+            document.getElementById("upload-file-center").value = "";
             stopLoading();
-        }, 1100);
+        }, 1000);
     };
 
     const startLoading = () => {
@@ -361,12 +413,56 @@ export default function Page() {
         <Fade in={true} timeout={1000}>
             <Box>
                 <PageContent
-                    downloadQRCodes={downloadQRCodes}
-                    clearQRCodes={clearQRCodes}
                     validCodes={validCodes}
                     onFileUploaded={onFileUploaded}
-                    qrCodesPDF={qrCodesPDF}
+                    downloadQRCodes={downloadQRCodes}
+                    clearQRCodes={clearQRCodes}
+                    pdfPreview={<MyPdfPreview data={qrCodesPDF} />}
                 />
+
+                <MySpacer size={20} horizontal />
+
+                <Divider />
+
+                <Box>
+                    <Typography variant="h6">Error Level</Typography>
+                    <ToggleButtonGroup
+                        value={quality}
+                        exclusive
+                        onChange={updateQuality}
+                        aria-label="quality"
+                    >
+                        <ToggleButton value="L" aria-label="low">
+                            <HorizontalRuleIcon />
+                        </ToggleButton>
+                        <ToggleButton value="M" aria-label="medium">
+                            <DragHandleIcon />
+                        </ToggleButton>
+                        <ToggleButton value="Q" aria-label="quartile">
+                            <ReorderIcon />
+                        </ToggleButton>
+                        <ToggleButton value="H" aria-label="high">
+                            <FormatAlignJustifyIcon />
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+
+                    <Typography variant="h6">Show Logo</Typography>
+                    <ToggleButtonGroup
+                        value={logoOn}
+                        exclusive
+                        onChange={updateLogoOn}
+                        aria-label="logo"
+                    >
+                        <ToggleButton value={true} aria-label="logo on">
+                            <ImageIcon />
+                        </ToggleButton>
+                        <ToggleButton value={false} aria-label="logo off">
+                            <HideImageIcon />
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </Box>
+
+                <Divider />
 
                 <MySpacer size={20} horizontal />
 
@@ -382,47 +478,7 @@ export default function Page() {
                     </Fade>
                 )}
 
-                <Box sx={{ display: "none", marginTop: "96px" }}>
-                    <Fade in={validCodes} timeout={500}>
-                        <Grid
-                            container
-                            direction="row"
-                            justifyContent="space-evenly"
-                            alignItems="baseline"
-                            className="bg-white color-black padding-bottom-32 qr-code-wrapper"
-                            spacing={6}
-                        >
-                            {qrCodes.map((qrCode, index) => (
-                                <Grid
-                                    key={"grid-preview" + index}
-                                    item
-                                    xs={12}
-                                    sm={6}
-                                    md={2}
-                                >
-                                    <QRCodeCanvas
-                                        value={qrCode["data"]}
-                                        id={"qrCode" + index}
-                                        key={"qrcode-preview" + index}
-                                        size={256}
-                                        level={"H"}
-                                        imageSettings={{
-                                            src: "./hc-icon-black.png",
-                                            height: 38,
-                                            width: 48,
-                                            excavate: true,
-                                        }}
-                                    />
-                                    <span className="display-block padding-side-4 line-break-any font-size-24">
-                                        {qrCode["description"]}
-                                    </span>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Fade>
-                </Box>
-
-                <Box sx={{ display: "none" }} ref={qrRef}>
+                <Box sx={{ display: "block" }} ref={qrRef}>
                     {qrCodes.map((qrCode, index) => (
                         <div key={"div-pdf" + index}>
                             <QRCodeCanvas
@@ -430,28 +486,58 @@ export default function Page() {
                                 key={"qrcode-pdf" + index}
                                 id={"qrCode" + index}
                                 size={512}
-                                level={"H"}
-                                imageSettings={{
-                                    src: "./hc-icon-black.png",
-                                    height: 103,
-                                    width: 128,
-                                    excavate: true,
-                                }}
+                                level={quality}
+                                imageSettings={logoOn ? QR_LOGO : {}}
                             />
                         </div>
                     ))}
                 </Box>
 
-                <Backdrop
-                    sx={{
-                        color: "#fff",
-                        zIndex: (theme) => theme.zIndex.drawer + 1,
-                    }}
-                    open={loading}
-                >
-                    <CircularProgress color="inherit" />
-                </Backdrop>
+                {loading && <>{MyLoading}</>}
             </Box>
         </Fade>
     );
 }
+
+// This is how we previewed QR Codes before the PDF
+// {oldQRCodesPreview(validCodes, qrCodes)}
+// function oldQRCodesPreview(validCodes, qrCodes) {
+//     return <Box sx={{ display: "none", marginTop: "96px" }}>
+//         <Fade in={validCodes} timeout={500}>
+//             <Grid
+//                 container
+//                 direction="row"
+//                 justifyContent="space-evenly"
+//                 alignItems="baseline"
+//                 className="bg-white color-black padding-bottom-32 qr-code-wrapper"
+//                 spacing={6}
+//             >
+//                 {qrCodes.map((qrCode, index) => (
+//                     <Grid
+//                         key={"grid-preview" + index}
+//                         item
+//                         xs={12}
+//                         sm={6}
+//                         md={2}
+//                     >
+//                         <QRCodeCanvas
+//                             value={qrCode["data"]}
+//                             id={"qrCode" + index}
+//                             key={"qrcode-preview" + index}
+//                             size={256}
+//                             level={"H"}
+//                             imageSettings={{
+//                                 src: "./hc-icon-black.png",
+//                                 height: 38,
+//                                 width: 48,
+//                                 excavate: true,
+//                             }} />
+//                         <span className="display-block padding-side-4 line-break-any font-size-24">
+//                             {qrCode["description"]}
+//                         </span>
+//                     </Grid>
+//                 ))}
+//             </Grid>
+//         </Fade>
+//     </Box>;
+// }

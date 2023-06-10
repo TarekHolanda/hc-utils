@@ -44,7 +44,7 @@ export default function Page() {
         redirect("/signin");
     }
 
-    const downloadQrCodes = async () => {
+    const downloadQRCodes = async () => {
         const zip = new JSZip();
 
         for (let i = 0; i < qrCodes.length; i++) {
@@ -114,24 +114,13 @@ export default function Page() {
         });
     };
 
-    const generateQrCodes = () => {
-        let aux = [];
-        if (min && max) {
-            for (let i = min; i <= max; i++) {
-                aux.push({
-                    description: i,
-                    data: "" + i,
-                });
-            }
-
-            setQrCodes(aux);
-            setValidCodes(true);
-        }
-    };
-
-    const clearQrCodes = () => {
+    const clearQRCodes = () => {
         setQrCodes([]);
         setValidCodes(false);
+
+        setTimeout(() => {
+            document.getElementById("upload-file-center").value = "";
+        }, 1000);
     };
 
     const formatData = (fileRow) => {
@@ -171,11 +160,10 @@ export default function Page() {
         <Fade in={true} timeout={1000}>
             <Box>
                 <PageContent
-                    generateQrCodes={generateQrCodes}
-                    downloadQrCodes={downloadQrCodes}
-                    clearQrCodes={clearQrCodes}
                     validCodes={validCodes}
                     onFileUploaded={onFileUploaded}
+                    downloadQRCodes={downloadQRCodes}
+                    clearQRCodes={clearQRCodes}
                 />
 
                 <MySpacer size={20} vertical />

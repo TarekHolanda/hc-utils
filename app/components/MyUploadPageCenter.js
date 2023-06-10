@@ -4,7 +4,6 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import UploadIcon from "@mui/icons-material/Upload";
-// import teststyles from "../styles/Test.module.css";
 
 export function MyUploadPageCenter(props) {
     return (

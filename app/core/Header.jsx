@@ -123,7 +123,6 @@ const Header = () => {
     const [drawerOpen, setdrawerOpen] = useState(false);
 
     const toggleDrawer = (open) => (event) => {
-        console.log(open);
         setdrawerOpen(open);
     };
 

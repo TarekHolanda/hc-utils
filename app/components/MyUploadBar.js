@@ -45,7 +45,7 @@ export function MyUploadBar(props) {
                 Download ZIP
             </Button>
 
-            {props.qrCodesPDF && (
+            {props.pdfPreview && (
                 <Box>
                     <MySpacer size={20} horizontal />
                     <Button
@@ -56,7 +56,7 @@ export function MyUploadBar(props) {
                         className="pdf-button"
                     >
                         <PDFDownloadLink
-                            document={<MyPdfPreview data={props.qrCodesPDF} />}
+                            document={props.pdfPreview}
                             fileName="QR Codes.pdf"
                         >
                             {({}) => "Download PDF"}
