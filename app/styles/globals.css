@@ -62,14 +62,12 @@ a {
     text-align: center;
 }
 
-body {
-    text-align: center;
+/* Employee Generator Page */
+.employee-generator-content {
+    height: calc(100vh - 128px);
 }
 
-button,
-label {
-    border: 1px solid white !important;
-}
+/* Check from here if it is used */
 
 .bg-white {
     background-color: white;

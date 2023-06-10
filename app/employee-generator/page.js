@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import ImageList from "@mui/material/ImageList";
@@ -12,6 +13,8 @@ import UploadIcon from "@mui/icons-material/Upload";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+
 import { QRCodeCanvas } from "qrcode.react";
 import JSZip from "jszip";
 import saveAs from "file-saver";
@@ -19,14 +22,13 @@ import Papa from "papaparse";
 
 import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
-import "../styles/old_index.css";
 
 function PageContent(props) {
-    return (
-        <div>
-            <div className="padding-1rem">
+    if (!props.validCodes) {
+        return (
+            <Container className="display-flex justify-around align-center employee-generator-content">
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     size="large"
                     component="label"
                     startIcon={<UploadIcon />}
@@ -41,30 +43,51 @@ function PageContent(props) {
                         onChange={props.onFileUploaded}
                     />
                 </Button>
+            </Container>
+        );
+    }
 
-                <MySpacer size={24} horizontal />
+    return (
+        <Container className="display-flex justify-around padding-1rem align-center">
+            <Button
+                variant="outlined"
+                size="large"
+                component="label"
+                startIcon={<UploadIcon />}
+            >
+                Upload
+                <input
+                    hidden
+                    accept=".csv"
+                    name="file"
+                    type="file"
+                    id="file"
+                    onChange={props.onFileUploaded}
+                />
+            </Button>
 
-                <Button
-                    size="large"
-                    onClick={props.downloadQrCodes}
-                    disabled={!props.validCodes}
-                    startIcon={<DownloadIcon />}
-                >
-                    Download
-                </Button>
+            <MySpacer size={24} horizontal />
 
-                <MySpacer size={24} horizontal />
+            <Button
+                variant="outlined"
+                size="large"
+                onClick={props.downloadQrCodes}
+                startIcon={<DownloadIcon />}
+            >
+                Download
+            </Button>
 
-                <Button
-                    size="large"
-                    onClick={props.clearQrCodes}
-                    disabled={!props.validCodes}
-                    startIcon={<DeleteIcon />}
-                >
-                    Clear
-                </Button>
-            </div>
-        </div>
+            <MySpacer size={24} horizontal />
+
+            <Button
+                variant="outlined"
+                size="large"
+                onClick={props.clearQrCodes}
+                startIcon={<DeleteIcon />}
+            >
+                Clear
+            </Button>
+        </Container>
     );
 }
 
@@ -219,7 +242,9 @@ export default function Page() {
 
     return (
         <Fade in={true} timeout={1000}>
-            <Container>
+            <Box>
+                <MySpacer size={20} vertical />
+
                 <PageContent
                     min={min}
                     max={max}
@@ -232,35 +257,42 @@ export default function Page() {
                     onFileUploaded={onFileUploaded}
                 />
 
-                <Fade in={validCodes} timeout={1000}>
-                    <ImageList
-                        sx={{ width: "auto", height: "auto" }}
-                        cols={3}
-                        gap={64}
-                    >
-                        {qrCodes.map((qrCode, index) => (
-                            <ImageListItem key={index} sx={{ margin: "auto" }}>
-                                <QRCodeCanvas
-                                    value={qrCode["data"]}
-                                    id={"qrCode" + index}
-                                    size={352}
-                                    level={"H"}
-                                    imageSettings={{
-                                        src: "./hc-icon-black.png",
-                                        height: 38,
-                                        width: 48,
-                                        excavate: true,
-                                    }}
-                                />
+                <MySpacer size={20} vertical />
 
-                                <ImageListItemBar
-                                    title={qrCode["description"]}
-                                    position="bottom"
-                                />
-                            </ImageListItem>
-                        ))}
-                    </ImageList>
-                </Fade>
+                {validCodes && (
+                    <Fade in={validCodes} timeout={1000}>
+                        <ImageList
+                            sx={{ width: "auto", height: "auto" }}
+                            cols={3}
+                            gap={64}
+                        >
+                            {qrCodes.map((qrCode, index) => (
+                                <ImageListItem
+                                    key={index}
+                                    sx={{ margin: "auto" }}
+                                >
+                                    <QRCodeCanvas
+                                        value={qrCode["data"]}
+                                        id={"qrCode" + index}
+                                        size={352}
+                                        level={"H"}
+                                        imageSettings={{
+                                            src: "./hc-icon-black.png",
+                                            height: 38,
+                                            width: 48,
+                                            excavate: true,
+                                        }}
+                                    />
+
+                                    <ImageListItemBar
+                                        title={qrCode["description"]}
+                                        position="bottom"
+                                    />
+                                </ImageListItem>
+                            ))}
+                        </ImageList>
+                    </Fade>
+                )}
 
                 <div ref={qrRef} className="display-none">
                     {qrCodes.map((qrCode, index) => {
@@ -282,7 +314,7 @@ export default function Page() {
                         );
                     })}
                 </div>
-            </Container>
+            </Box>
         </Fade>
     );
 }
