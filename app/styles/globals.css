@@ -62,8 +62,7 @@ a {
     text-align: center;
 }
 
-/* Employee Generator Page */
-.employee-generator-content {
+.container-center-button {
     height: calc(100vh - 128px);
 }
 
@@ -104,5 +103,5 @@ a {
 
 .pdf-button a {
     text-decoration: none;
-    color: white;
+    color: #90caf9;
 }

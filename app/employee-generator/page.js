@@ -26,7 +26,7 @@ import { MySpacer } from "../components/MySpacer";
 function PageContent(props) {
     if (!props.validCodes) {
         return (
-            <Container className="display-flex justify-around align-center employee-generator-content">
+            <Container className="display-flex justify-around align-center container-center-button">
                 <Button
                     variant="outlined"
                     size="large"
@@ -39,7 +39,7 @@ function PageContent(props) {
                         accept=".csv"
                         name="file"
                         type="file"
-                        id="file"
+                        id="employee-qr-code-file"
                         onChange={props.onFileUploaded}
                     />
                 </Button>
@@ -61,7 +61,7 @@ function PageContent(props) {
                     accept=".csv"
                     name="file"
                     type="file"
-                    id="file"
+                    id="employee-qr-code-file"
                     onChange={props.onFileUploaded}
                 />
             </Button>
@@ -93,8 +93,6 @@ function PageContent(props) {
 
 export default function Page() {
     const { data: session, status } = useSession();
-    const [min, setMin] = useState(0);
-    const [max, setMax] = useState(0);
     const [qrCodes, setQrCodes] = useState([
         { description: "QR Code", data: "QR Code" },
     ]);
@@ -232,24 +230,10 @@ export default function Page() {
         }
     };
 
-    const updateMin = (event) => {
-        setMin(event.target.value);
-    };
-
-    const updateMax = (event) => {
-        setMax(event.target.value);
-    };
-
     return (
         <Fade in={true} timeout={1000}>
             <Box>
-                <MySpacer size={20} vertical />
-
                 <PageContent
-                    min={min}
-                    max={max}
-                    updateMin={updateMin}
-                    updateMax={updateMax}
                     generateQrCodes={generateQrCodes}
                     downloadQrCodes={downloadQrCodes}
                     clearQrCodes={clearQrCodes}
