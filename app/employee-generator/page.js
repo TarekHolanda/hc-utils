@@ -27,7 +27,7 @@ import styles from "../styles/Test.module.css";
 function PageContent(props) {
     if (!props.validCodes) {
         return (
-            <Container className={styles.aaa}>
+            <Box className={styles.aaa} sx={{ display: "flex" }}>
                 <Button
                     variant="outlined"
                     size="large"
@@ -44,12 +44,12 @@ function PageContent(props) {
                         onChange={props.onFileUploaded}
                     />
                 </Button>
-            </Container>
+            </Box>
         );
     }
 
     return (
-        <Container className={styles.bbb}>
+        <Box className={styles.bbb} sx={{ display: "flex" }}>
             <Button
                 variant="outlined"
                 size="large"
@@ -88,7 +88,7 @@ function PageContent(props) {
             >
                 Clear
             </Button>
-        </Container>
+        </Box>
     );
 }
 
