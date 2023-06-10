@@ -39,7 +39,7 @@ import teststyles from "../styles/Test.module.css";
 function PageContent(props) {
     if (!props.validCodes) {
         return (
-            <Container className={teststyles.aaa}>
+            <Box className={teststyles.aaa}>
                 <Button
                     variant="outlined"
                     size="large"
@@ -56,12 +56,12 @@ function PageContent(props) {
                         onChange={props.onFileUploaded}
                     />
                 </Button>
-            </Container>
+            </Box>
         );
     }
 
     return (
-        <Container className={teststyles.bbb}>
+        <Box className={teststyles.bbb}>
             <MySpacer size={20} vertical />
 
             <Button
@@ -119,7 +119,7 @@ function PageContent(props) {
             >
                 Clear
             </Button>
-        </Container>
+        </Box>
     );
 }
 
