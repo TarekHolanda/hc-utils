@@ -130,7 +130,10 @@ const Header = () => {
     const loginButton = getLoginButton(status, toggleDrawer);
 
     return (
-        <AppBar position="static" style={{ background: "#2A63B2" }}>
+        <AppBar
+            position="static"
+            style={{ background: "#2A63B2", width: "100vw" }}
+        >
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 0 }}>

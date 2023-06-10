@@ -1,8 +1,21 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { useSession, getSession } from "next-auth/react";
+import React, { useState, useRef } from "react";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Fade from "@mui/material/Fade";
+import Button from "@mui/material/Button";
+import UploadIcon from "@mui/icons-material/Upload";
+import DownloadIcon from "@mui/icons-material/Download";
+import DeleteIcon from "@mui/icons-material/Delete";
+import PdfIcon from "@mui/icons-material/PictureAsPdf";
+import Container from "@mui/material/Container";
+
 import Papa from "papaparse";
 import QRCodeCanvas from "qrcode.react";
 import JSZip from "jszip";
@@ -14,30 +27,106 @@ import {
     PDFViewer,
     Image,
 } from "@react-pdf/renderer";
-import { Backdrop, CircularProgress } from "@mui/material";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import UploadIcon from "@mui/icons-material/UploadFile";
-import DownloadIcon from "@mui/icons-material/Download";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PdfIcon from "@mui/icons-material/PictureAsPdf";
 
-import "../styles/old_index.css";
 import { formatData } from "./formatData";
 import { MySpacer } from "../components/MySpacer";
 import { MyLoading } from "../components/MyLoading";
-import { styles } from "./styles";
 import { MyPdfPreview } from "../components/MyPdfPreview";
+import { styles } from "./styles";
+// import "../styles/old_index.css";
+
+function PageContent(props) {
+    if (!props.validCodes) {
+        return (
+            <Container className="display-flex justify-around align-center container-center-button">
+                <Button
+                    variant="outlined"
+                    size="large"
+                    component="label"
+                    startIcon={<UploadIcon />}
+                >
+                    Upload
+                    <input
+                        hidden
+                        accept=".csv"
+                        name="file"
+                        type="file"
+                        id="scan-and-go-file"
+                        onChange={props.onFileUploaded}
+                    />
+                </Button>
+            </Container>
+        );
+    }
+
+    return (
+        <Container className="display-flex justify-around padding-1rem align-center">
+            <MySpacer size={20} vertical />
+
+            <Button
+                variant="outlined"
+                size="large"
+                component="label"
+                startIcon={<UploadIcon />}
+            >
+                Upload
+                <input
+                    hidden
+                    accept=".csv"
+                    name="file"
+                    type="file"
+                    id="scan-and-go-file"
+                    onChange={props.onFileUploaded}
+                />
+            </Button>
+
+            <MySpacer size={24} horizontal />
+
+            <Button
+                variant="outlined"
+                size="large"
+                onClick={props.downloadQRCodes}
+                startIcon={<DownloadIcon />}
+            >
+                Download ZIP
+            </Button>
+
+            <MySpacer size={20} horizontal />
+
+            <Button
+                variant="outlined"
+                size="large"
+                component="label"
+                startIcon={<PdfIcon />}
+                className="pdf-button"
+            >
+                <PDFDownloadLink
+                    document={<MyPdfPreview data={props.qrCodesPDF} />}
+                    fileName="QR Codes.pdf"
+                >
+                    {({ blob, url, loading, error }) => "Download PDF"}
+                </PDFDownloadLink>
+            </Button>
+
+            <MySpacer size={20} horizontal />
+
+            <Button
+                variant="outlined"
+                size="large"
+                onClick={props.clearQRCodes}
+                startIcon={<DeleteIcon />}
+            >
+                Clear
+            </Button>
+        </Container>
+    );
+}
 
 export default function Page() {
     const { data: session, status } = useSession();
     const [qrCodes, setQrCodes] = useState([]);
     const [qrCodesPDF, setQrCodesPDF] = useState(<View></View>);
-    const [qrCodesLoaded, setQrCodesLoaded] = useState(false);
+    const [validCodes, setValidCodes] = useState(false);
     const [loading, setLoading] = useState(false);
     const qrRef = useRef();
 
@@ -51,6 +140,7 @@ export default function Page() {
 
     const generatePDF = (qrCodes) => {
         let aux = [];
+        console.log("Foi... 0");
 
         for (let i = 0; i < qrCodes.length; i++) {
             const canvas = qrRef?.current?.querySelector("#qrCode" + i);
@@ -60,6 +150,7 @@ export default function Page() {
                 description: qrCodes[i]["description"],
             });
         }
+        console.log("Foi... 1");
 
         let table = [];
         for (let i = 0; i < aux.length; i += 9) {
@@ -222,18 +313,22 @@ export default function Page() {
                 </View>
             );
         }
-        setQrCodesPDF(table);
 
+        console.log("Foi... 2");
+        setQrCodesPDF(table);
+        console.log("Foi... 3");
         setTimeout(() => {
-            setQrCodesLoaded(true);
+            setValidCodes(true);
+            console.log("Foi... 4");
         }, 1000);
 
         setTimeout(() => {
+            console.log("Foi... 5");
             stopLoading();
         }, 2000);
     };
 
-    const downloadQRCode = async (e) => {
+    const downloadQRCodes = async (e) => {
         e.preventDefault();
         const zip = new JSZip();
 
@@ -333,9 +428,9 @@ export default function Page() {
         }
     };
 
-    const clearQRCode = () => {
+    const clearQRCodes = () => {
         startLoading();
-        setQrCodesLoaded(false);
+        setValidCodes(false);
 
         setTimeout(() => {
             document.getElementById("file").value = "";
@@ -353,83 +448,32 @@ export default function Page() {
     };
 
     return (
-        <Fade in={status !== null}>
-            <main>
-                <Box>
-                    <h1>Scan & Go - QR Code Generator (Inspector)</h1>
-
-                    <MySpacer size={24} horizontal={false} />
-
-                    <Button
-                        variant="contained"
-                        size="large"
-                        component="label"
-                        startIcon={<UploadIcon />}
-                    >
-                        Upload
-                        <input
-                            hidden
-                            accept=".csv"
-                            name="file"
-                            type="file"
-                            id="file"
-                            onChange={onFileUploaded}
-                        />
-                    </Button>
-
-                    <MySpacer size={24} horizontal />
-
-                    <Button
-                        variant="contained"
-                        size="large"
-                        onClick={downloadQRCode}
-                        disabled={!qrCodesLoaded}
-                        startIcon={<DownloadIcon />}
-                    >
-                        Download ZIP
-                    </Button>
-
-                    <MySpacer size={20} horizontal />
-
-                    <Button
-                        variant="contained"
-                        size="large"
-                        component="label"
-                        startIcon={<PdfIcon />}
-                        className="pdf-button"
-                    >
-                        <PDFDownloadLink
-                            document={<MyPdfPreview data={qrCodesPDF} />}
-                            fileName="QR Codes.pdf"
-                        >
-                            {({ blob, url, loading, error }) => "Download PDF"}
-                        </PDFDownloadLink>
-                    </Button>
-
-                    <MySpacer size={20} horizontal />
-
-                    <Button
-                        variant="contained"
-                        size="large"
-                        onClick={clearQRCode}
-                        startIcon={<DeleteIcon />}
-                    >
-                        Clear
-                    </Button>
-                </Box>
+        <Fade in={true} timeout={1000}>
+            <Box>
+                <PageContent
+                    downloadQRCodes={downloadQRCodes}
+                    clearQRCodes={clearQRCodes}
+                    validCodes={validCodes}
+                    onFileUploaded={onFileUploaded}
+                    qrCodesPDF={qrCodesPDF}
+                />
 
                 <MySpacer size={20} horizontal />
 
-                <Fade in={qrCodesLoaded} timeout={500}>
-                    <Box>
-                        <PDFViewer style={{ width: "100%", height: "1192px" }}>
-                            <MyPdfPreview data={qrCodesPDF} />
-                        </PDFViewer>
-                    </Box>
-                </Fade>
+                {validCodes && (
+                    <Fade in={validCodes} timeout={500}>
+                        <Box>
+                            <PDFViewer
+                                style={{ width: "100%", height: "1192px" }}
+                            >
+                                <MyPdfPreview data={qrCodesPDF} />
+                            </PDFViewer>
+                        </Box>
+                    </Fade>
+                )}
 
                 <Box sx={{ display: "none", marginTop: "96px" }}>
-                    <Fade in={qrCodesLoaded} timeout={500}>
+                    <Fade in={validCodes} timeout={500}>
                         <Grid
                             container
                             direction="row"
@@ -497,7 +541,7 @@ export default function Page() {
                 >
                     <CircularProgress color="inherit" />
                 </Backdrop>
-            </main>
+            </Box>
         </Fade>
     );
 }

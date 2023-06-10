@@ -62,14 +62,11 @@ a {
     text-align: center;
 }
 
-body {
-    text-align: center;
+.container-center-button {
+    height: calc(100vh - 128px);
 }
 
-button,
-label {
-    border: 1px solid white !important;
-}
+/* Check from here if it is used */
 
 .bg-white {
     background-color: white;
@@ -106,5 +103,5 @@ label {
 
 .pdf-button a {
     text-decoration: none;
-    color: white;
+    color: #90caf9;
 }
