@@ -33,12 +33,13 @@ import { MySpacer } from "../components/MySpacer";
 import { MyLoading } from "../components/MyLoading";
 import { MyPdfPreview } from "../components/MyPdfPreview";
 import { styles } from "./styles";
+import teststyles from "../styles/Test.module.css";
 // import "../styles/old_index.css";
 
 function PageContent(props) {
     if (!props.validCodes) {
         return (
-            <Container className="display-flex justify-around align-center container-center-button">
+            <Container className={teststyles.aaa}>
                 <Button
                     variant="outlined"
                     size="large"
@@ -60,7 +61,7 @@ function PageContent(props) {
     }
 
     return (
-        <Container className="display-flex justify-around padding-1rem align-center">
+        <Container className={teststyles.bbb}>
             <MySpacer size={20} vertical />
 
             <Button

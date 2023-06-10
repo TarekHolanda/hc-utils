@@ -22,11 +22,12 @@ import Papa from "papaparse";
 
 import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
+import styles from "../styles/Test.module.css";
 
 function PageContent(props) {
     if (!props.validCodes) {
         return (
-            <Container className="display-flex justify-around align-center container-center-button">
+            <Container className={styles.aaa}>
                 <Button
                     variant="outlined"
                     size="large"
@@ -48,7 +49,7 @@ function PageContent(props) {
     }
 
     return (
-        <Container className="display-flex justify-around padding-1rem align-center">
+        <Container className={styles.bbb}>
             <Button
                 variant="outlined"
                 size="large"
