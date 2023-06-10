@@ -1,0 +1,14 @@
+.aaa {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+    align-items: center;
+    height: calc(100vh - 128px);
+}
+
+.bbb {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+    align-items: center;
+}
