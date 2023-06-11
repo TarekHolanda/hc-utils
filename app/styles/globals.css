@@ -24,6 +24,10 @@ a {
     display: none;
 }
 
+.display-block {
+    display: block;
+}
+
 .justify-around {
     justify-content: space-around;
 }
@@ -62,11 +66,9 @@ a {
     text-align: center;
 }
 
-.container-center-button {
+.box-center-page {
     height: calc(100vh - 128px);
 }
-
-/* Check from here if it is used */
 
 .bg-white {
     background-color: white;
@@ -83,14 +85,6 @@ a {
 
 .padding-bottom-32 {
     padding-bottom: 32px;
-}
-
-.display-none {
-    display: none;
-}
-
-.display-block {
-    display: block;
 }
 
 .line-break-any {

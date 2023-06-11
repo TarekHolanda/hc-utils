@@ -5,14 +5,9 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import UploadIcon from "@mui/icons-material/Upload";
-import DownloadIcon from "@mui/icons-material/Download";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 
 import { QRCodeCanvas } from "qrcode.react";
@@ -22,74 +17,15 @@ import Papa from "papaparse";
 
 import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
-import styles from "../styles/Test.module.css";
+import { MyUploadPageCenter } from "../components/MyUploadPageCenter";
+import { MyUploadBar } from "../components/MyUploadBar";
 
 function PageContent(props) {
     if (!props.validCodes) {
-        return (
-            <Box className={styles.aaa} sx={{ display: "flex" }}>
-                <Button
-                    variant="outlined"
-                    size="large"
-                    component="label"
-                    startIcon={<UploadIcon />}
-                >
-                    Upload
-                    <input
-                        hidden
-                        accept=".csv"
-                        name="file"
-                        type="file"
-                        id="employee-qr-code-file"
-                        onChange={props.onFileUploaded}
-                    />
-                </Button>
-            </Box>
-        );
+        return MyUploadPageCenter(props);
     }
 
-    return (
-        <Box className={styles.bbb} sx={{ display: "flex" }}>
-            <Button
-                variant="outlined"
-                size="large"
-                component="label"
-                startIcon={<UploadIcon />}
-            >
-                Upload
-                <input
-                    hidden
-                    accept=".csv"
-                    name="file"
-                    type="file"
-                    id="employee-qr-code-file"
-                    onChange={props.onFileUploaded}
-                />
-            </Button>
-
-            <MySpacer size={24} horizontal />
-
-            <Button
-                variant="outlined"
-                size="large"
-                onClick={props.downloadQrCodes}
-                startIcon={<DownloadIcon />}
-            >
-                Download
-            </Button>
-
-            <MySpacer size={24} horizontal />
-
-            <Button
-                variant="outlined"
-                size="large"
-                onClick={props.clearQrCodes}
-                startIcon={<DeleteIcon />}
-            >
-                Clear
-            </Button>
-        </Box>
-    );
+    return MyUploadBar(props);
 }
 
 export default function Page() {
@@ -108,7 +44,7 @@ export default function Page() {
         redirect("/signin");
     }
 
-    const downloadQrCodes = async () => {
+    const downloadQRCodes = async () => {
         const zip = new JSZip();
 
         for (let i = 0; i < qrCodes.length; i++) {
@@ -178,24 +114,13 @@ export default function Page() {
         });
     };
 
-    const generateQrCodes = () => {
-        let aux = [];
-        if (min && max) {
-            for (let i = min; i <= max; i++) {
-                aux.push({
-                    description: i,
-                    data: "" + i,
-                });
-            }
-
-            setQrCodes(aux);
-            setValidCodes(true);
-        }
-    };
-
-    const clearQrCodes = () => {
+    const clearQRCodes = () => {
         setQrCodes([]);
         setValidCodes(false);
+
+        setTimeout(() => {
+            document.getElementById("upload-file-center").value = "";
+        }, 1000);
     };
 
     const formatData = (fileRow) => {
@@ -235,11 +160,10 @@ export default function Page() {
         <Fade in={true} timeout={1000}>
             <Box>
                 <PageContent
-                    generateQrCodes={generateQrCodes}
-                    downloadQrCodes={downloadQrCodes}
-                    clearQrCodes={clearQrCodes}
                     validCodes={validCodes}
                     onFileUploaded={onFileUploaded}
+                    downloadQRCodes={downloadQRCodes}
+                    clearQRCodes={clearQRCodes}
                 />
 
                 <MySpacer size={20} vertical />
