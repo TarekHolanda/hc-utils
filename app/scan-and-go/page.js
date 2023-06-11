@@ -41,6 +41,24 @@ const QR_LOGO = {
     excavate: true,
 };
 
+const SIZES = {
+    small: {
+        qrCodesPerPage: 9,
+        qrCodesPerLine: 3,
+        linesPerPage: 3,
+    },
+    medium: {
+        qrCodesPerPage: 4,
+        qrCodesPerLine: 2,
+        linesPerPage: 2,
+    },
+    large: {
+        qrCodesPerPage: 2,
+        qrCodesPerLine: 1,
+        linesPerPage: 2,
+    },
+};
+
 function PageContent(props) {
     if (!props.validCodes) {
         return MyUploadPageCenter(props);
@@ -49,167 +67,78 @@ function PageContent(props) {
     return MyUploadBar(props);
 }
 
-// TODO
+function buildQRCodeView(qrCodeData, description, index, size) {
+    return (
+        <View key={"row" + index}>
+            <Image
+                src={{
+                    uri: qrCodeData
+                        ? qrCodeData.qrCodeDataUri
+                        : "./all-white.png",
+                    method: "GET",
+                    headers: { "Cache-Control": "no-cache" },
+                    body: "",
+                }}
+                style={
+                    size !== "small"
+                        ? size === "large"
+                            ? styles.qrCodeLarge
+                            : styles.qrCodeMedium
+                        : styles.qrCodeSmall
+                }
+            />
+
+            <Text
+                style={
+                    size !== "small"
+                        ? size === "large"
+                            ? styles.descriptionLarge
+                            : styles.descriptionMedium
+                        : styles.descriptionSmall
+                }
+            >
+                {description ? description : ""}
+            </Text>
+        </View>
+    );
+}
+
 function buildPDF(aux, size) {
-    console.log(size);
     let table = [];
-    for (let i = 0; i < aux.length; i += 9) {
+
+    for (let i = 0; i < aux.length; i += SIZES[size].qrCodesPerPage) {
+        let page = [];
+        for (let j = 0; j < SIZES[size].linesPerPage; j++) {
+            let line = [];
+            for (let k = 0; k < SIZES[size].qrCodesPerLine; k++) {
+                let index = i + j * SIZES[size].qrCodesPerLine + k;
+                line.push(
+                    buildQRCodeView(
+                        aux[index],
+                        aux[index] ? aux[index].description : "",
+                        index,
+                        size
+                    )
+                );
+            }
+
+            page.push(
+                <View
+                    style={
+                        size !== "small"
+                            ? styles.inlineNotSmall
+                            : styles.inlineSmall
+                    }
+                    key={"view" + i + j}
+                >
+                    {line}
+                </View>
+            );
+        }
+
         table.push(
             <View style={styles.vertical} key={"parent" + i}>
-                <View style={styles.inline} key={"view" + i}>
-                    <View>
-                        <Image
-                            src={{
-                                uri: aux[i]
-                                    ? aux[i].qrCodeDataUri
-                                    : "./all-white.png",
-                                method: "GET",
-                                headers: { "Cache-Control": "no-cache" },
-                                body: "",
-                            }}
-                            style={styles.qrCode}
-                        />
-                        <Text style={styles.description}>
-                            {aux[i] ? aux[i].description : ""}
-                        </Text>
-                    </View>
-
-                    <View>
-                        <Image
-                            src={{
-                                uri: aux[i + 1]
-                                    ? aux[i + 1].qrCodeDataUri
-                                    : "./all-white.png",
-                                method: "GET",
-                                headers: { "Cache-Control": "no-cache" },
-                                body: "",
-                            }}
-                            style={styles.qrCode}
-                        />
-                        <Text style={styles.description}>
-                            {aux[i + 1] ? aux[i + 1].description : ""}
-                        </Text>
-                    </View>
-
-                    <View>
-                        <Image
-                            src={{
-                                uri: aux[i + 2]
-                                    ? aux[i + 2].qrCodeDataUri
-                                    : "./all-white.png",
-                                method: "GET",
-                                headers: { "Cache-Control": "no-cache" },
-                                body: "",
-                            }}
-                            style={styles.qrCode}
-                        />
-                        <Text style={styles.description}>
-                            {aux[i + 2] ? aux[i + 2].description : ""}
-                        </Text>
-                    </View>
-                </View>
-
-                <View style={styles.inline} key={"view" + i + 1}>
-                    <View>
-                        <Image
-                            src={{
-                                uri: aux[i + 3]
-                                    ? aux[i + 3].qrCodeDataUri
-                                    : "./all-white.png",
-                                method: "GET",
-                                headers: { "Cache-Control": "no-cache" },
-                                body: "",
-                            }}
-                            style={styles.qrCode}
-                        />
-                        <Text style={styles.description}>
-                            {aux[i + 3] ? aux[i + 3].description : ""}
-                        </Text>
-                    </View>
-                    <View>
-                        <Image
-                            src={{
-                                uri: aux[i + 4]
-                                    ? aux[i + 4].qrCodeDataUri
-                                    : "./all-white.png",
-                                method: "GET",
-                                headers: { "Cache-Control": "no-cache" },
-                                body: "",
-                            }}
-                            style={styles.qrCode}
-                        />
-                        <Text style={styles.description}>
-                            {aux[i + 4] ? aux[i + 4].description : ""}
-                        </Text>
-                    </View>
-                    <View>
-                        <Image
-                            src={{
-                                uri: aux[i + 5]
-                                    ? aux[i + 5].qrCodeDataUri
-                                    : "./all-white.png",
-                                method: "GET",
-                                headers: { "Cache-Control": "no-cache" },
-                                body: "",
-                            }}
-                            style={styles.qrCode}
-                        />
-                        <Text style={styles.description}>
-                            {aux[i + 5] ? aux[i + 5].description : ""}
-                        </Text>
-                    </View>
-                </View>
-
-                <View style={styles.inline} key={"view" + i + 2}>
-                    <View>
-                        <Image
-                            src={{
-                                uri: aux[i + 6]
-                                    ? aux[i + 6].qrCodeDataUri
-                                    : "./all-white.png",
-                                method: "GET",
-                                headers: { "Cache-Control": "no-cache" },
-                                body: "",
-                            }}
-                            style={styles.qrCode}
-                        />
-                        <Text style={styles.description}>
-                            {aux[i + 6] ? aux[i + 6].description : ""}
-                        </Text>
-                    </View>
-                    <View>
-                        <Image
-                            src={{
-                                uri: aux[i + 7]
-                                    ? aux[i + 7].qrCodeDataUri
-                                    : "./all-white.png",
-                                method: "GET",
-                                headers: { "Cache-Control": "no-cache" },
-                                body: "",
-                            }}
-                            style={styles.qrCode}
-                        />
-                        <Text style={styles.description}>
-                            {aux[i + 7] ? aux[i + 7].description : ""}
-                        </Text>
-                    </View>
-                    <View>
-                        <Image
-                            src={{
-                                uri: aux[i + 8]
-                                    ? aux[i + 8].qrCodeDataUri
-                                    : "./all-white.png",
-                                method: "GET",
-                                headers: { "Cache-Control": "no-cache" },
-                                body: "",
-                            }}
-                            style={styles.qrCode}
-                        />
-                        <Text style={styles.description}>
-                            {aux[i + 8] ? aux[i + 8].description : ""}
-                        </Text>
-                    </View>
-                </View>
+                {page}
             </View>
         );
     }
@@ -232,23 +161,22 @@ export default function Page() {
         if (newSize && newSize !== size) {
             setSize(newSize);
 
-            // if (validCodes) {
-            //     setLoading(true);
-            //     setTimeout(() => {
-            //         generatePDF();
-            //     }, 250);
-            // }
+            if (validCodes) {
+                setLoading(true);
+                generatePDF(newSize);
+            }
         }
     };
 
     const updateLogoOn = (event, newLogoOn) => {
-        if (newLogoOn && newLogoOn !== logoOn) {
+        if (newLogoOn !== null && newLogoOn !== logoOn) {
             setLogoOn(newLogoOn);
 
             if (validCodes) {
                 setLoading(true);
+
                 setTimeout(() => {
-                    generatePDF();
+                    generatePDF(size);
                 }, 250);
             }
         }
@@ -261,7 +189,7 @@ export default function Page() {
             if (validCodes) {
                 setLoading(true);
                 setTimeout(() => {
-                    generatePDF();
+                    generatePDF(size);
                 }, 250);
             }
         }
@@ -270,7 +198,7 @@ export default function Page() {
     useEffect(() => {
         if (qrCodes.length > 0) {
             setTimeout(() => {
-                generatePDF();
+                generatePDF(size);
             }, 1000);
         }
     }, [qrCodes]);
@@ -283,7 +211,7 @@ export default function Page() {
         redirect("/signin");
     }
 
-    const generatePDF = () => {
+    const generatePDF = (pdfSize) => {
         let aux = [];
 
         for (let i = 0; i < qrCodes.length; i++) {
@@ -295,7 +223,7 @@ export default function Page() {
             });
         }
 
-        const table = buildPDF(aux, size);
+        const table = buildPDF(aux, pdfSize);
 
         setQrCodesPDF(table);
 
@@ -463,7 +391,7 @@ export default function Page() {
                         <MySpacer size={20} horizontal />
 
                         <Box className="text-center">
-                            <Typography variant="h6">Error Level</Typography>
+                            <Typography variant="h6">Density Level</Typography>
                             <ToggleButtonGroup
                                 value={quality}
                                 exclusive
@@ -498,9 +426,8 @@ export default function Page() {
                                 exclusive
                                 onChange={updateSize}
                                 aria-label="size"
-                                disabled
                             >
-                                <ToggleButton value="smalln" aria-label="small">
+                                <ToggleButton value="small" aria-label="small">
                                     <LooksOneIcon />
                                 </ToggleButton>
                                 <ToggleButton
