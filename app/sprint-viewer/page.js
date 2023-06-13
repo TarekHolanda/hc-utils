@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
@@ -200,6 +200,29 @@ const AverageRows = () => {
 
 export default function Page() {
     const { data: session, status } = useSession();
+    const [sprints, setSprints] = useState([]);
+
+    // Get list of sprints from API
+    useEffect(() => {
+        // fetch("http://localhost:8000/hc/test")
+        fetch("http://127.0.0.1:8000/hc/test")
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status !== 404) {
+                    // Showw toast error
+                    console.log("Deu ruim!!!");
+                    console.log(data);
+                }
+
+                console.log("Deu bom!!!");
+                console.log(data);
+                // setSprints(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+    // console.log(sprints);
 
     if (status === "loading") {
         return <>{MyLoading}</>;
@@ -279,29 +302,6 @@ export default function Page() {
         </Container>
     );
 }
-
-// Get list of sprints from API
-// const [sprints, setSprints] = useState([]);
-// useEffect(() => {
-//     fetch("http://localhost:8000/hc/test")
-//         // fetch("http://127.0.0.1:8000/hc/test")
-//         .then((response) => response.json())
-//         .then((data) => {
-//             if (data.status !== 404) {
-//                 // Showw toast error
-//                 console.log("Deu ruim!!!");
-//                 console.log(data);
-//             }
-
-//             console.log("Deu bom!!!");
-//             console.log(data);
-//             setSprints(data);
-//         })
-//         .catch((error) => {
-//             console.error(error);
-//         });
-// }, []);
-// console.log(sprints);
 
 // useEffect(() => {
 //     const fetchData = async () => {
