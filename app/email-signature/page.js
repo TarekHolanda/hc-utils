@@ -52,7 +52,7 @@ export default function Page() {
         setPhone(event.target.value);
     };
 
-    const CopyToClipboard = (element) => {
+    const CopyToClipboard = () => {
         const doc = document;
         const text = doc.getElementById("signature");
         let range;
@@ -111,6 +111,7 @@ export default function Page() {
                         }}
                         id="signature"
                         style={{ background: "white", padding: "16px" }}
+                        onClick={(event) => event.preventDefault()}
                     />
                 }
 
