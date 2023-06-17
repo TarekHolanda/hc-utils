@@ -19,6 +19,7 @@ import Typography from "@mui/material/Typography";
 import LooksOneIcon from "@mui/icons-material/LooksOne";
 import LooksTwoIcon from "@mui/icons-material/LooksTwo";
 import Looks3Icon from "@mui/icons-material/Looks3";
+import Looks4Icon from "@mui/icons-material/Looks4";
 
 import Papa from "papaparse";
 import QRCodeCanvas from "qrcode.react";
@@ -42,6 +43,11 @@ const QR_LOGO = {
 };
 
 const SIZES = {
+    xsmall: {
+        qrCodesPerPage: 9,
+        qrCodesPerLine: 3,
+        linesPerPage: 3,
+    },
     small: {
         qrCodesPerPage: 9,
         qrCodesPerLine: 3,
@@ -83,7 +89,9 @@ function buildQRCodeView(qrCodeData, description, index, size) {
                     size !== "small"
                         ? size === "large"
                             ? styles.qrCodeLarge
-                            : styles.qrCodeMedium
+                            : size === "medium"
+                            ? styles.qrCodeMedium
+                            : styles.qrCodeXsmall
                         : styles.qrCodeSmall
                 }
             />
@@ -93,7 +101,9 @@ function buildQRCodeView(qrCodeData, description, index, size) {
                     size !== "small"
                         ? size === "large"
                             ? styles.descriptionLarge
-                            : styles.descriptionMedium
+                            : size === "medium"
+                            ? styles.descriptionMedium
+                            : styles.descriptionXsmall
                         : styles.descriptionSmall
                 }
             >
@@ -125,7 +135,7 @@ function buildPDF(aux, size) {
             page.push(
                 <View
                     style={
-                        size !== "small"
+                        size !== "small" && size !== "xsmall"
                             ? styles.inlineNotSmall
                             : styles.inlineSmall
                     }
@@ -427,17 +437,23 @@ export default function Page() {
                                 onChange={updateSize}
                                 aria-label="size"
                             >
-                                <ToggleButton value="small" aria-label="small">
+                                <ToggleButton
+                                    value="xsmall"
+                                    aria-label="xsmall"
+                                >
                                     <LooksOneIcon />
+                                </ToggleButton>
+                                <ToggleButton value="small" aria-label="small">
+                                    <LooksTwoIcon />
                                 </ToggleButton>
                                 <ToggleButton
                                     value="medium"
                                     aria-label="medium"
                                 >
-                                    <LooksTwoIcon />
+                                    <Looks3Icon />
                                 </ToggleButton>
                                 <ToggleButton value="large" aria-label="large">
-                                    <Looks3Icon />
+                                    <Looks4Icon />
                                 </ToggleButton>
                             </ToggleButtonGroup>
                         </Box>

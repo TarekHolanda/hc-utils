@@ -19,6 +19,13 @@ export const styles = StyleSheet.create({
         width: "100%",
         height: "calc(100% / 2)",
     },
+    qrCodeXsmall: {
+        width: "120px",
+        height: "120px",
+        marginTop: "20px",
+        marginLeft: "30px",
+        marginRight: "30px",
+    },
     qrCodeSmall: {
         width: "180px",
         height: "180px",
@@ -30,6 +37,13 @@ export const styles = StyleSheet.create({
     qrCodeLarge: {
         width: "350px",
         height: "350px",
+    },
+    descriptionXsmall: {
+        width: "180px",
+        height: "64px",
+        marginLeft: "10px",
+        marginRight: "10px",
+        marginBottom: "30px",
     },
     descriptionSmall: {
         width: "180px",
