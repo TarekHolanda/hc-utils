@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
             <body className={inter.className}>
                 <Provider>
                     <Header />
-                    <main className="grow">{children}</main>
+                    <main>{children}</main>
                 </Provider>
             </body>
         </html>
