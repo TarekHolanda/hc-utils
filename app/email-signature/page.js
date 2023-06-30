@@ -80,7 +80,7 @@ export default function Page() {
     };
 
     if (status === "loading") {
-        return <>{MyLoading}</>;
+        return <MyLoading loading={true} />;
     }
 
     if (status === "unauthenticated" || !session) {

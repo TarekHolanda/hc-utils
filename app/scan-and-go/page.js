@@ -34,6 +34,7 @@ import { MyPdfPreview } from "../components/MyPdfPreview";
 import { styles } from "./styles";
 import { MyUploadPageCenter } from "../components/MyUploadPageCenter";
 import { MyUploadBar } from "../components/MyUploadBar";
+import { MySpeedDial } from "../components/MySpeedDial";
 
 const QR_LOGO = {
     src: "./hc-icon-black.png",
@@ -214,7 +215,7 @@ export default function Page() {
     }, [qrCodes]);
 
     if (status === "loading") {
-        return <>{MyLoading}</>;
+        return <MyLoading loading={true} />;
     }
 
     if (status === "unauthenticated" || !session) {
@@ -489,7 +490,9 @@ export default function Page() {
                     ))}
                 </Box>
 
-                {loading && <>{MyLoading}</>}
+                <MySpeedDial page={"scan-and-go"} />
+
+                <MyLoading loading={loading} />
             </Box>
         </Fade>
     );
