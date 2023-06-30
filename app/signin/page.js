@@ -14,7 +14,7 @@ export default function Page() {
     const { data: session, status } = useSession();
 
     if (status === "loading") {
-        return <>{MyLoading}</>;
+        return <MyLoading loading={true} />;
     }
 
     if (status === "unauthenticated" || !session) {

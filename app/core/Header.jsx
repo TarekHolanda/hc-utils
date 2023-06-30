@@ -25,6 +25,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import BadgeIcon from "@mui/icons-material/Badge";
 import QrCodeIcon from "@mui/icons-material/QrCodeScanner";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 
@@ -51,6 +52,11 @@ const drawerList = [
         title: "Email Signature",
         icon: <ContactMailIcon />,
         link: "/email-signature",
+    },
+    {
+        title: "Sprint Viewer",
+        icon: <QueryStatsIcon />,
+        link: "/sprint-viewer",
     },
 ];
 
