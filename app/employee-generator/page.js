@@ -37,7 +37,7 @@ export default function Page() {
     const qrRef = useRef(null);
 
     if (status === "loading") {
-        return <>{MyLoading}</>;
+        return <MyLoading loading={true} />;
     }
 
     if (status === "unauthenticated" || !session) {

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-
 import { MyLoading } from "../components/MyLoading";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -15,185 +15,123 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
-import { Typography } from "@mui/material";
+import { Tab, Typography } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Collapse from "@mui/material/Collapse";
 
-const SPRINTS = [
-    {
-        id: 1,
-        name: "Sprint #105",
-        index: 105,
-        totalPoints: 24,
-        pointsMerged: 10,
-        tasksRisky: 4,
-        tasksFive: 1,
-        tasksThree: 0,
-        deploysExtra: 1,
-        delayed: false,
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(odd)": {
+        backgroundColor: theme.palette.action.hover,
     },
-    {
-        id: 2,
-        name: "Sprint #104",
-        index: 104,
-        totalPoints: 30,
-        pointsMerged: 11,
-        tasksRisky: 4,
-        tasksFive: 1,
-        tasksThree: 1,
-        deploysExtra: 1,
-        delayed: true,
+    "&:last-child td, &:last-child th": {
+        border: 0,
     },
-    {
-        id: 3,
-        name: "Sprint #103",
-        index: 103,
-        totalPoints: 22,
-        pointsMerged: 6,
-        tasksRisky: 8,
-        tasksFive: 1,
-        tasksThree: 1,
-        deploysExtra: 0,
-        delayed: true,
+    "&:nth-child(2)": {
+        backgroundColor: theme.palette.success.dark,
     },
-    {
-        id: 4,
-        name: "Sprint #101",
-        index: 101,
-        totalPoints: 15,
-        pointsMerged: 5,
-        tasksRisky: 4,
-        tasksFive: 0,
-        tasksThree: 0,
-        deploysExtra: 0,
-        delayed: false,
+    "&:nth-child(3)": {
+        backgroundColor: theme.palette.error.dark,
     },
-    {
-        id: 5,
-        name: "Sprint #100",
-        index: 100,
-        totalPoints: 35,
-        pointsMerged: 25,
-        tasksRisky: 8,
-        tasksFive: 1,
-        tasksThree: 4,
-        deploysExtra: 2,
-        delayed: true,
+    "&:hover": {
+        cursor: "pointer",
+        backgroundColor: theme.palette.primary.dark,
     },
-];
+}));
 
-function createData(
-    index,
-    totalPoints,
-    pointsMerged,
-    tasksRisky,
-    tasksFive,
-    tasksThree,
-    deploysExtra,
-    delayed
-) {
+// Calculate sprints average
+const calculateAverage = (sprints, name) => {
+    const randomID = Math.floor(Math.random() * 10) + 1;
+
+    const totalPoints = sprints.reduce((acc, sprint) => {
+        return acc + sprint.totalPoints;
+    }, 0);
+
+    const pointsMerged = sprints.reduce((acc, sprint) => {
+        return acc + sprint.pointsMerged;
+    }, 0);
+
+    const pointsLeft = sprints.reduce((acc, sprint) => {
+        return acc + (sprint.totalPoints - sprint.pointsMerged);
+    }, 0);
+
+    const extraDeploys = sprints.reduce((acc, sprint) => {
+        return acc + sprint.extraDeploys;
+    }, 0);
+
     return {
-        index,
-        totalPoints,
-        pointsMerged,
-        tasksRisky,
-        tasksFive,
-        tasksThree,
-        deploysExtra,
-        delayed,
+        id: randomID,
+        index: name,
+        totalPoints: totalPoints / sprints.length,
+        pointsMerged: pointsMerged / sprints.length,
+        pointsLeft: pointsLeft / sprints.length,
+        extraDeploys: extraDeploys / sprints.length,
     };
-}
+};
 
-const rows = [
-    createData(105, 24, 10, 4, 1, 0, 1, false),
-    createData(104, 30, 11, 4, 1, 1, 1, true),
-    createData(103, 22, 6, 8, 1, 1, 0, false),
-    createData(101, 15, 5, 4, 0, 0, 1, false),
-    createData(100, 35, 25, 8, 1, 4, 2, true),
-    createData(99, 35, 25, 8, 1, 4, 2, true),
-    createData(98, 35, 25, 8, 1, 4, 2, true),
-    createData(97, 35, 25, 8, 1, 4, 2, true),
-];
+const MyRow = ({ row }) => {
+    const { id, index, name, totalPoints, pointsMerged, extraDeploys } = row;
 
-const AverageRows = () => {
-    var avg = {
-        totalPoints: 0,
-        pointsMerged: 0,
-        tasksRisky: 0,
-        tasksFive: 0,
-        tasksThree: 0,
-        deploysExtra: 0,
-    };
-    var avgDelay = {
-        totalPoints: 0,
-        pointsMerged: 0,
-        tasksRisky: 0,
-        tasksFive: 0,
-        tasksThree: 0,
-        deploysExtra: 0,
-    };
+    return (
+        <StyledTableRow
+            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            key={id}
+        >
+            <TableCell align="center">{index}</TableCell>
+            <TableCell align="center">{totalPoints}</TableCell>
+            <TableCell align="center">{pointsMerged}</TableCell>
+            <TableCell align="center">{totalPoints - pointsMerged}</TableCell>
+            <TableCell align="center">{extraDeploys}</TableCell>
+        </StyledTableRow>
+    );
+};
 
-    // Calculate average of data in rows and set to avg
-    rows.forEach((row) => {
-        if (row.delayed) {
-            avgDelay.totalPoints += row.totalPoints;
-            avgDelay.pointsMerged += row.pointsMerged;
-            avgDelay.tasksRisky += row.tasksRisky;
-            avgDelay.tasksFive += row.tasksFive;
-            avgDelay.tasksThree += row.tasksThree;
-            avgDelay.deploysExtra += row.deploysExtra;
-        } else {
-            avg.totalPoints += row.totalPoints;
-            avg.pointsMerged += row.pointsMerged;
-            avg.tasksRisky += row.tasksRisky;
-            avg.tasksFive += row.tasksFive;
-            avg.tasksThree += row.tasksThree;
-            avg.deploysExtra += row.deploysExtra;
-        }
-    });
+const MyRows = ({ sprints }) => {
+    // Current Sprint
+    const firstSprint = sprints[0];
+    // Last Sprints not delayed
+    const sprintsNotDelayed = sprints.filter(
+        (sprint, index) => index !== 0 && !sprint.delayed
+    );
+    // Last Sprints delayed
+    const sprintsDelayed = sprints.filter(
+        (sprint, index) => index !== 0 && sprint.delayed
+    );
 
-    avg.totalPoints = (avg.totalPoints / rows.length).toFixed(1);
-    avg.pointsMerged = (avg.pointsMerged / rows.length).toFixed(1);
-    avg.tasksRisky = (avg.tasksRisky / rows.length).toFixed(1);
-    avg.tasksFive = (avg.tasksFive / rows.length).toFixed(1);
-    avg.tasksThree = (avg.tasksThree / rows.length).toFixed(1);
-    avg.deploysExtra = (avg.deploysExtra / rows.length).toFixed(1);
+    const avgSprintsNotDelayed = calculateAverage(
+        sprintsNotDelayed,
+        "Average Not Delayed"
+    );
 
-    avgDelay.totalPoints = (avgDelay.totalPoints / rows.length).toFixed(1);
-    avgDelay.pointsMerged = (avgDelay.pointsMerged / rows.length).toFixed(1);
-    avgDelay.tasksRisky = (avgDelay.tasksRisky / rows.length).toFixed(1);
-    avgDelay.tasksFive = (avgDelay.tasksFive / rows.length).toFixed(1);
-    avgDelay.tasksThree = (avgDelay.tasksThree / rows.length).toFixed(1);
-    avgDelay.deploysExtra = (avgDelay.deploysExtra / rows.length).toFixed(1);
+    const avgSprintsDelayed = calculateAverage(
+        sprintsDelayed,
+        "Average Delayed"
+    );
 
     return (
         <>
-            <TableRow key={"average-on-time"} sx={{ backgroundColor: "blue" }}>
-                <TableCell component="th" scope="row" align="center">
-                    On Time Average
-                </TableCell>
-                <TableCell align="center">{avg.totalPoints}</TableCell>
-                <TableCell align="center">
-                    {(avg.totalPoints - avg.pointsMerged).toFixed(1)}
-                </TableCell>
-                <TableCell align="center">{avg.pointsMerged}</TableCell>
-                <TableCell align="center">{avg.tasksRisky}</TableCell>
-                <TableCell align="center">{avg.tasksFive}</TableCell>
-                <TableCell align="center">{avg.tasksThree}</TableCell>
-                <TableCell align="center">{avg.deploysExtra}</TableCell>
-            </TableRow>
-            <TableRow key={"average-delayed"} sx={{ backgroundColor: "red" }}>
-                <TableCell component="th" scope="row" align="center">
-                    Delayed Average
-                </TableCell>
-                <TableCell align="center">{avgDelay.totalPoints}</TableCell>
-                <TableCell align="center">
-                    {(avgDelay.totalPoints - avgDelay.pointsMerged).toFixed(1)}
-                </TableCell>
-                <TableCell align="center">{avgDelay.pointsMerged}</TableCell>
-                <TableCell align="center">{avgDelay.tasksRisky}</TableCell>
-                <TableCell align="center">{avgDelay.tasksFive}</TableCell>
-                <TableCell align="center">{avgDelay.tasksThree}</TableCell>
-                <TableCell align="center">{avgDelay.deploysExtra}</TableCell>
-            </TableRow>
+            <MyRow row={firstSprint} key="current" />
+
+            <MyRow
+                row={avgSprintsNotDelayed}
+                key="average not delayed"
+                collapsed={sprintsNotDelayed}
+            />
+
+            <MyRow
+                row={avgSprintsDelayed}
+                key="average delayed"
+                collapsed={sprintsDelayed}
+            />
+
+            {sprintsNotDelayed.map((sprint) => (
+                <MyRow row={sprint} key={sprint.id} />
+            ))}
+
+            {sprintsDelayed.map((sprint) => (
+                <MyRow row={sprint} key={sprint.id} />
+            ))}
         </>
     );
 };
@@ -201,101 +139,49 @@ const AverageRows = () => {
 export default function Page() {
     const { data: session, status } = useSession();
     const [sprints, setSprints] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // Get list of sprints from API
     useEffect(() => {
-        // fetch("http://localhost:8000/hc/test")
-        fetch("http://127.0.0.1:8000/hc/test")
+        fetch("http://127.0.0.1:8000/hc/sprints")
             .then((response) => response.json())
             .then((data) => {
-                if (data.status !== 404) {
-                    // Showw toast error
-                    console.log("Deu ruim!!!");
-                    console.log(data);
-                }
-
-                console.log("Deu bom!!!");
                 console.log(data);
-                // setSprints(data);
+                setSprints(data.data);
+                setLoading(false);
             })
             .catch((error) => {
                 console.error(error);
+                setLoading(false);
             });
     }, []);
-    // console.log(sprints);
 
-    if (status === "loading") {
-        return <>{MyLoading}</>;
+    if (status === "loading" || loading) {
+        return <MyLoading loading={true} />;
     }
 
     if (status === "unauthenticated" || !session) {
         redirect("/signin");
     }
 
-    // redirect("/");
-
     return (
         <Container>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table
+                    sx={{ minWidth: 512 }}
+                    aria-label="sprints table"
+                    stickyHeader
+                >
                     <TableHead>
-                        <TableRow sx={{ backgroundColor: "black" }}>
-                            <TableCell align="center">Sprint Number</TableCell>
+                        <TableRow>
+                            <TableCell align="center">Sprint #</TableCell>
                             <TableCell align="center">Total Points</TableCell>
                             <TableCell align="center">Merged</TableCell>
                             <TableCell align="center">Points Left</TableCell>
-                            <TableCell align="center">Risky</TableCell>
-                            <TableCell align="center">5 Points</TableCell>
-                            <TableCell align="center">3 Points</TableCell>
-                            <TableCell align="center">Deploys</TableCell>
+                            <TableCell align="center">Extra Deploys</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <AverageRows />
-
-                        {rows.map((row, index) => (
-                            <TableRow
-                                key={row.index}
-                                sx={{
-                                    "&:last-child td, &:last-child th": {
-                                        border: 0,
-                                    },
-                                    ...(index === 0 && {
-                                        backgroundColor: "green",
-                                    }),
-                                }}
-                            >
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                >
-                                    #{row.index}{" "}
-                                    {index === 0 && <span>(current)</span>}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {row.totalPoints}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {row.totalPoints - row.pointsMerged}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {row.pointsMerged}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {row.tasksRisky}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {row.tasksFive}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {row.tasksThree}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {row.deploysExtra}
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                        <MyRows sprints={sprints} />
                     </TableBody>
                 </Table>
             </TableContainer>

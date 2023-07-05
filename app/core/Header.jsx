@@ -15,15 +15,19 @@ import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import BrightnessIcon from "@mui/icons-material/BrightnessHigh";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import BadgeIcon from "@mui/icons-material/Badge";
 import QrCodeIcon from "@mui/icons-material/QrCodeScanner";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 
 import SignInButton from "./SignInButton";
 import { MyTooltip } from "../components/MyTooltip";
@@ -49,37 +53,68 @@ const drawerList = [
         icon: <ContactMailIcon />,
         link: "/email-signature",
     },
+    {
+        title: "Sprint Viewer",
+        icon: <QueryStatsIcon />,
+        link: "/sprint-viewer",
+    },
 ];
 
-const MyDrawer = (
-    <Box sx={{ width: 256 }} role="presentation">
-        <List>
-            {drawerList.map((item, index) => (
-                <Link href={item.link} key={item.title + index}>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.title} />
+const MyDrawer = ({ resolvedTheme, setTheme }) => {
+    return (
+        <Box sx={{ width: 256 }} role="presentation">
+            <List>
+                {drawerList.map((item, index) => (
+                    <Link href={item.link} key={item.title + index}>
+                        <ListItem disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>{item.icon}</ListItemIcon>
+                                <ListItemText primary={item.title} />
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
+                ))}
+            </List>
+
+            <Divider />
+
+            <List>
+                <ListItem key={"theme-toggle"} disablePadding>
+                    {resolvedTheme === "light" && (
+                        <ListItemButton onClick={() => setTheme("dark")}>
+                            <ListItemIcon>
+                                <DarkModeIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Dark Mode"} />
                         </ListItemButton>
-                    </ListItem>
-                </Link>
-            ))}
-        </List>
+                    )}
 
-        <Divider />
+                    {resolvedTheme !== "light" && (
+                        <ListItemButton onClick={() => setTheme("light")}>
+                            <ListItemIcon>
+                                <BrightnessIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Light Mode"} />
+                        </ListItemButton>
+                    )}
+                </ListItem>
+            </List>
 
-        <List>
-            <ListItem key={"signout"} disablePadding>
-                <ListItemButton onClick={() => signOut()}>
-                    <ListItemIcon>
-                        <LogoutIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={"Sign out"} />
-                </ListItemButton>
-            </ListItem>
-        </List>
-    </Box>
-);
+            <Divider />
+
+            <List>
+                <ListItem key={"signout"} disablePadding>
+                    <ListItemButton onClick={() => signOut()}>
+                        <ListItemIcon>
+                            <LogoutIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Sign out"} />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+        </Box>
+    );
+};
 
 const getLoginButton = (status, toggleDrawer) => {
     switch (status) {
@@ -118,7 +153,7 @@ const pages = {
 
 const Header = () => {
     const currentPage = usePathname();
-
+    const { theme, resolvedTheme, setTheme } = useTheme();
     const { data: session, status } = useSession();
     const [drawerOpen, setdrawerOpen] = useState(false);
 
@@ -157,13 +192,14 @@ const Header = () => {
                     <Box sx={{ flexGrow: 0 }}>{loginButton}</Box>
                 </Toolbar>
             </Container>
+
             <Drawer
                 anchor={"right"}
                 open={drawerOpen}
                 onClose={toggleDrawer(false)}
                 onClick={toggleDrawer(false)}
             >
-                {MyDrawer}
+                <MyDrawer resolvedTheme={resolvedTheme} setTheme={setTheme} />
             </Drawer>
         </AppBar>
     );

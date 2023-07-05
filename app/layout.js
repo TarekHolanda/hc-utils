@@ -18,11 +18,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body className={inter.className}>
                 <Provider>
                     <Header />
-                    <main className="grow">{children}</main>
+                    <main>{children}</main>
                 </Provider>
             </body>
         </html>
