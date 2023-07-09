@@ -1,9 +1,9 @@
 import { getCsrfToken, getSession, signIn, signOut } from "next-auth/react";
 
 // Development
-const BASE_URL = "http://127.0.0.1:8000/hc/";
+// const BASE_URL = "http://127.0.0.1:8000/hc/";
 // Production
-// const BASE_URL = "https://hc-utils-api.herokuapp.com/hc/";
+const BASE_URL = "https://hc-utils-api.herokuapp.com/hc/";
 
 export async function handleGet(url, params) {
     const csrfToken = await getCsrfToken();
