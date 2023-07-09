@@ -1,0 +1,90 @@
+import { getCsrfToken, getSession, signIn, signOut } from "next-auth/react";
+
+// Development
+const BASE_URL = "http://127.0.0.1:8000/hc/";
+// Production
+// const BASE_URL = "https://hc-utils-api.herokuapp.com/hc/";
+
+export async function handleGet(url, params) {
+    const csrfToken = await getCsrfToken();
+    if (!csrfToken) {
+        throw new Error("Failed to get CSRF token.");
+    }
+
+    // The Token ID has been manually added on the session
+    const session = await getSession();
+    // @ts-ignore
+    const token = session?.token;
+    if (!token) {
+        throw new Error("Failed to get Google token.");
+    }
+    console.log("Token: ", token);
+
+    // Prepare parameters to be sent on the get call
+    let paramsString = "";
+    if (params) {
+        paramsString = "?";
+        for (const [key, value] of Object.entries(params)) {
+            paramsString += `${key}=${value}&`;
+        }
+        paramsString = paramsString.slice(0, -1);
+    }
+
+    try {
+        const response = await fetch(BASE_URL + url + paramsString, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+                Authorization: "Bearer " + token,
+            },
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            return responseData;
+        } else {
+            throw new Error("Failed to make the GET request.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        throw error;
+    }
+}
+
+export async function handlePost(url, data) {
+    const csrfToken = await getCsrfToken();
+    if (!csrfToken) {
+        throw new Error("Failed to get CSRF token.");
+    }
+
+    // The Token ID has been manually added on the session
+    const session = await getSession();
+    // @ts-ignore
+    const token = session?.token;
+    if (!token) {
+        throw new Error("Failed to get Google token.");
+    }
+
+    try {
+        const response = await fetch(BASE_URL + url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+                Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            return responseData;
+        } else {
+            throw new Error("Failed to make the POST request.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        throw error;
+    }
+}

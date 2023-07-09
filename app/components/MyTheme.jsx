@@ -14,6 +14,7 @@ export const darkTheme = createTheme({
     },
 });
 
+// Declare and export the global styles with css and styled to use theme pallete colors
 export const globalStyles = css`
     :root {
         body {
@@ -29,6 +30,24 @@ export const globalStyles = css`
         }
     }
 `;
+
+// export const globalStyles = css`
+//     :root {
+//         --primary-main: #00aaa0;
+
+//         body {
+//             background-color: #fff;
+//             color: #121212;
+//         }
+//     }
+
+//     [data-theme="dark"] {
+//         body {
+//             background-color: #121212;
+//             color: #fff;
+//         }
+//     }
+// `;
 
 // const darkMode = createTheme({
 //     palette: {

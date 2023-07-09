@@ -100,3 +100,7 @@ a {
     text-decoration: none;
     color: #90caf9;
 }
+
+.width-128 {
+    width: 128px;
+}
