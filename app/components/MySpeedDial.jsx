@@ -42,7 +42,7 @@ const actions = {
     ],
 };
 
-export const MySpeedDial = ({ page }) => {
+export const MySpeedDial = ({ page, callback }) => {
     const [open, setOpen] = useState(false);
     const handleClick = () => setOpen(!open);
 
@@ -51,20 +51,21 @@ export const MySpeedDial = ({ page }) => {
             <Backdrop open={open} onClick={handleClick} />
             <SpeedDial
                 ariaLabel="SpeedDial"
-                sx={{ position: "absolute", bottom: 16, right: 16 }}
+                sx={{ position: "absolute", bottom: 24, right: 24 }}
                 icon={<SpeedDialIcon />}
-                onClick={handleClick}
+                onClick={callback ? callback : handleClick}
                 open={open}
                 direction="left"
             >
-                {actions[page].map((action) => (
-                    <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        tooltipTitle={action.name}
-                        onClick={handleClick}
-                    />
-                ))}
+                {!callback &&
+                    actions[page].map((action) => (
+                        <SpeedDialAction
+                            key={action.name}
+                            icon={action.icon}
+                            tooltipTitle={action.name}
+                            onClick={handleClick}
+                        />
+                    ))}
             </SpeedDial>
         </Box>
     );
