@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { signOut } from "next-auth/react";
 import GoogleProvider from "next-auth/providers/google";
 
 const GOOGLE_AUTHORIZATION_URL =
@@ -12,7 +13,8 @@ const GOOGLE_AUTHORIZATION_URL =
 async function refreshAccessToken(token) {
     try {
         const url =
-            "https://oauth2.googleapis.com/tokeninfo?id_token=" + token.token;
+            "https://oauth2.googleapis.com/tokeninfo?id_token=" +
+            token.id_token;
 
         const response = await fetch(url, {
             method: "GET",
@@ -22,6 +24,11 @@ async function refreshAccessToken(token) {
         });
 
         const currentToken = await response.json();
+
+        console.log("Token...");
+        console.log(token);
+        console.log("Current Token...");
+        console.log(currentToken);
 
         if (currentToken.error === "invalid_token") {
             const urlRefresh =
@@ -44,7 +51,7 @@ async function refreshAccessToken(token) {
 
             return {
                 ...token,
-                token: refreshedToken.id_token,
+                id_token: refreshedToken.id_token,
                 access_token: refreshedToken.access_token,
             };
         }
@@ -73,6 +80,10 @@ export const authOptions = {
     secret: process.env.JWT_SECRET,
     session: {
         strategy: "jwt",
+        jwt: true,
+    },
+    jwt: {
+        secret: process.env.JWT_SECRET,
     },
     pages: {
         signIn: "/login",
@@ -81,22 +92,37 @@ export const authOptions = {
         async signIn({ profile }) {
             return profile.email.endsWith("@heavyconnect.com");
         },
+        async redirect({ url, baseUrl }) {
+            return baseUrl;
+        },
         async jwt({ token, user, account }) {
+            console.log("JWT Token");
+            console.log(token);
+            console.log("JWT User");
+            console.log(user);
+            console.log("JWT Account");
+            console.log(account);
             if (account && user) {
                 token = Object.assign({}, token, {
-                    token: account.id_token,
+                    id_token: account.id_token,
                     access_token: account.access_token,
                     user,
                 });
             }
+
             return refreshAccessToken(token);
         },
         async session({ session, token }) {
             if (session) {
+                console.log("Session Session");
+                console.log(session);
+                console.log("Token Session");
+                console.log(token);
                 session = Object.assign({}, session, {
-                    token: token.token,
+                    id_token: token.id_token,
                     access_token: token.access_token,
                     user: token.user,
+                    token: token,
                 });
             }
             return session;

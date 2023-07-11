@@ -1,24 +1,24 @@
-import { getCsrfToken, getSession, signIn, signOut } from "next-auth/react";
+import { getCsrfToken, getSession } from "next-auth/react";
 
 // Development
-// const BASE_URL = "http://127.0.0.1:8000/hc/";
+const BASE_URL = "http://127.0.0.1:8000/hc/";
 // Production
-const BASE_URL = "https://hc-utils-api.herokuapp.com/hc/";
+// const BASE_URL = "https://hc-utils-api.herokuapp.com/hc/";
 
 export async function handleGet(url, params) {
     const csrfToken = await getCsrfToken();
     if (!csrfToken) {
-        throw new Error("Failed to get CSRF token.");
+        return { error: "Failed to get CSRF token." };
     }
 
     // The Token ID has been manually added on the session
     const session = await getSession();
+    console.log(session);
     // @ts-ignore
-    const token = session?.token;
+    const token = session?.id_token;
     if (!token) {
-        throw new Error("Failed to get Google token.");
+        return { error: "Failed to get Google token." };
     }
-    console.log("Token: ", token);
 
     // Prepare parameters to be sent on the get call
     let paramsString = "";
@@ -44,31 +44,31 @@ export async function handleGet(url, params) {
             const responseData = await response.json();
             return responseData;
         } else {
-            throw new Error("Failed to make the GET request.");
+            return { error: "Failed to make the GET request." };
         }
     } catch (error) {
-        console.error("Error:", error);
-        throw error;
+        return { error: "An error occurred while making the GET request." };
     }
 }
 
-export async function handlePost(url, data) {
+export async function handleAPI(url, data, method) {
     const csrfToken = await getCsrfToken();
     if (!csrfToken) {
-        throw new Error("Failed to get CSRF token.");
+        return { error: "Failed to get CSRF token." };
     }
 
     // The Token ID has been manually added on the session
     const session = await getSession();
+    console.log(session);
     // @ts-ignore
-    const token = session?.token;
+    const token = session?.id_token;
     if (!token) {
-        throw new Error("Failed to get Google token.");
+        return { error: "Failed to get Google token." };
     }
 
     try {
         const response = await fetch(BASE_URL + url, {
-            method: "POST",
+            method: method,
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrfToken,
@@ -81,10 +81,9 @@ export async function handlePost(url, data) {
             const responseData = await response.json();
             return responseData;
         } else {
-            throw new Error("Failed to make the POST request.");
+            return { error: "Failed to make the POST request." };
         }
     } catch (error) {
-        console.error("Error:", error);
-        throw error;
+        return { error: "An error occurred while making the POST request." };
     }
 }
