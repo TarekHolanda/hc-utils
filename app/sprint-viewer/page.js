@@ -33,7 +33,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
-import { handleGet, handlePost } from "../api/handleCallAPI";
+import { handleGet, handleAPI } from "../api/handleCallAPI";
 import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
 import { MySpeedDial } from "../components/MySpeedDial";
@@ -104,7 +104,7 @@ const calculateAverage = (sprints, index) => {
     };
 };
 
-const MyRow = ({ row, styleClass }) => {
+const MyRow = ({ row, styleClass, handleOpenModal }) => {
     const {
         id,
         index,
@@ -116,7 +116,11 @@ const MyRow = ({ row, styleClass }) => {
     } = row;
 
     return (
-        <StyledTableRow key={id} className={styleClass ? styleClass : ""}>
+        <StyledTableRow
+            key={id}
+            className={styleClass ? styleClass : ""}
+            onClick={handleOpenModal ? () => handleOpenModal(row) : null}
+        >
             <TableCell align="center">
                 <Typography variant="h6">
                     {index} <span>{delayed ? "(delayed)" : ""}</span>
@@ -140,7 +144,7 @@ const MyRow = ({ row, styleClass }) => {
     );
 };
 
-const MyRows = ({ sprints }) => {
+const MyRows = ({ sprints, handleOpenModal }) => {
     if (!sprints?.length) {
         return;
     }
@@ -168,7 +172,11 @@ const MyRows = ({ sprints }) => {
 
     return (
         <>
-            <MyRow row={firstSprint} key="current" />
+            <MyRow
+                row={firstSprint}
+                key="current"
+                handleOpenModal={handleOpenModal}
+            />
 
             <MyRow
                 row={avgSprintsNotDelayed}
@@ -183,11 +191,19 @@ const MyRows = ({ sprints }) => {
             />
 
             {sprintsNotDelayed.map((sprint) => (
-                <MyRow row={sprint} key={sprint.id} />
+                <MyRow
+                    row={sprint}
+                    key={sprint.id}
+                    handleOpenModal={handleOpenModal}
+                />
             ))}
 
             {sprintsDelayed.map((sprint) => (
-                <MyRow row={sprint} key={sprint.id} />
+                <MyRow
+                    row={sprint}
+                    key={sprint.id}
+                    handleOpenModal={handleOpenModal}
+                />
             ))}
         </>
     );
@@ -197,23 +213,45 @@ export default function Page() {
     const { data: session, status } = useSession();
     const [sprints, setSprints] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [crudModalOpen, setCrudModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertSeverity, setAlertSeverity] = useState("success");
-    const [sprintIndex, setSprintindex] = useState("");
-    const [sprintTotalPoints, setSprintTotalPoints] = useState("");
-    const [sprintPointsMerged, setSprintPointsMerged] = useState("");
-    const [sprintExtraDeploys, setSprintExtraDeploys] = useState("");
-    const [sprintDelayed, setSprintDelayed] = useState(false);
     const [sprintsAmount, setSprintsAmount] = useState("10");
+    const [sprint, setSprint] = useState({
+        index: "",
+        totalPoints: "",
+        pointsMerged: "",
+        extraDeploys: "",
+        delayed: false,
+    });
 
     const handleGetSprints = () => {
         setLoading(true);
         handleGet("sprints", { pageSize: sprintsAmount }).then((response) => {
+            if (response.error) {
+                handleAlert(response.error, "error");
+                setLoading(false);
+
+                return;
+            }
+
             setSprints(response.data);
             setLoading(false);
         });
+    };
+
+    const handleAlert = (
+        message = "Something went wrong",
+        severity = "error"
+    ) => {
+        setAlertMessage(message);
+        setAlertSeverity(severity);
+        setShowAlert(true);
+
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 2000);
     };
 
     useEffect(() => {
@@ -228,57 +266,104 @@ export default function Page() {
         redirect("/signin");
     }
 
-    const handleCrudModalOpen = () => {
-        setCrudModalOpen(!crudModalOpen);
+    const handleOpenModal = (current) => {
+        setModalOpen(true);
+        console.log("Current");
+        console.log(current);
+        if (current && current.id) {
+            setSprint(current);
+        }
     };
 
-    const handleAddSprint = (event) => {
+    const handleCloseModal = () => {
+        setModalOpen(false);
+        setSprint({
+            index: "",
+            totalPoints: "",
+            pointsMerged: "",
+            extraDeploys: "",
+            delayed: false,
+        });
+    };
+
+    const handleSetSprint = (value, type) => {
+        setSprint((prevState) => ({
+            ...prevState,
+            [type]: value,
+        }));
+    };
+
+    const handleAddUpdateSprint = (event) => {
         event.preventDefault();
 
-        if (!sprintIndex || !sprintTotalPoints) {
-            setAlertMessage("Sprint Index and Total Points are required");
-            setAlertSeverity("warning");
-            setShowAlert(true);
-
-            setTimeout(() => {
-                setShowAlert(false);
-            }, 2000);
-
+        if (!sprint.index || !sprint.totalPoints) {
+            handleAlert(
+                "Sprint Index and Total Points are required",
+                "warning"
+            );
             return;
         }
 
+        handleCloseModal();
         setLoading(true);
-        const newSprint = {
-            index: sprintIndex,
-            totalPoints: sprintTotalPoints,
-            pointsMerged: sprintPointsMerged || 0,
-            extraDeploys: sprintExtraDeploys || 0,
-            delayed: sprintDelayed || false,
+
+        const sprintParam = {
+            id: sprint.id || 0,
+            index: sprint.index,
+            totalPoints: sprint.totalPoints,
+            pointsMerged: sprint.pointsMerged || 0,
+            extraDeploys: sprint.extraDeploys || 0,
+            delayed: sprint.delayed || false,
         };
 
-        handlePost("sprints/add", newSprint).then((response) => {
-            setLoading(false);
-            handleCrudModalOpen();
+        const method = sprint.id ? "PUT" : "POST";
+        const url = sprint.id
+            ? "sprints/" + sprint.id + "/update"
+            : "sprints/add";
 
-            const newSprints = [...sprints, response.data]
-                .sort((a, b) => b.index - a.index)
-                .slice(0, sprintsAmount);
+        handleAPI(url, sprintParam, method).then((response) => {
+            if (response.error) {
+                handleAlert(response.error, "error");
+                handleOpenModal();
+                setLoading(false);
+                return;
+            }
 
-            setSprints(newSprints);
+            // if (sprint.id) {
+            //     console.log("Sprint Updated");
+            //     const newSprints = sprints.map((sprintCurrent) => {
+            //         if (sprintCurrent.id === response.data.id) {
+            //             return response.data;
+            //         }
 
-            setAlertMessage("Sprint added successfully");
-            setAlertSeverity("success");
-            setShowAlert(true);
+            //         return sprintCurrent;
+            //     });
 
-            setTimeout(() => {
-                setShowAlert(false);
-            }, 2000);
-
-            setSprintindex("");
-            setSprintTotalPoints("");
-            setSprintPointsMerged("");
-            setSprintExtraDeploys("");
-            setSprintDelayed(false);
+            //     setSprints(newSprints);
+            // } else {
+            //     console.log("Sprint Added");
+            //     const newSprints = [...sprints, response.data]
+            //         .sort((a, b) => b.index - a.index)
+            //         .slice(0, sprintsAmount);
+            //     setSprints(newSprints);
+            // }
+            // setLoading(false);
+            handleGetSprints();
+            handleAlert(
+                "Sprint #" +
+                    sprint.index +
+                    " " +
+                    (sprint.id ? "updated" : "added") +
+                    " successfully",
+                "success"
+            );
+            setSprint({
+                index: "",
+                totalPoints: "",
+                pointsMerged: "",
+                extraDeploys: "",
+                delayed: false,
+            });
         });
     };
 
@@ -355,15 +440,18 @@ export default function Page() {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            <MyRows sprints={sprints} />
+                            <MyRows
+                                sprints={sprints}
+                                handleOpenModal={handleOpenModal}
+                            />
                         )}
                     </TableBody>
                 </Table>
             </TableContainer>
 
-            <Dialog open={crudModalOpen}>
+            <Dialog open={modalOpen}>
                 <FormControl>
-                    <DialogTitle>Sprint</DialogTitle>
+                    <DialogTitle>Sprint #{sprint.index}</DialogTitle>
 
                     <Divider />
 
@@ -380,10 +468,11 @@ export default function Page() {
                                 inputMode: "numeric",
                                 pattern: "[0-9]*",
                             }}
-                            value={sprintIndex}
+                            value={sprint.index}
                             onChange={(event) => {
-                                setSprintindex(
-                                    parseInt(event.target.value) || ""
+                                handleSetSprint(
+                                    parseInt(event.target.value) || "",
+                                    "index"
                                 );
                             }}
                         />
@@ -398,10 +487,11 @@ export default function Page() {
                                 inputMode: "numeric",
                                 pattern: "[0-9]*",
                             }}
-                            value={sprintTotalPoints}
+                            value={sprint.totalPoints}
                             onChange={(event) => {
-                                setSprintTotalPoints(
-                                    parseInt(event.target.value) || ""
+                                handleSetSprint(
+                                    parseInt(event.target.value) || "",
+                                    "totalPoints"
                                 );
                             }}
                         />
@@ -416,10 +506,11 @@ export default function Page() {
                                 inputMode: "numeric",
                                 pattern: "[0-9]*",
                             }}
-                            value={sprintPointsMerged}
+                            value={sprint.pointsMerged}
                             onChange={(event) => {
-                                setSprintPointsMerged(
-                                    parseInt(event.target.value) || ""
+                                handleSetSprint(
+                                    parseInt(event.target.value) || "",
+                                    "pointsMerged"
                                 );
                             }}
                         />
@@ -434,19 +525,23 @@ export default function Page() {
                                 inputMode: "numeric",
                                 pattern: "[0-9]*",
                             }}
-                            value={sprintExtraDeploys}
+                            value={sprint.extraDeploys}
                             onChange={(event) => {
-                                setSprintExtraDeploys(
-                                    parseInt(event.target.value) || ""
+                                handleSetSprint(
+                                    parseInt(event.target.value) || "",
+                                    "extraDeploys"
                                 );
                             }}
                         />
                         <FormControlLabel
                             control={<Switch />}
                             label="Delayed"
-                            value={sprintDelayed}
+                            value={sprint.delayed}
                             onChange={(event) => {
-                                setSprintDelayed(event.target.checked);
+                                handleSetSprint(
+                                    event.target.checked,
+                                    "delayed"
+                                );
                             }}
                         />
                     </DialogContent>
@@ -457,7 +552,7 @@ export default function Page() {
                         <Button
                             variant="outlined"
                             size="large"
-                            onClick={handleCrudModalOpen}
+                            onClick={handleCloseModal}
                             className="width-128"
                         >
                             Cancel
@@ -465,7 +560,7 @@ export default function Page() {
                         <Button
                             variant="outlined"
                             size="large"
-                            onClick={handleAddSprint}
+                            onClick={handleAddUpdateSprint}
                             className="width-128"
                         >
                             Save
@@ -474,10 +569,7 @@ export default function Page() {
                 </FormControl>
             </Dialog>
 
-            <MySpeedDial
-                page={"sprint-viewer"}
-                callback={handleCrudModalOpen}
-            />
+            <MySpeedDial page={"sprint-viewer"} callback={handleOpenModal} />
 
             <Snackbar
                 open={showAlert}
