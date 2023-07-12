@@ -1,29 +1,20 @@
 import { getCsrfToken, getSession } from "next-auth/react";
 
-// Development
-// const BASE_URL = "http://127.0.0.1:8000/hc/";
-// Production
-const BASE_URL = "https://hc-utils-api.herokuapp.com/hc/";
+const BASE_URL = process.env.BASE_URL_API;
 
 export async function handleGet(url, params) {
+    console.log(BASE_URL);
     const csrfToken = await getCsrfToken();
-    if (!csrfToken) {
-        return { error: "Failed to get CSRF token." };
-    }
-
-    // The Token ID has been manually added on the session
+    console.log(csrfToken);
     const session = await getSession();
     console.log(session);
-    // @ts-ignore
-    const token = session?.id_token;
-    if (!token) {
-        return { error: "Failed to get Google token." };
+    if (!csrfToken || !session) {
+        return { error: "User not authenticated" };
     }
 
     // Prepare parameters to be sent on the get call
-    let paramsString = "";
+    let paramsString = "?";
     if (params) {
-        paramsString = "?";
         for (const [key, value] of Object.entries(params)) {
             paramsString += `${key}=${value}&`;
         }
@@ -36,7 +27,7 @@ export async function handleGet(url, params) {
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrfToken,
-                Authorization: "Bearer " + token,
+                Authorization: "Bearer " + session?.user?.email,
             },
         });
 
@@ -53,17 +44,11 @@ export async function handleGet(url, params) {
 
 export async function handleAPI(url, data, method) {
     const csrfToken = await getCsrfToken();
-    if (!csrfToken) {
-        return { error: "Failed to get CSRF token." };
-    }
-
-    // The Token ID has been manually added on the session
+    console.log(csrfToken);
     const session = await getSession();
     console.log(session);
-    // @ts-ignore
-    const token = session?.id_token;
-    if (!token) {
-        return { error: "Failed to get Google token." };
+    if (!csrfToken || !session) {
+        return { error: "User not authenticated" };
     }
 
     try {
@@ -72,7 +57,7 @@ export async function handleAPI(url, data, method) {
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrfToken,
-                Authorization: "Bearer " + token,
+                Authorization: "Bearer " + session?.user?.email,
             },
             body: JSON.stringify(data),
         });
