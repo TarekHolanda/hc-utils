@@ -3,9 +3,7 @@ import { getCsrfToken, getSession } from "next-auth/react";
 const BASE_URL = process.env.BASE_URL_API;
 
 export async function handleGet(url, params) {
-    console.log(BASE_URL);
     const csrfToken = await getCsrfToken();
-    console.log(csrfToken);
     const session = await getSession();
     console.log(session);
     if (!csrfToken || !session) {
@@ -27,7 +25,6 @@ export async function handleGet(url, params) {
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrfToken,
-                Authorization: "Bearer " + session?.user?.email,
             },
         });
 
@@ -44,7 +41,6 @@ export async function handleGet(url, params) {
 
 export async function handleAPI(url, data, method) {
     const csrfToken = await getCsrfToken();
-    console.log(csrfToken);
     const session = await getSession();
     console.log(session);
     if (!csrfToken || !session) {
@@ -57,7 +53,6 @@ export async function handleAPI(url, data, method) {
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrfToken,
-                Authorization: "Bearer " + session?.user?.email,
             },
             body: JSON.stringify(data),
         });
