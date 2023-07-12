@@ -328,7 +328,7 @@ export default function Page() {
                 setLoading(false);
                 return;
             }
-
+            console.log("Sprint Added/Updated successfully");
             // if (sprint.id) {
             //     console.log("Sprint Updated");
             //     const newSprints = sprints.map((sprintCurrent) => {
