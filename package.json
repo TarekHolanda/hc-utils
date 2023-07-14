@@ -14,7 +14,6 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.3",
     "@react-pdf/renderer": "^3.1.10",
-    "cors": "^2.8.5",
     "dompurify": "^3.0.3",
     "encoding": "^0.1.13",
     "file-saver": "^2.0.5",

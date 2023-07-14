@@ -31,6 +31,7 @@ import TextField from "@mui/material/TextField";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { styled } from "@mui/material/styles";
 
 import { handleGet, handleAPI } from "../api/handleCallAPI";
@@ -213,6 +214,7 @@ export default function Page() {
     const { data: session, status } = useSession();
     const [sprints, setSprints] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loadingModal, setLoadingModal] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
@@ -303,9 +305,7 @@ export default function Page() {
             );
             return;
         }
-
-        handleCloseModal();
-        setLoading(true);
+        setLoadingModal(true);
 
         const sprintParam = {
             id: sprint.id || 0,
@@ -315,7 +315,6 @@ export default function Page() {
             extraDeploys: sprint.extraDeploys || 0,
             delayed: sprint.delayed || false,
         };
-
         const method = sprint.id ? "PUT" : "POST";
         const url = sprint.id
             ? "sprints/" + sprint.id + "/update"
@@ -324,39 +323,71 @@ export default function Page() {
         handleAPI(url, sprintParam, method).then((response) => {
             if (response.error) {
                 handleAlert(response.error, "error");
-                handleOpenModal();
-                setLoading(false);
+                setLoadingModal(false);
                 return;
             }
-            console.log("Sprint Added/Updated successfully");
-            // if (sprint.id) {
-            //     console.log("Sprint Updated");
-            //     const newSprints = sprints.map((sprintCurrent) => {
-            //         if (sprintCurrent.id === response.data.id) {
-            //             return response.data;
-            //         }
 
-            //         return sprintCurrent;
-            //     });
+            if (sprint.id) {
+                const newSprints = sprints.map((sprintCurrent) => {
+                    if (sprintCurrent.id === response.data.id) {
+                        return response.data;
+                    }
 
-            //     setSprints(newSprints);
-            // } else {
-            //     console.log("Sprint Added");
-            //     const newSprints = [...sprints, response.data]
-            //         .sort((a, b) => b.index - a.index)
-            //         .slice(0, sprintsAmount);
-            //     setSprints(newSprints);
-            // }
-            // setLoading(false);
-            handleGetSprints();
+                    return sprintCurrent;
+                });
+
+                setSprints(newSprints);
+                handleAlert(
+                    "Sprint #" + sprint.index + " updated successfully",
+                    "success"
+                );
+            } else {
+                const newSprints = [...sprints, response.data]
+                    .sort((a, b) => b.index - a.index)
+                    .slice(0, sprintsAmount);
+                setSprints(newSprints);
+                handleAlert(
+                    "Sprint #" + sprint.index + " added successfully",
+                    "success"
+                );
+            }
+
+            setModalOpen(false);
+            setLoadingModal(false);
+            setSprint({
+                index: "",
+                totalPoints: "",
+                pointsMerged: "",
+                extraDeploys: "",
+                delayed: false,
+            });
+        });
+    };
+
+    const handleDeleteSprint = (event) => {
+        event.preventDefault();
+        setLoadingModal(true);
+
+        const method = "DELETE";
+        const url = "sprints/" + sprint.id + "/delete";
+
+        handleAPI(url, {}, method).then((response) => {
+            if (response.error) {
+                handleAlert(response.error, "error");
+                setLoadingModal(false);
+                return;
+            }
+
+            const newSprints = sprints.filter(
+                (sprintCurrent) => sprintCurrent.id !== sprint.id
+            );
+            setSprints(newSprints);
             handleAlert(
-                "Sprint #" +
-                    sprint.index +
-                    " " +
-                    (sprint.id ? "updated" : "added") +
-                    " successfully",
+                "Sprint #" + sprint.index + " deleted successfully",
                 "success"
             );
+            setModalOpen(false);
+            setLoadingModal(false);
             setSprint({
                 index: "",
                 totalPoints: "",
@@ -475,7 +506,9 @@ export default function Page() {
                                     "index"
                                 );
                             }}
+                            disabled={loading}
                         />
+
                         <TextField
                             margin="dense"
                             id="sprint-total"
@@ -494,7 +527,9 @@ export default function Page() {
                                     "totalPoints"
                                 );
                             }}
+                            disabled={loading}
                         />
+
                         <TextField
                             margin="dense"
                             id="sprint-merged"
@@ -513,7 +548,9 @@ export default function Page() {
                                     "pointsMerged"
                                 );
                             }}
+                            disabled={loading}
                         />
+
                         <TextField
                             margin="dense"
                             id="sprint-extra-deploys"
@@ -532,7 +569,9 @@ export default function Page() {
                                     "extraDeploys"
                                 );
                             }}
+                            disabled={loading}
                         />
+
                         <FormControlLabel
                             control={<Switch />}
                             label="Delayed"
@@ -548,24 +587,41 @@ export default function Page() {
 
                     <Divider />
 
-                    <DialogActions>
-                        <Button
-                            variant="outlined"
-                            size="large"
-                            onClick={handleCloseModal}
-                            className="width-128"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            size="large"
-                            onClick={handleAddUpdateSprint}
-                            className="width-128"
-                        >
-                            Save
-                        </Button>
-                    </DialogActions>
+                    {loadingModal ? (
+                        <Skeleton
+                            variant="rectangular"
+                            animation="wave"
+                            height={58.25}
+                        />
+                    ) : (
+                        <DialogActions>
+                            <IconButton
+                                aria-label="delete"
+                                size="large"
+                                onClick={handleDeleteSprint}
+                                sx={{ position: "absolute", left: "4px" }}
+                                color="error"
+                            >
+                                <DeleteOutlineIcon fontSize="inherit" />
+                            </IconButton>
+                            <Button
+                                variant="outlined"
+                                size="large"
+                                onClick={handleCloseModal}
+                                className="width-128"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="large"
+                                onClick={handleAddUpdateSprint}
+                                className="width-128"
+                            >
+                                Save
+                            </Button>
+                        </DialogActions>
+                    )}
                 </FormControl>
             </Dialog>
 
