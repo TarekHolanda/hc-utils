@@ -3,13 +3,6 @@ import { getCsrfToken, getSession } from "next-auth/react";
 const BASE_URL = process.env.BASE_URL_API;
 
 export async function handleGet(url, params) {
-    const csrfToken = await getCsrfToken();
-    const session = await getSession();
-    console.log(session);
-    if (!csrfToken || !session) {
-        return { error: "User not authenticated" };
-    }
-
     // Prepare parameters to be sent on the get call
     let paramsString = "?";
     if (params) {
@@ -22,14 +15,12 @@ export async function handleGet(url, params) {
     try {
         const response = await fetch(BASE_URL + url + paramsString, {
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrfToken,
-            },
+            headers: {"Content-Type": "application/json"},
         });
 
         if (response.ok) {
             const responseData = await response.json();
+            console.log(responseData);
             return responseData;
         } else {
             return { error: "Failed to make the GET request." };
@@ -40,20 +31,10 @@ export async function handleGet(url, params) {
 }
 
 export async function handleAPI(url, data, method) {
-    const csrfToken = await getCsrfToken();
-    const session = await getSession();
-    console.log(session);
-    if (!csrfToken || !session) {
-        return { error: "User not authenticated" };
-    }
-
     try {
         const response = await fetch(BASE_URL + url, {
             method: method,
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrfToken,
-            },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data),
         });
 
