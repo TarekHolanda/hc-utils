@@ -344,7 +344,10 @@ export default function Page() {
             } else {
                 const newSprints = [...sprints, response.data]
                     .sort((a, b) => b.index - a.index)
-                    .slice(0, sprintsAmount);
+                    .slice(
+                        0,
+                        sprintsAmount === "0" ? sprints.length : sprintsAmount
+                    );
                 setSprints(newSprints);
                 handleAlert(
                     "Sprint #" + sprint.index + " added successfully",
@@ -595,15 +598,17 @@ export default function Page() {
                         />
                     ) : (
                         <DialogActions>
-                            <IconButton
-                                aria-label="delete"
-                                size="large"
-                                onClick={handleDeleteSprint}
-                                sx={{ position: "absolute", left: "4px" }}
-                                color="error"
-                            >
-                                <DeleteOutlineIcon fontSize="inherit" />
-                            </IconButton>
+                            {sprint.id && (
+                                <IconButton
+                                    aria-label="delete"
+                                    size="large"
+                                    onClick={handleDeleteSprint}
+                                    sx={{ position: "absolute", left: "4px" }}
+                                    color="error"
+                                >
+                                    <DeleteOutlineIcon fontSize="inherit" />
+                                </IconButton>
+                            )}
                             <Button
                                 variant="outlined"
                                 size="large"
@@ -625,7 +630,12 @@ export default function Page() {
                 </FormControl>
             </Dialog>
 
-            <MySpeedDial page={"sprint-viewer"} callback={handleOpenModal} />
+            <MySpeedDial
+                page={"sprint-viewer"}
+                callback={() => {
+                    setModalOpen(true);
+                }}
+            />
 
             <Snackbar
                 open={showAlert}
