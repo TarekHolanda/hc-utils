@@ -1,4 +1,4 @@
-import { getCsrfToken, getSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 const BASE_URL = process.env.BASE_URL_API;
 
@@ -15,12 +15,11 @@ export async function handleGet(url, params) {
     try {
         const response = await fetch(BASE_URL + url + paramsString, {
             method: "GET",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
         });
 
         if (response.ok) {
             const responseData = await response.json();
-            console.log(responseData);
             return responseData;
         } else {
             return { error: "Failed to make the GET request." };
@@ -34,7 +33,7 @@ export async function handleAPI(url, data, method) {
     try {
         const response = await fetch(BASE_URL + url, {
             method: method,
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
 
