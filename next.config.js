@@ -14,6 +14,7 @@ const nextConfig = {
     },
     env: {
         BASE_URL_API: process.env.BASE_URL_API,
+        ADMIN_EMAILS: process.env.ADMIN_EMAILS,
     },
 };
 
