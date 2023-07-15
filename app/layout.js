@@ -2,7 +2,7 @@ import "./styles/globals.css";
 import { Inter, Exo_2 } from "next/font/google";
 
 import Provider from "./core/Provider";
-import Header from "./core/Header";
+import MyHeader from "./core/MyHeader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
         <html lang="en" suppressHydrationWarning>
             <body className={inter.className}>
                 <Provider>
-                    <Header />
+                    <MyHeader />
                     <main>{children}</main>
                 </Provider>
             </body>

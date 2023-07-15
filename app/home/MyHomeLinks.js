@@ -69,6 +69,20 @@ export const MyHomeLinks = ({ path }) => {
                         <MyLink path={"sprint-viewer"} />
                     </Link>
                 </Grid>
+
+                <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={12}
+                    lg={3}
+                    xl={3}
+                    className="display-flex justify-center"
+                >
+                    <Link href={"/resources"}>
+                        <MyLink path={"resources"} />
+                    </Link>
+                </Grid>
             </Grid>
         </>
     );

@@ -31,8 +31,12 @@ const CARDS = {
         title: "Sprints History",
         description:
             "Review past sprints and plan the next one. More tools coming soon!",
-        // image: "./chart.jpg",
-        image: "./coming-soon.jpg",
+        image: "./chart.jpg",
+    },
+    resources: {
+        title: "Resources",
+        description: "Find links and internal tools. All in one place.",
+        image: "./paperclips.jpg",
     },
 };
 
