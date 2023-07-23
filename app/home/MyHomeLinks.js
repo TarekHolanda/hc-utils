@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import { MyLink } from "./MyLink";
 import { MySpacer } from "../components/MySpacer";
 
-export const MyHomeLinks = ({ path }) => {
+export const MyHomeLinks = ({ isAdmin }) => {
     return (
         <>
             <MySpacer size={32} vertical />
@@ -83,6 +83,22 @@ export const MyHomeLinks = ({ path }) => {
                         <MyLink path={"resources"} />
                     </Link>
                 </Grid>
+
+                {isAdmin && (
+                    <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={12}
+                        lg={3}
+                        xl={3}
+                        className="display-flex justify-center"
+                    >
+                        <Link href={"/customer-xray"}>
+                            <MyLink path={"customer-xray"} />
+                        </Link>
+                    </Grid>
+                )}
             </Grid>
         </>
     );

@@ -38,6 +38,11 @@ const CARDS = {
         description: "Find links and internal tools. All in one place.",
         image: "./paperclips.jpg",
     },
+    "customer-xray": {
+        title: "Customers X-Ray",
+        description: "Customers status and activity. Updated every week.",
+        image: "./customer-xray.jpg",
+    },
 };
 
 export const MyLink = ({ path }) => {
