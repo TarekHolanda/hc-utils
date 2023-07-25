@@ -20,6 +20,7 @@ import ListItemText from "@mui/material/ListItemText";
 import LogoutIcon from "@mui/icons-material/Logout";
 import QrCodeIcon from "@mui/icons-material/QrCodeScanner";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 
 const drawerList = [
     {
@@ -54,7 +55,15 @@ const drawerList = [
     },
 ];
 
-export const MyDrawer = ({ resolvedTheme, setTheme }) => {
+const adminList = [
+    {
+        title: "Customer X-Ray",
+        icon: <AutoGraphIcon />,
+        link: "/customer-xray",
+    },
+];
+
+export const MyDrawer = ({ resolvedTheme, setTheme, isAdmin }) => {
     return (
         <Box sx={{ width: 256 }} role="presentation">
             <List>
@@ -68,6 +77,18 @@ export const MyDrawer = ({ resolvedTheme, setTheme }) => {
                         </ListItem>
                     </Link>
                 ))}
+
+                {isAdmin &&
+                    adminList.map((item, index) => (
+                        <Link href={item.link} key={item.title + index}>
+                            <ListItem disablePadding>
+                                <ListItemButton>
+                                    <ListItemIcon>{item.icon}</ListItemIcon>
+                                    <ListItemText primary={item.title} />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                    ))}
             </List>
 
             <Divider />

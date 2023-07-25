@@ -20,6 +20,8 @@ import SignInButton from "./SignInButton";
 import { MyTooltip } from "../components/MyTooltip";
 import { MyDrawer } from "./MyDrawer";
 
+const ADMIN_EMAILS = process.env.ADMIN_EMAILS.split(",");
+
 const getLoginButton = (status, toggleDrawer) => {
     switch (status) {
         case "loading":
@@ -55,12 +57,15 @@ const pages = {
     "/email-signature": "HC Utils - Email Signature",
     "/sprint-viewer": "HC Utils - Sprint Viewer",
     "/resources": "HC Utils - Resources",
+    "/customer-xray": "HC Utils - Customer X-Ray",
 };
 
 const Header = () => {
     const currentPage = usePathname();
     const { theme, resolvedTheme, setTheme } = useTheme();
     const { data: session, status } = useSession();
+    const userEmail = session?.user.email;
+    const isAdmin = ADMIN_EMAILS.includes(userEmail);
     const [drawerOpen, setdrawerOpen] = useState(false);
 
     const toggleDrawer = (open) => (event) => {
@@ -105,7 +110,11 @@ const Header = () => {
                 onClose={toggleDrawer(false)}
                 onClick={toggleDrawer(false)}
             >
-                <MyDrawer resolvedTheme={resolvedTheme} setTheme={setTheme} />
+                <MyDrawer
+                    resolvedTheme={resolvedTheme}
+                    setTheme={setTheme}
+                    isAdmin={isAdmin}
+                />
             </Drawer>
         </AppBar>
     );
