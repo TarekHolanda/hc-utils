@@ -1,4 +1,10 @@
+import { format } from "date-fns";
+
 export const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "short" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    const date = new Date(dateString);
+    const dateOnly = new Date(
+        date.valueOf() + date.getTimezoneOffset() * 60 * 1000
+    );
+    const dateFormatted = format(dateOnly, "MMM yyyy");
+    return dateFormatted;
 };

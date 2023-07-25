@@ -22,8 +22,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
 import styled from "@mui/material/styles/styled";
 import { formatDate } from "../utils/formatDate";
 import SyncIcon from "@mui/icons-material/Sync";
@@ -32,6 +30,11 @@ import ArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ArrowDoubleIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&.expanded": {
@@ -68,10 +71,14 @@ const CustomerRow = ({ customer }) => {
                 <TableCell align="center">{customer.name}</TableCell>
                 <TableCell align="center">${customer.mrr.toFixed(2)}</TableCell>
                 <TableCell align="center">
-                    {customer.active_users_avg}
+                    {customer.active_users_avg.toFixed(2)}
                 </TableCell>
-                <TableCell align="center">{customer.reports_avg}</TableCell>
-                <TableCell align="center">{customer.attendances_avg}</TableCell>
+                <TableCell align="center">
+                    {customer.reports_avg.toFixed(2)}
+                </TableCell>
+                <TableCell align="center">
+                    {customer.attendances_avg.toFixed(2)}
+                </TableCell>
             </StyledTableRow>
             <StyledTableRow onClick={handleExpand}>
                 <TableCell style={{ padding: 0, paddingTop: 0 }} colSpan={5}>
@@ -116,7 +123,7 @@ const CustomerRow = ({ customer }) => {
                                                 color="primary"
                                                 variant="body2"
                                             >
-                                                {detail.active_users}
+                                                {detail.active_users.toFixed(2)}
                                             </Typography>
                                         </TableCell>
                                         <TableCell
@@ -127,7 +134,7 @@ const CustomerRow = ({ customer }) => {
                                                 color="primary"
                                                 variant="body2"
                                             >
-                                                {detail.reports}
+                                                {detail.reports.toFixed(2)}
                                             </Typography>
                                         </TableCell>
                                         <TableCell
@@ -138,7 +145,7 @@ const CustomerRow = ({ customer }) => {
                                                 color="primary"
                                                 variant="body2"
                                             >
-                                                {detail.attendances}
+                                                {detail.attendances.toFixed(2)}
                                             </Typography>
                                         </TableCell>
                                     </StyledInternalRow>
@@ -159,19 +166,14 @@ export default function Page() {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertSeverity, setAlertSeverity] = useState("success");
-
-    const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
     const [months, setMonths] = useState(4);
     const [sortField, setSortField] = useState("name");
     const [sortOrder, setSortOrder] = useState("asc");
 
     const handleSort = (field) => {
         if (field === sortField) {
-            // Toggle the sortOrder if the same field is clicked again
             setSortOrder(sortOrder === "asc" ? "desc" : "asc");
         } else {
-            // Set the new sort field and set sortOrder to ascending
             setSortField(field);
             setSortOrder("asc");
         }
@@ -179,20 +181,22 @@ export default function Page() {
 
     const handleGetCustomers = () => {
         setLoading(true);
-        handleGet("customers", { sort: sortField, order: sortOrder }).then(
-            (response) => {
-                console.log(response);
-                if (response.error) {
-                    handleAlert(response.error, "error");
-                    setLoading(false);
-
-                    return;
-                }
-
-                setCustomers(response.data);
+        handleGet("customers", {
+            sort: sortField,
+            order: sortOrder,
+            months: months,
+        }).then((response) => {
+            console.log(response);
+            if (response.error) {
+                handleAlert(response.error, "error");
                 setLoading(false);
+
+                return;
             }
-        );
+
+            setCustomers(response.data);
+            setLoading(false);
+        });
     };
 
     const handleAlert = (
@@ -209,9 +213,8 @@ export default function Page() {
     };
 
     useEffect(() => {
-        console.log("Call it...");
         handleGetCustomers();
-    }, [sortField, sortOrder]);
+    }, [sortField, sortOrder, months]);
 
     if (status === "loading") {
         return <MyLoading loading={true} />;
@@ -223,14 +226,34 @@ export default function Page() {
 
     return (
         <Container>
-            <IconButton
-                aria-label="sync"
-                size="large"
-                onClick={handleGetCustomers}
-                sx={{ float: "right" }}
-            >
-                <SyncIcon fontSize="inherit" />
-            </IconButton>
+            <Box className="display-flex justify-center padding-1rem align-center">
+                <FormControl sx={{ width: 256 }}>
+                    <InputLabel id="months-label">Date Range</InputLabel>
+                    <Select
+                        labelId="months-label"
+                        id="months"
+                        value={months}
+                        input={<OutlinedInput label="Date Range" />}
+                        onChange={(event) => {
+                            setMonths(event.target.value);
+                        }}
+                    >
+                        <MenuItem value={4}>4 months</MenuItem>
+                        <MenuItem value={6}>6 months</MenuItem>
+                        <MenuItem value={12}>12 months</MenuItem>
+                        <MenuItem value={18}>18 months</MenuItem>
+                        <MenuItem value={24}>24 months</MenuItem>
+                    </Select>
+                </FormControl>
+                <IconButton
+                    aria-label="sync"
+                    size="large"
+                    onClick={handleGetCustomers}
+                    sx={{ float: "right" }}
+                >
+                    <SyncIcon fontSize="inherit" />
+                </IconButton>
+            </Box>
 
             <TableContainer component={Paper}>
                 <Table>
