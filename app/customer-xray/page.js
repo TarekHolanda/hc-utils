@@ -72,12 +72,42 @@ const CustomerRow = ({ customer }) => {
                 <TableCell align="center">${customer.mrr.toFixed(2)}</TableCell>
                 <TableCell align="center">
                     {customer.active_users_avg.toFixed(2)}
+
+                    {customer.active_users_avg > 0 ? (
+                        <Typography color="primary" variant="body2">
+                            $
+                            {(customer.mrr / customer.active_users_avg).toFixed(
+                                2
+                            )}
+                        </Typography>
+                    ) : (
+                        ""
+                    )}
                 </TableCell>
                 <TableCell align="center">
                     {customer.reports_avg.toFixed(2)}
+
+                    {customer.reports_avg > 0 ? (
+                        <Typography color="primary" variant="body2">
+                            ${(customer.mrr / customer.reports_avg).toFixed(2)}
+                        </Typography>
+                    ) : (
+                        ""
+                    )}
                 </TableCell>
                 <TableCell align="center">
                     {customer.attendances_avg.toFixed(2)}
+
+                    {customer.attendances_avg > 0 ? (
+                        <Typography color="primary" variant="body2">
+                            $
+                            {(customer.mrr / customer.attendances_avg).toFixed(
+                                2
+                            )}
+                        </Typography>
+                    ) : (
+                        ""
+                    )}
                 </TableCell>
             </StyledTableRow>
             <StyledTableRow onClick={handleExpand}>
@@ -258,26 +288,35 @@ export default function Page() {
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
-                        <TableRow>
+                        <TableRow className="pointer">
                             <TableCell
                                 align="center"
                                 width={"30%"}
                                 onClick={() => handleSort("name")}
                             >
-                                <Box className="display-flex">
+                                <Box className="display-flex justify-center">
                                     <Typography variant="h6">
                                         Last {months} months
                                     </Typography>
                                     {sortField === "name" ? (
                                         <>
                                             {sortOrder === "asc" ? (
-                                                <ArrowUpIcon fontSize="medium" />
+                                                <ArrowUpIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             ) : (
-                                                <ArrowDownIcon fontSize="medium" />
+                                                <ArrowDownIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             )}
                                         </>
                                     ) : (
-                                        <ArrowDoubleIcon fontSize="medium" />
+                                        <ArrowDoubleIcon
+                                            fontSize="medium"
+                                            className="margin-top-4px margin-left-8px"
+                                        />
                                     )}
                                 </Box>
                             </TableCell>
@@ -286,18 +325,27 @@ export default function Page() {
                                 width={"17.5%"}
                                 onClick={() => handleSort("mrr")}
                             >
-                                <Box className="display-flex">
+                                <Box className="display-flex justify-center">
                                     <Typography variant="h6">MRR</Typography>
                                     {sortField === "mrr" ? (
                                         <>
                                             {sortOrder === "asc" ? (
-                                                <ArrowUpIcon fontSize="medium" />
+                                                <ArrowUpIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             ) : (
-                                                <ArrowDownIcon fontSize="medium" />
+                                                <ArrowDownIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             )}
                                         </>
                                     ) : (
-                                        <ArrowDoubleIcon fontSize="medium" />
+                                        <ArrowDoubleIcon
+                                            fontSize="medium"
+                                            className="margin-top-4px margin-left-8px"
+                                        />
                                     )}
                                 </Box>
                             </TableCell>
@@ -306,20 +354,29 @@ export default function Page() {
                                 width={"17.5%"}
                                 onClick={() => handleSort("active_users_avg")}
                             >
-                                <Box className="display-flex">
+                                <Box className="display-flex justify-center">
                                     <Typography variant="h6">
                                         Active Users
                                     </Typography>
                                     {sortField === "active_users_avg" ? (
                                         <>
                                             {sortOrder === "asc" ? (
-                                                <ArrowUpIcon fontSize="medium" />
+                                                <ArrowUpIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             ) : (
-                                                <ArrowDownIcon fontSize="medium" />
+                                                <ArrowDownIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             )}
                                         </>
                                     ) : (
-                                        <ArrowDoubleIcon fontSize="medium" />
+                                        <ArrowDoubleIcon
+                                            fontSize="medium"
+                                            className="margin-top-4px margin-left-8px"
+                                        />
                                     )}
                                 </Box>
                             </TableCell>
@@ -328,20 +385,29 @@ export default function Page() {
                                 width={"17.5%"}
                                 onClick={() => handleSort("reports_avg")}
                             >
-                                <Box className="display-flex">
+                                <Box className="display-flex justify-center">
                                     <Typography variant="h6">
                                         Reports
                                     </Typography>
                                     {sortField === "reports_avg" ? (
                                         <>
                                             {sortOrder === "asc" ? (
-                                                <ArrowUpIcon fontSize="medium" />
+                                                <ArrowUpIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             ) : (
-                                                <ArrowDownIcon fontSize="medium" />
+                                                <ArrowDownIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             )}
                                         </>
                                     ) : (
-                                        <ArrowDoubleIcon fontSize="medium" />
+                                        <ArrowDoubleIcon
+                                            fontSize="medium"
+                                            className="margin-top-4px margin-left-8px"
+                                        />
                                     )}
                                 </Box>
                             </TableCell>
@@ -350,20 +416,29 @@ export default function Page() {
                                 width={"17.5%"}
                                 onClick={() => handleSort("attendances_avg")}
                             >
-                                <Box className="display-flex">
+                                <Box className="display-flex justify-center">
                                     <Typography variant="h6">
                                         Attendances
                                     </Typography>
                                     {sortField === "attendances_avg" ? (
                                         <>
                                             {sortOrder === "asc" ? (
-                                                <ArrowUpIcon fontSize="medium" />
+                                                <ArrowUpIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             ) : (
-                                                <ArrowDownIcon fontSize="medium" />
+                                                <ArrowDownIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
                                             )}
                                         </>
                                     ) : (
-                                        <ArrowDoubleIcon fontSize="medium" />
+                                        <ArrowDoubleIcon
+                                            fontSize="medium"
+                                            className="margin-top-4px margin-left-8px"
+                                        />
                                     )}
                                 </Box>
                             </TableCell>
