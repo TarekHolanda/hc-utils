@@ -35,6 +35,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import TextField from "@mui/material/TextField";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&.expanded": {
@@ -256,25 +257,47 @@ export default function Page() {
 
     return (
         <Container>
-            <Box className="display-flex justify-center padding-1rem align-center">
-                <FormControl sx={{ width: 256 }}>
-                    <InputLabel id="months-label">Date Range</InputLabel>
-                    <Select
-                        labelId="months-label"
-                        id="months"
-                        value={months}
-                        input={<OutlinedInput label="Date Range" />}
-                        onChange={(event) => {
-                            setMonths(event.target.value);
-                        }}
-                    >
-                        <MenuItem value={4}>4 months</MenuItem>
-                        <MenuItem value={6}>6 months</MenuItem>
-                        <MenuItem value={12}>12 months</MenuItem>
-                        <MenuItem value={18}>18 months</MenuItem>
-                        <MenuItem value={24}>24 months</MenuItem>
-                    </Select>
-                </FormControl>
+            <Box
+                component="form"
+                autoComplete="off"
+                size="small"
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    paddingTop: "2rem",
+                    paddingBottom: "1rem",
+                }}
+            >
+                <TextField
+                    select
+                    label="Date Range"
+                    value={months}
+                    onChange={(event) => {
+                        setMonths(event.target.value);
+                    }}
+                    sx={{
+                        width: "25%",
+                    }}
+                    SelectProps={{ MenuProps: { disableScrollLock: true } }}
+                >
+                    <MenuItem value={1}>1 month</MenuItem>
+                    <MenuItem value={2}>2 months</MenuItem>
+                    <MenuItem value={3}>3 months</MenuItem>
+                    <MenuItem value={4}>4 months</MenuItem>
+                    <MenuItem value={6}>6 months</MenuItem>
+                    <MenuItem value={12}>12 months</MenuItem>
+                    <MenuItem value={18}>18 months</MenuItem>
+                    <MenuItem value={24}>24 months</MenuItem>
+                </TextField>
+                {/* <Box></Box> */}
+                {/* <TextField
+                    id="outlined-basic"
+                    label="Search"
+                    variant="outlined"
+                    sx={{
+                        width: "50%",
+                    }}
+                /> */}
                 <IconButton
                     aria-label="sync"
                     size="large"
