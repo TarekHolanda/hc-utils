@@ -109,6 +109,7 @@ const Header = () => {
                 open={drawerOpen}
                 onClose={toggleDrawer(false)}
                 onClick={toggleDrawer(false)}
+                ModalProps={{ disableScrollLock: true }}
             >
                 <MyDrawer
                     resolvedTheme={resolvedTheme}
