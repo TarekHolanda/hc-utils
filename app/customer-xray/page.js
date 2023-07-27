@@ -200,7 +200,7 @@ export default function Page() {
     const [months, setMonths] = useState(4);
     const [sortField, setSortField] = useState("name");
     const [sortOrder, setSortOrder] = useState("asc");
-    const [search, setSearch] = useState("braga");
+    const [search, setSearch] = useState("");
 
     const handleSort = (field) => {
         if (field === sortField) {
