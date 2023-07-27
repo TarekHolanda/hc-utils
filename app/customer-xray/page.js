@@ -200,6 +200,7 @@ export default function Page() {
     const [months, setMonths] = useState(4);
     const [sortField, setSortField] = useState("name");
     const [sortOrder, setSortOrder] = useState("asc");
+    const [search, setSearch] = useState("braga");
 
     const handleSort = (field) => {
         if (field === sortField) {
@@ -216,6 +217,7 @@ export default function Page() {
             sort: sortField,
             order: sortOrder,
             months: months,
+            search: search,
         }).then((response) => {
             console.log(response);
             if (response.error) {
@@ -289,15 +291,25 @@ export default function Page() {
                     <MenuItem value={18}>18 months</MenuItem>
                     <MenuItem value={24}>24 months</MenuItem>
                 </TextField>
-                {/* <Box></Box> */}
-                {/* <TextField
+                <Box></Box>
+                <TextField
                     id="outlined-basic"
                     label="Search"
                     variant="outlined"
+                    type="search"
+                    value={search}
                     sx={{
                         width: "50%",
                     }}
-                /> */}
+                    onChange={(event) => {
+                        setSearch(event.target.value);
+                    }}
+                    onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                            handleGetCustomers();
+                        }
+                    }}
+                />
                 <IconButton
                     aria-label="sync"
                     size="large"
@@ -307,7 +319,6 @@ export default function Page() {
                     <SyncIcon fontSize="inherit" />
                 </IconButton>
             </Box>
-
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -320,6 +331,13 @@ export default function Page() {
                                 <Box className="display-flex justify-center">
                                     <Typography variant="h6">
                                         Last {months} months
+                                    </Typography>
+                                    <Typography
+                                        color="primary"
+                                        variant="body2"
+                                        className="margin-top-6px margin-left-8px"
+                                    >
+                                        ({customers.length})
                                     </Typography>
                                     {sortField === "name" ? (
                                         <>
@@ -496,7 +514,6 @@ export default function Page() {
                     </TableBody>
                 </Table>
             </TableContainer>
-
             <Snackbar
                 open={showAlert}
                 anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
@@ -505,7 +522,6 @@ export default function Page() {
                     {alertMessage}
                 </Alert>
             </Snackbar>
-
             <MySpacer size={16} vertical />
         </Container>
     );
