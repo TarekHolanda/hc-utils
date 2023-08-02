@@ -37,6 +37,8 @@ import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import TextField from "@mui/material/TextField";
 
+const COLUMN_WIDTH = "16%";
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&.expanded": {
         backgroundColor: theme.palette.action.selected,
@@ -73,17 +75,11 @@ const CustomerRow = ({ customer }) => {
                 <TableCell align="center">${customer.mrr.toFixed(2)}</TableCell>
                 <TableCell align="center">
                     {customer.active_users_avg.toFixed(2)}
-
-                    {customer.active_users_avg > 0 ? (
-                        <Typography color="primary" variant="body2">
-                            $
-                            {(customer.mrr / customer.active_users_avg).toFixed(
-                                2
-                            )}
-                        </Typography>
-                    ) : (
-                        ""
-                    )}
+                </TableCell>
+                <TableCell align="center">
+                    <Typography color="primary" variant="body2">
+                        ${customer.active_users_price.toFixed(2)}
+                    </Typography>
                 </TableCell>
                 <TableCell align="center">
                     {customer.reports_avg.toFixed(2)}
@@ -112,7 +108,7 @@ const CustomerRow = ({ customer }) => {
                 </TableCell>
             </StyledTableRow>
             <StyledTableRow onClick={handleExpand}>
-                <TableCell style={{ padding: 0, paddingTop: 0 }} colSpan={5}>
+                <TableCell style={{ padding: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={expanded} timeout="auto" unmountOnExit>
                         <Table size="small">
                             <TableBody>
@@ -319,13 +315,14 @@ export default function Page() {
                     <SyncIcon fontSize="inherit" />
                 </IconButton>
             </Box>
+
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow className="pointer">
                             <TableCell
                                 align="center"
-                                width={"30%"}
+                                width={"20%"}
                                 onClick={() => handleSort("name")}
                             >
                                 <Box className="display-flex justify-center">
@@ -363,7 +360,7 @@ export default function Page() {
                             </TableCell>
                             <TableCell
                                 align="center"
-                                width={"17.5%"}
+                                width={COLUMN_WIDTH}
                                 onClick={() => handleSort("mrr")}
                             >
                                 <Box className="display-flex justify-center">
@@ -392,7 +389,7 @@ export default function Page() {
                             </TableCell>
                             <TableCell
                                 align="center"
-                                width={"17.5%"}
+                                width={COLUMN_WIDTH}
                                 onClick={() => handleSort("active_users_avg")}
                             >
                                 <Box className="display-flex justify-center">
@@ -423,7 +420,38 @@ export default function Page() {
                             </TableCell>
                             <TableCell
                                 align="center"
-                                width={"17.5%"}
+                                width={COLUMN_WIDTH}
+                                onClick={() => handleSort("active_users_price")}
+                            >
+                                <Box className="display-flex justify-center">
+                                    <Typography variant="h6">
+                                        User Price
+                                    </Typography>
+                                    {sortField === "active_users_price" ? (
+                                        <>
+                                            {sortOrder === "asc" ? (
+                                                <ArrowUpIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
+                                            ) : (
+                                                <ArrowDownIcon
+                                                    fontSize="medium"
+                                                    className="margin-top-4px margin-left-8px"
+                                                />
+                                            )}
+                                        </>
+                                    ) : (
+                                        <ArrowDoubleIcon
+                                            fontSize="medium"
+                                            className="margin-top-4px margin-left-8px"
+                                        />
+                                    )}
+                                </Box>
+                            </TableCell>
+                            <TableCell
+                                align="center"
+                                width={COLUMN_WIDTH}
                                 onClick={() => handleSort("reports_avg")}
                             >
                                 <Box className="display-flex justify-center">
@@ -454,7 +482,7 @@ export default function Page() {
                             </TableCell>
                             <TableCell
                                 align="center"
-                                width={"17.5%"}
+                                width={COLUMN_WIDTH}
                                 onClick={() => handleSort("attendances_avg")}
                             >
                                 <Box className="display-flex justify-center">
@@ -490,7 +518,7 @@ export default function Page() {
                             <TableRow>
                                 <TableCell
                                     align="center"
-                                    colSpan={5}
+                                    colSpan={6}
                                     padding="none"
                                 >
                                     <Skeleton
