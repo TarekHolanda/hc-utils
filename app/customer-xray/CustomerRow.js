@@ -53,7 +53,7 @@ export const CustomerRow = ({ customer }) => {
                     <Typography
                         variant="body2"
                         color={
-                            customer.active_users_price > 75 ||
+                            customer.active_users_price > 100 ||
                             !customer.active_users_price
                                 ? "error"
                                 : "primary"
