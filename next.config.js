@@ -15,6 +15,9 @@ const nextConfig = {
     env: {
         BASE_URL_API: process.env.BASE_URL_API,
         ADMIN_EMAILS: process.env.ADMIN_EMAILS,
+        SUPER_ADMIN_EMAILS: process.env.SUPER_ADMIN_EMAILS,
+        DEV_EMAILS: process.env.DEV_EMAILS,
+        GITHUB_TOKEN: process.env.GITHUB_TOKEN,
     },
 };
 

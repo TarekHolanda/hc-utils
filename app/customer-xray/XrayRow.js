@@ -7,10 +7,19 @@ import TableCell from "@mui/material/TableCell";
 import Collapse from "@mui/material/Collapse";
 import styled from "@mui/material/styles/styled";
 import TableRow from "@mui/material/TableRow";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Menu from "@mui/material/Menu";
+import EditIcon from "@mui/icons-material/Edit";
 
 import { formatDate } from "../utils/formatDate";
-
-const COLUMN_WIDTH = "16%";
+import {
+    CUSTOMER_STATUS,
+    COLUMN_WIDTH_LG,
+    COLUMN_WIDTH_MD,
+    COLUMN_WIDTH_SM,
+} from "../utils/constants";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&.expanded": {
@@ -23,6 +32,27 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:last-child td, &:last-child th": {
         border: 0,
     },
+    "& td.good": {
+        backgroundColor: theme.palette.success.main,
+    },
+    "& td.onboarding": {
+        backgroundColor: theme.palette.info.dark,
+    },
+    "& td.churn": {
+        backgroundColor: theme.palette.warning.light,
+    },
+    "& td.inactive": {
+        backgroundColor: theme.palette.warning.main,
+    },
+    "& td.high-risk": {
+        backgroundColor: theme.palette.error.dark,
+    },
+    "& td.medium-risk": {
+        backgroundColor: theme.palette.error.main,
+    },
+    "& td.low-risk": {
+        backgroundColor: theme.palette.error.light,
+    },
 }));
 
 const StyledInternalRow = styled(TableRow)(({ theme }) => ({
@@ -31,11 +61,47 @@ const StyledInternalRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export const CustomerRow = ({ customer }) => {
+const MyMenu = ({ anchorEl, open, handleCloseMenu, handleEdit }) => {
+    return (
+        <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleCloseMenu}
+            MenuListProps={{
+                "aria-labelledby": "basic-button",
+            }}
+            disableScrollLock={true}
+        >
+            <MenuItem
+                onClick={handleEdit}
+                sx={{ width: 320, maxWidth: "100%" }}
+            >
+                <ListItemIcon>
+                    <EditIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Edit</ListItemText>
+            </MenuItem>
+        </Menu>
+    );
+};
+
+export const XrayRow = ({ customer, index, handleOpenDialog }) => {
     const [expanded, setExpanded] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
 
     const handleExpand = () => {
         setExpanded(!expanded);
+    };
+
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
+
+    const handleEdit = () => {
+        handleOpenDialog(customer);
+        handleCloseMenu();
     };
 
     return (
@@ -43,8 +109,14 @@ export const CustomerRow = ({ customer }) => {
             <StyledTableRow
                 className={expanded ? "expanded" : ""}
                 onClick={handleExpand}
+                onContextMenu={(event) => {
+                    event.preventDefault();
+                    setAnchorEl(event.currentTarget);
+                }}
             >
-                <TableCell align="center">{customer.name}</TableCell>
+                <TableCell>
+                    {index + 1}. {customer.name}
+                </TableCell>
                 <TableCell align="center">${customer.mrr.toFixed(2)}</TableCell>
                 <TableCell align="center">
                     {customer.active_users_avg.toFixed(2)}
@@ -94,20 +166,36 @@ export const CustomerRow = ({ customer }) => {
                         )}
                     </Typography>
                 </TableCell>
+                <TableCell align="center" className={customer.status}>
+                    {CUSTOMER_STATUS[customer.status]}
+                </TableCell>
             </StyledTableRow>
-            <StyledTableRow onClick={handleExpand}>
-                <TableCell style={{ padding: 0, paddingTop: 0 }} colSpan={6}>
+
+            <StyledTableRow>
+                <TableCell style={{ padding: 0, paddingTop: 0 }} colSpan={7}>
                     <Collapse in={expanded} timeout="auto" unmountOnExit>
                         <Table size="small">
                             <TableBody>
                                 {customer.details.map((detail) => (
                                     <StyledInternalRow key={detail.date}>
-                                        <TableCell align="center" width={"20%"}>
-                                            <Typography></Typography>
-                                        </TableCell>
+                                        {detail.date ===
+                                            customer.details[0].date && (
+                                            <TableCell
+                                                align="center"
+                                                width={COLUMN_WIDTH_LG}
+                                                rowSpan={
+                                                    customer.details.length
+                                                }
+                                            >
+                                                <Typography variant="body2">
+                                                    {customer.comment}
+                                                </Typography>
+                                            </TableCell>
+                                        )}
+
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH}
+                                            width={COLUMN_WIDTH_MD}
                                         >
                                             <Typography variant="body2">
                                                 {formatDate(detail.date)}
@@ -115,7 +203,7 @@ export const CustomerRow = ({ customer }) => {
                                         </TableCell>
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH}
+                                            width={COLUMN_WIDTH_MD}
                                         >
                                             <Typography
                                                 color="primary"
@@ -126,7 +214,7 @@ export const CustomerRow = ({ customer }) => {
                                         </TableCell>
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH}
+                                            width={COLUMN_WIDTH_MD}
                                         >
                                             {detail.active_users > 0 ? (
                                                 <Typography
@@ -145,7 +233,7 @@ export const CustomerRow = ({ customer }) => {
                                         </TableCell>
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH}
+                                            width={COLUMN_WIDTH_MD}
                                         >
                                             <Typography
                                                 color="primary"
@@ -154,9 +242,10 @@ export const CustomerRow = ({ customer }) => {
                                                 {detail.reports.toFixed(2)}
                                             </Typography>
                                         </TableCell>
+
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH}
+                                            width={COLUMN_WIDTH_MD}
                                         >
                                             <Typography
                                                 color="primary"
@@ -165,6 +254,13 @@ export const CustomerRow = ({ customer }) => {
                                                 {detail.attendances.toFixed(2)}
                                             </Typography>
                                         </TableCell>
+
+                                        <TableCell
+                                            align="center"
+                                            width={COLUMN_WIDTH_SM}
+                                        >
+                                            <Typography variant="body2"></Typography>
+                                        </TableCell>
                                     </StyledInternalRow>
                                 ))}
                             </TableBody>
@@ -172,6 +268,13 @@ export const CustomerRow = ({ customer }) => {
                     </Collapse>
                 </TableCell>
             </StyledTableRow>
+
+            <MyMenu
+                anchorEl={anchorEl}
+                open={open}
+                handleCloseMenu={handleCloseMenu}
+                handleEdit={handleEdit}
+            />
         </>
     );
 };

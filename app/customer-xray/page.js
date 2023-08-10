@@ -5,14 +5,15 @@ import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 
 import Alert from "@mui/material/Alert";
-import Container from "@mui/material/Container";
 import Snackbar from "@mui/material/Snackbar";
+import Box from "@mui/material/Box";
 
-import { handleGet } from "../api/handleCallAPI";
+import { handleGet, handleAPI } from "../api/handleCallAPI";
 import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
 import { XrayActionBar } from "./XrayActionBar";
 import { XrayTable } from "./XrayTable";
+import { XrayDialog } from "./XrayDialog";
 
 export default function Page() {
     const { data: session, status } = useSession();
@@ -21,10 +22,22 @@ export default function Page() {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertSeverity, setAlertSeverity] = useState("success");
-    const [months, setMonths] = useState(4);
+
+    const [filterMonths, setFilterMonths] = useState(4);
+    const [filterStatus, setFilterStatus] = useState("");
     const [sortField, setSortField] = useState("name");
     const [sortOrder, setSortOrder] = useState("asc");
     const [search, setSearch] = useState("");
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [loadingDialog, setLoadingDialog] = useState(false);
+    const [customer, setCustomer] = useState({
+        id: "",
+        name: "",
+        mrr: "",
+        status: "",
+        comment: "",
+    });
 
     const handleSort = (field) => {
         if (field === sortField) {
@@ -40,10 +53,11 @@ export default function Page() {
         handleGet("customers", {
             sort: sortField,
             order: sortOrder,
-            months: months,
+            filterMonths: filterMonths,
+            filterStatus: filterStatus,
             search: search,
         }).then((response) => {
-            console.log(response);
+            console.table(response.data);
             if (response.error) {
                 handleAlert(response.error, "error");
                 setLoading(false);
@@ -71,7 +85,7 @@ export default function Page() {
 
     useEffect(() => {
         handleGetCustomers();
-    }, [sortField, sortOrder, months]);
+    }, [sortField, sortOrder, filterMonths, filterStatus]);
 
     if (status === "loading") {
         return <MyLoading loading={true} />;
@@ -81,23 +95,88 @@ export default function Page() {
         redirect("/signin");
     }
 
+    const handleSetCustomer = (value, field) => {
+        setCustomer((prevState) => ({
+            ...prevState,
+            [field]: value,
+        }));
+    };
+
+    const handleOpenDialog = (current) => {
+        setDialogOpen(true);
+
+        if (current && current.id) {
+            setCustomer({
+                id: current.id,
+                name: current.name,
+                mrr: current.mrr,
+                status: current.status,
+                comment: current.comment || "",
+            });
+        }
+    };
+
+    const handleCloseDialog = () => {
+        setDialogOpen(false);
+        setCustomer({
+            id: "",
+            name: "",
+            mrr: "",
+            status: "",
+            comment: "",
+        });
+    };
+
+    const handleUpdateCustomer = () => {
+        setLoadingDialog(true);
+
+        handleAPI("customers/" + customer.id + "/update", customer, "PUT").then(
+            (response) => {
+                if (response.error) {
+                    handleAlert(response.error, "error");
+                    setLoadingDialog(false);
+
+                    return;
+                }
+
+                handleAlert("Customer updated", "success");
+                setDialogOpen(false);
+                setLoadingDialog(false);
+                handleGetCustomers();
+            }
+        );
+    };
+
     return (
-        <Container>
+        <Box className="margin-side-2rem">
             <XrayActionBar
-                months={months}
-                setMonths={setMonths}
+                filterMonths={filterMonths}
+                setFilterMonths={setFilterMonths}
+                filterStatus={filterStatus}
+                setFilterStatus={setFilterStatus}
                 search={search}
                 setSearch={setSearch}
                 handleGetCustomers={handleGetCustomers}
             />
 
             <XrayTable
+                loading={loading}
                 customers={customers}
-                months={months}
+                filterMonths={filterMonths}
                 sortField={sortField}
                 sortOrder={sortOrder}
                 handleSort={handleSort}
+                handleOpenDialog={handleOpenDialog}
+            />
+
+            <XrayDialog
+                dialogOpen={dialogOpen}
+                customer={customer}
                 loading={loading}
+                loadingDialog={loadingDialog}
+                handleSetCustomer={handleSetCustomer}
+                handleCloseDialog={handleCloseDialog}
+                handleUpdateCustomer={handleUpdateCustomer}
             />
 
             <Snackbar
@@ -110,6 +189,6 @@ export default function Page() {
             </Snackbar>
 
             <MySpacer size={16} vertical />
-        </Container>
+        </Box>
     );
 }

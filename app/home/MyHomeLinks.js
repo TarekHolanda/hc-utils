@@ -8,7 +8,23 @@ import Grid from "@mui/material/Grid";
 import { MyLink } from "./MyLink";
 import { MySpacer } from "../components/MySpacer";
 
-export const MyHomeLinks = ({ isAdmin }) => {
+const adminList = [
+    {
+        link: "/customer-xray",
+        path: "customer-xray",
+    },
+];
+
+const superAdminList = [];
+
+const devList = [
+    {
+        link: "/github-viewer",
+        path: "github-viewer",
+    },
+];
+
+export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
     return (
         <>
             <MySpacer size={32} vertical />
@@ -84,21 +100,59 @@ export const MyHomeLinks = ({ isAdmin }) => {
                     </Link>
                 </Grid>
 
-                {isAdmin && (
-                    <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={12}
-                        lg={3}
-                        xl={3}
-                        className="display-flex justify-center"
-                    >
-                        <Link href={"/customer-xray"}>
-                            <MyLink path={"customer-xray"} />
-                        </Link>
-                    </Grid>
-                )}
+                {isAdmin &&
+                    adminList.map((item, index) => (
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={12}
+                            lg={3}
+                            xl={3}
+                            className="display-flex justify-center"
+                            key={item.link + index}
+                        >
+                            <Link href={item.link}>
+                                <MyLink path={item.path} />
+                            </Link>
+                        </Grid>
+                    ))}
+
+                {isSuperAdmin &&
+                    superAdminList.map((item, index) => (
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={12}
+                            lg={3}
+                            xl={3}
+                            className="display-flex justify-center"
+                            key={item.link + index}
+                        >
+                            <Link href={item.link}>
+                                <MyLink path={item.path} />
+                            </Link>
+                        </Grid>
+                    ))}
+
+                {isDev &&
+                    devList.map((item, index) => (
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={12}
+                            lg={3}
+                            xl={3}
+                            className="display-flex justify-center"
+                            key={item.link + index}
+                        >
+                            <Link href={item.link}>
+                                <MyLink path={item.path} />
+                            </Link>
+                        </Grid>
+                    ))}
             </Grid>
         </>
     );

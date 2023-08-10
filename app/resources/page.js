@@ -17,6 +17,8 @@ import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
 
 const ADMIN_EMAILS = process.env.ADMIN_EMAILS.split(",");
+const SUPER_ADMIN_EMAILS = process.env.SUPER_ADMIN_EMAILS.split(",");
+const DEV_EMAILS = process.env.DEV_EMAILS.split(",");
 
 const resources = [
     {
@@ -78,6 +80,9 @@ const resourcesAdmin = [
         name: "Customers X-Ray",
         url: "https://docs.google.com/spreadsheets/d/1EepbeQe4_65qSNOkTD8VbPAZdAQMeOvTaJ-Zy596d-0",
     },
+];
+
+const resourcesSuperAdmin = [
     {
         name: "US Trip Guidelines",
         url: "https://docs.google.com/document/d/1oRu-2zExERayNVFTtBULTgRrwW4zARzEjCMn7y12WLg",
@@ -87,6 +92,8 @@ const resourcesAdmin = [
         url: "https://docs.google.com/presentation/d/1id2sqNo4ezvvo9T6B3wi5kQVAjcvR_QWj96BFUVRQMo",
     },
 ];
+
+const resourcesDev = [];
 
 const MyResourcesGrid = ({ title, resources }) => {
     return (
@@ -134,6 +141,8 @@ export default function Page() {
     const { data: session, status } = useSession();
     const userEmail = session?.user.email;
     const isAdmin = ADMIN_EMAILS.includes(userEmail);
+    const isSuperAdmin = SUPER_ADMIN_EMAILS.includes(userEmail);
+    const isDev = DEV_EMAILS.includes(userEmail);
 
     if (status === "loading") {
         return <MyLoading loading={true} />;
@@ -145,7 +154,10 @@ export default function Page() {
 
     return (
         <Box className="padding-1rem">
-            <MyResourcesGrid title="Links & Tools" resources={resources} />
+            <MyResourcesGrid
+                title="General - Links & Tools"
+                resources={resources}
+            />
 
             <MySpacer size={48} />
 
@@ -153,6 +165,24 @@ export default function Page() {
                 <MyResourcesGrid
                     title="Admin - Links & Tools"
                     resources={resourcesAdmin}
+                />
+            )}
+
+            <MySpacer size={48} />
+
+            {isSuperAdmin && (
+                <MyResourcesGrid
+                    title="Super Admin - Links & Tools"
+                    resources={resourcesSuperAdmin}
+                />
+            )}
+
+            <MySpacer size={48} />
+
+            {isDev && (
+                <MyResourcesGrid
+                    title="Dev - Links & Tools"
+                    resources={resourcesDev}
                 />
             )}
         </Box>
