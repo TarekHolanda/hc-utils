@@ -43,6 +43,11 @@ const CARDS = {
         description: "Customers status and activity. Updated every week.",
         image: "./customer-xray.jpg",
     },
+    "github-viewer": {
+        title: "GitHub Viewer",
+        description: "Pull Requests and Reviews from GitHub.",
+        image: "./github.jpg",
+    },
 };
 
 export const MyLink = ({ path }) => {

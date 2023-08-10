@@ -14,17 +14,21 @@ import ArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ArrowDoubleIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
 
-import { CustomerRow } from "./CustomerRow";
-
-const COLUMN_WIDTH = "16%";
+import { XrayRow } from "./XrayRow";
+import {
+    COLUMN_WIDTH_LG,
+    COLUMN_WIDTH_MD,
+    COLUMN_WIDTH_SM,
+} from "../utils/constants";
 
 export const XrayTable = ({
+    loading,
     customers,
-    months,
+    filterMonths,
     sortField,
     sortOrder,
     handleSort,
-    loading,
+    handleOpenDialog,
 }) => {
     return (
         <TableContainer component={Paper}>
@@ -32,13 +36,12 @@ export const XrayTable = ({
                 <TableHead>
                     <TableRow className="pointer">
                         <TableCell
-                            align="center"
-                            width={"20%"}
+                            width={COLUMN_WIDTH_LG}
                             onClick={() => handleSort("name")}
                         >
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">
-                                    Last {months} months
+                                    Last {filterMonths} months
                                 </Typography>
                                 <Typography
                                     color="primary"
@@ -70,8 +73,7 @@ export const XrayTable = ({
                             </Box>
                         </TableCell>
                         <TableCell
-                            align="center"
-                            width={COLUMN_WIDTH}
+                            width={COLUMN_WIDTH_MD}
                             onClick={() => handleSort("mrr")}
                         >
                             <Box className="display-flex justify-center">
@@ -99,8 +101,7 @@ export const XrayTable = ({
                             </Box>
                         </TableCell>
                         <TableCell
-                            align="center"
-                            width={COLUMN_WIDTH}
+                            width={COLUMN_WIDTH_MD}
                             onClick={() => handleSort("active_users_avg")}
                         >
                             <Box className="display-flex justify-center">
@@ -130,8 +131,7 @@ export const XrayTable = ({
                             </Box>
                         </TableCell>
                         <TableCell
-                            align="center"
-                            width={COLUMN_WIDTH}
+                            width={COLUMN_WIDTH_MD}
                             onClick={() => handleSort("active_users_price")}
                         >
                             <Box className="display-flex justify-center">
@@ -159,8 +159,7 @@ export const XrayTable = ({
                             </Box>
                         </TableCell>
                         <TableCell
-                            align="center"
-                            width={COLUMN_WIDTH}
+                            width={COLUMN_WIDTH_MD}
                             onClick={() => handleSort("reports_avg")}
                         >
                             <Box className="display-flex justify-center">
@@ -188,8 +187,7 @@ export const XrayTable = ({
                             </Box>
                         </TableCell>
                         <TableCell
-                            align="center"
-                            width={COLUMN_WIDTH}
+                            width={COLUMN_WIDTH_MD}
                             onClick={() => handleSort("attendances_avg")}
                         >
                             <Box className="display-flex justify-center">
@@ -218,14 +216,44 @@ export const XrayTable = ({
                                 )}
                             </Box>
                         </TableCell>
+
+                        <TableCell
+                            width={COLUMN_WIDTH_SM}
+                            onClick={() => handleSort("status")}
+                        >
+                            <Box className="display-flex justify-center">
+                                <Typography variant="h6">Status</Typography>
+                                {sortField === "status" ? (
+                                    <>
+                                        {sortOrder === "asc" ? (
+                                            <ArrowUpIcon
+                                                fontSize="medium"
+                                                className="margin-top-4px margin-left-8px"
+                                            />
+                                        ) : (
+                                            <ArrowDownIcon
+                                                fontSize="medium"
+                                                className="margin-top-4px margin-left-8px"
+                                            />
+                                        )}
+                                    </>
+                                ) : (
+                                    <ArrowDoubleIcon
+                                        fontSize="medium"
+                                        className="margin-top-4px margin-left-8px"
+                                    />
+                                )}
+                            </Box>
+                        </TableCell>
                     </TableRow>
                 </TableHead>
+
                 <TableBody>
                     {loading ? (
                         <TableRow>
                             <TableCell
                                 align="center"
-                                colSpan={6}
+                                colSpan={7}
                                 padding="none"
                             >
                                 <Skeleton
@@ -238,10 +266,12 @@ export const XrayTable = ({
                         </TableRow>
                     ) : (
                         <>
-                            {customers.map((customer) => (
-                                <CustomerRow
+                            {customers.map((customer, index) => (
+                                <XrayRow
                                     key={customer.id}
                                     customer={customer}
+                                    index={index}
+                                    handleOpenDialog={handleOpenDialog}
                                 />
                             ))}
                         </>

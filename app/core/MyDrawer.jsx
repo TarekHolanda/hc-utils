@@ -21,6 +21,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import QrCodeIcon from "@mui/icons-material/QrCodeScanner";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 const drawerList = [
     {
@@ -63,7 +64,23 @@ const adminList = [
     },
 ];
 
-export const MyDrawer = ({ resolvedTheme, setTheme, isAdmin }) => {
+const superAdminList = [];
+
+const devList = [
+    {
+        title: "GitHub Viewer",
+        icon: <GitHubIcon />,
+        link: "/github-viewer",
+    },
+];
+
+export const MyDrawer = ({
+    resolvedTheme,
+    setTheme,
+    isAdmin,
+    isSuperAdmin,
+    isDev,
+}) => {
     return (
         <Box sx={{ width: 256 }} role="presentation">
             <List>
@@ -80,6 +97,30 @@ export const MyDrawer = ({ resolvedTheme, setTheme, isAdmin }) => {
 
                 {isAdmin &&
                     adminList.map((item, index) => (
+                        <Link href={item.link} key={item.title + index}>
+                            <ListItem disablePadding>
+                                <ListItemButton>
+                                    <ListItemIcon>{item.icon}</ListItemIcon>
+                                    <ListItemText primary={item.title} />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                    ))}
+
+                {isSuperAdmin &&
+                    superAdminList.map((item, index) => (
+                        <Link href={item.link} key={item.title + index}>
+                            <ListItem disablePadding>
+                                <ListItemButton>
+                                    <ListItemIcon>{item.icon}</ListItemIcon>
+                                    <ListItemText primary={item.title} />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                    ))}
+
+                {isDev &&
+                    devList.map((item, index) => (
                         <Link href={item.link} key={item.title + index}>
                             <ListItem disablePadding>
                                 <ListItemButton>

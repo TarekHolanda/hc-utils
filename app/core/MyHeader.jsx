@@ -21,6 +21,8 @@ import { MyTooltip } from "../components/MyTooltip";
 import { MyDrawer } from "./MyDrawer";
 
 const ADMIN_EMAILS = process.env.ADMIN_EMAILS.split(",");
+const SUPER_ADMIN_EMAILS = process.env.SUPER_ADMIN_EMAILS.split(",");
+const DEV_EMAILS = process.env.DEV_EMAILS.split(",");
 
 const getLoginButton = (status, toggleDrawer) => {
     switch (status) {
@@ -58,6 +60,7 @@ const pages = {
     "/sprint-viewer": "HC Utils - Sprint Viewer",
     "/resources": "HC Utils - Resources",
     "/customer-xray": "HC Utils - Customer X-Ray",
+    "/github-viewer": "HC Utils - GitHub Viewer",
 };
 
 const Header = () => {
@@ -66,6 +69,8 @@ const Header = () => {
     const { data: session, status } = useSession();
     const userEmail = session?.user.email;
     const isAdmin = ADMIN_EMAILS.includes(userEmail);
+    const isSuperAdmin = SUPER_ADMIN_EMAILS.includes(userEmail);
+    const isDev = DEV_EMAILS.includes(userEmail);
     const [drawerOpen, setdrawerOpen] = useState(false);
 
     const toggleDrawer = (open) => (event) => {
@@ -115,6 +120,8 @@ const Header = () => {
                     resolvedTheme={resolvedTheme}
                     setTheme={setTheme}
                     isAdmin={isAdmin}
+                    isSuperAdmin={isSuperAdmin}
+                    isDev={isDev}
                 />
             </Drawer>
         </AppBar>
