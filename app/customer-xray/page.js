@@ -37,6 +37,11 @@ export default function Page() {
         mrr: "",
         status: "",
         comment: "",
+        use_inspector: false,
+        use_timekeeper: false,
+        use_training: false,
+        use_analytics: false,
+        use_selfaudit: false,
     });
 
     const handleSort = (field) => {
@@ -112,6 +117,11 @@ export default function Page() {
                 mrr: current.mrr,
                 status: current.status,
                 comment: current.comment || "",
+                use_inspector: current.use_inspector,
+                use_timekeeper: current.use_timekeeper,
+                use_training: current.use_training,
+                use_analytics: current.use_analytics,
+                use_selfaudit: current.use_selfaudit,
             });
         }
     };
@@ -124,6 +134,11 @@ export default function Page() {
             mrr: "",
             status: "",
             comment: "",
+            use_inspector: false,
+            use_timekeeper: false,
+            use_training: false,
+            use_analytics: false,
+            use_selfaudit: false,
         });
     };
 

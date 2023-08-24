@@ -16,6 +16,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { formatDate } from "../utils/formatDate";
 import {
     CUSTOMER_STATUS,
+    USE_CASE,
     COLUMN_WIDTH_LG,
     COLUMN_WIDTH_MD,
     COLUMN_WIDTH_SM,
@@ -262,12 +263,29 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                             </Typography>
                                         </TableCell>
 
-                                        <TableCell
-                                            align="center"
-                                            width={COLUMN_WIDTH_SM}
-                                        >
-                                            <Typography variant="body2"></Typography>
-                                        </TableCell>
+                                        {detail.date ===
+                                            customer.details[0].date && (
+                                            <TableCell
+                                                align="center"
+                                                width={COLUMN_WIDTH_LG}
+                                                rowSpan={
+                                                    customer.details.length
+                                                }
+                                            >
+                                                <Typography variant="body2">
+                                                    {customer.use_inspector &&
+                                                        "Inspector, "}
+                                                    {customer.use_timekeeper &&
+                                                        "TimeKeeper, "}
+                                                    {customer.use_training &&
+                                                        "Training, "}
+                                                    {customer.use_analytics &&
+                                                        "Analytics, "}
+                                                    {customer.use_selfaudit &&
+                                                        "Self Audit"}
+                                                </Typography>
+                                            </TableCell>
+                                        )}
                                     </StyledInternalRow>
                                 ))}
                             </TableBody>
