@@ -104,24 +104,27 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
         handleCloseMenu();
     };
 
+    const handleContextMenu = (event) => {
+        event.preventDefault();
+        setAnchorEl(event.currentTarget);
+    };
+
     return (
         <>
             <StyledTableRow
                 className={expanded ? "expanded" : ""}
                 onClick={handleExpand}
-                onContextMenu={(event) => {
-                    event.preventDefault();
-                    setAnchorEl(event.currentTarget);
-                }}
             >
-                <TableCell>
+                <TableCell onContextMenu={handleContextMenu}>
                     {index + 1}. {customer.name}
                 </TableCell>
-                <TableCell align="center">${customer.mrr.toFixed(2)}</TableCell>
-                <TableCell align="center">
+                <TableCell align="center" onContextMenu={handleContextMenu}>
+                    ${customer.mrr.toFixed(2)}
+                </TableCell>
+                <TableCell align="center" onContextMenu={handleContextMenu}>
                     {customer.active_users_avg.toFixed(2)}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" onContextMenu={handleContextMenu}>
                     <Typography
                         variant="body2"
                         color={
@@ -134,7 +137,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                         ${customer.active_users_price.toFixed(2)}
                     </Typography>
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" onContextMenu={handleContextMenu}>
                     {customer.reports_avg.toFixed(2)}
 
                     <Typography color="primary" variant="body2">
@@ -150,7 +153,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                         )}
                     </Typography>
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" onContextMenu={handleContextMenu}>
                     {customer.attendances_avg.toFixed(2)}
 
                     <Typography color="primary" variant="body2">
@@ -166,8 +169,12 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                         )}
                     </Typography>
                 </TableCell>
-                <TableCell align="center" className={customer.status}>
-                    {CUSTOMER_STATUS[customer.status]}
+                <TableCell
+                    align="center"
+                    onContextMenu={handleContextMenu}
+                    className={CUSTOMER_STATUS[customer.status].class}
+                >
+                    {CUSTOMER_STATUS[customer.status].label}
                 </TableCell>
             </StyledTableRow>
 

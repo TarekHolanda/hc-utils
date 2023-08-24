@@ -1,11 +1,32 @@
 export const CUSTOMER_STATUS = {
-    good: "Good",
-    onboarding: "Onboarding",
-    "low-risk": "Low Risk",
-    "medium-risk": "Medium Risk",
-    "high-risk": "High Risk",
-    churn: "Churn",
-    inactive: "Inactive",
+    1: {
+        label: "Good",
+        class: "good",
+    },
+    2: {
+        label: "Onboarding",
+        class: "onboarding",
+    },
+    3: {
+        label: "Churn",
+        class: "churn",
+    },
+    4: {
+        label: "Inactive",
+        class: "inactive",
+    },
+    5: {
+        label: "Low Risk",
+        class: "low-risk",
+    },
+    6: {
+        label: "Medium Risk",
+        class: "medium-risk",
+    },
+    7: {
+        label: "High Risk",
+        class: "high-risk",
+    },
 };
 
 export const COLUMN_WIDTH_LG = "18%";

@@ -57,7 +57,7 @@ export default function Page() {
             filterStatus: filterStatus,
             search: search,
         }).then((response) => {
-            console.table(response.data);
+            console.log(response.data);
             if (response.error) {
                 handleAlert(response.error, "error");
                 setLoading(false);
