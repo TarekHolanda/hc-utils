@@ -11,6 +11,7 @@ import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import Skeleton from "@mui/material/Skeleton";
 import TextField from "@mui/material/TextField";
+import styled from "@mui/material/styles/styled";
 import MenuItem from "@mui/material/MenuItem";
 
 export const XrayDialog = ({
@@ -66,13 +67,66 @@ export const XrayDialog = ({
                         }}
                         disabled={loading}
                     >
-                        <MenuItem value={"good"}>Good</MenuItem>
-                        <MenuItem value={"onboarding"}>Onboarding</MenuItem>
-                        <MenuItem value={"low-risk"}>Low Risk</MenuItem>
-                        <MenuItem value={"medium-risk"}>Medium Risk</MenuItem>
-                        <MenuItem value={"high-risk"}>High Risk</MenuItem>
-                        <MenuItem value={"churn"}>Churn</MenuItem>
-                        <MenuItem value={"inactive"}>Inactive</MenuItem>
+                        <MenuItem
+                            value={1}
+                            sx={{
+                                color: (theme) =>
+                                    `${theme.palette.success.main}`,
+                            }}
+                        >
+                            Good
+                        </MenuItem>
+                        <MenuItem
+                            value={2}
+                            sx={{
+                                color: (theme) => `${theme.palette.info.dark}`,
+                            }}
+                        >
+                            Onboarding
+                        </MenuItem>
+                        <MenuItem
+                            value={3}
+                            sx={{
+                                color: (theme) =>
+                                    `${theme.palette.warning.light}`,
+                            }}
+                        >
+                            Churn
+                        </MenuItem>
+                        <MenuItem
+                            value={4}
+                            sx={{
+                                color: (theme) =>
+                                    `${theme.palette.warning.main}`,
+                            }}
+                        >
+                            Inactive
+                        </MenuItem>
+                        <MenuItem
+                            value={5}
+                            sx={{
+                                color: (theme) => `${theme.palette.error.dark}`,
+                            }}
+                        >
+                            Low Risk
+                        </MenuItem>
+                        <MenuItem
+                            value={6}
+                            sx={{
+                                color: (theme) => `${theme.palette.error.main}`,
+                            }}
+                        >
+                            Medium Risk
+                        </MenuItem>
+                        <MenuItem
+                            value={7}
+                            sx={{
+                                color: (theme) =>
+                                    `${theme.palette.error.light}`,
+                            }}
+                        >
+                            High Risk
+                        </MenuItem>
                     </TextField>
 
                     <TextField

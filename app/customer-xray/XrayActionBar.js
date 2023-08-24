@@ -32,6 +32,7 @@ export const XrayActionBar = ({
             <Box>
                 <TextField
                     select
+                    id="date-range"
                     label="Date Range"
                     value={filterMonths}
                     className="width-128"
@@ -54,6 +55,7 @@ export const XrayActionBar = ({
 
                 <TextField
                     select
+                    id="status"
                     label="Status"
                     value={filterStatus}
                     className="width-256"
@@ -63,13 +65,13 @@ export const XrayActionBar = ({
                     SelectProps={{ MenuProps: { disableScrollLock: true } }}
                 >
                     <MenuItem value={""}>All</MenuItem>
-                    <MenuItem value={"good"}>Good</MenuItem>
-                    <MenuItem value={"onboarding"}>Onboarding</MenuItem>
-                    <MenuItem value={"low-risk"}>Low Risk</MenuItem>
-                    <MenuItem value={"medium-risk"}>Medium Risk</MenuItem>
-                    <MenuItem value={"high-risk"}>High Risk</MenuItem>
-                    <MenuItem value={"churn"}>Churn</MenuItem>
-                    <MenuItem value={"inactive"}>Inactive</MenuItem>
+                    <MenuItem value={1}>Good</MenuItem>
+                    <MenuItem value={2}>Onboarding</MenuItem>
+                    <MenuItem value={3}>Churn</MenuItem>
+                    <MenuItem value={4}>Inactive</MenuItem>
+                    <MenuItem value={5}>Low Risk</MenuItem>
+                    <MenuItem value={6}>Medium Risk</MenuItem>
+                    <MenuItem value={7}>High Risk</MenuItem>
                 </TextField>
             </Box>
 
