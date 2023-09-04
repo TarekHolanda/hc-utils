@@ -5,14 +5,18 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import SyncIcon from "@mui/icons-material/Sync";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 
 import { MySpacer } from "../components/MySpacer";
 
 export const XrayActionBar = ({
     filterMonths,
-    setFilterMonths,
     filterStatus,
+    filterNoMrr,
+    setFilterMonths,
     setFilterStatus,
+    setFilterNoMrr,
     search,
     setSearch,
     handleGetCustomers,
@@ -22,12 +26,7 @@ export const XrayActionBar = ({
             component="form"
             autoComplete="off"
             size="small"
-            sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                paddingTop: "2rem",
-                paddingBottom: "1rem",
-            }}
+            className="display-flex justify-space-between padding-top-2rem padding-bottom-1rem"
         >
             <Box>
                 <TextField
@@ -73,6 +72,21 @@ export const XrayActionBar = ({
                     <MenuItem value={6}>Medium Risk</MenuItem>
                     <MenuItem value={7}>High Risk</MenuItem>
                 </TextField>
+
+                <MySpacer size={16} horizontal />
+
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={filterNoMrr}
+                            onChange={(event) => {
+                                setFilterNoMrr(event.target.checked);
+                            }}
+                        />
+                    }
+                    label="Filter No MRR"
+                    labelPlacement="top"
+                />
             </Box>
 
             <Box>

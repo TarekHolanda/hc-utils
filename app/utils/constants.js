@@ -31,6 +31,6 @@ export const CUSTOMER_STATUS = {
 
 export const COLUMN_WIDTH_LG = "18%";
 
-export const COLUMN_WIDTH_MD = "15%";
+export const COLUMN_WIDTH_MD = "12%";
 
-export const COLUMN_WIDTH_SM = "7%";
+export const COLUMN_WIDTH_SM = "10%";
