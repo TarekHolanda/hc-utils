@@ -14,7 +14,6 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import styled from "@mui/material/styles/styled";
 
 export const XrayDialog = ({
     dialogOpen,
@@ -27,7 +26,7 @@ export const XrayDialog = ({
 }) => {
     console.log("Call Dialog:", customer);
     return (
-        <Dialog open={dialogOpen}>
+        <Dialog open={dialogOpen} disableScrollLock>
             <FormControl>
                 <DialogTitle>{customer.name}</DialogTitle>
 

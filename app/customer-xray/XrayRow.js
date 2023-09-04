@@ -155,14 +155,31 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     </Typography>
                 </TableCell>
                 <TableCell align="center" onContextMenu={handleContextMenu}>
-                    {customer.attendances_avg.toFixed(2)}
+                    {customer.attendances_crew_avg.toFixed(2)}
 
                     <Typography color="primary" variant="body2">
-                        {customer.attendances_avg > 0 ? (
+                        {customer.attendances_crew_avg > 0 ? (
                             <>
                                 $
                                 {(
-                                    customer.mrr / customer.attendances_avg
+                                    customer.mrr / customer.attendances_crew_avg
+                                ).toFixed(2)}
+                            </>
+                        ) : (
+                            "-"
+                        )}
+                    </Typography>
+                </TableCell>
+                <TableCell align="center" onContextMenu={handleContextMenu}>
+                    {customer.attendances_individual_avg.toFixed(2)}
+
+                    <Typography color="primary" variant="body2">
+                        {customer.attendances_individual_avg > 0 ? (
+                            <>
+                                $
+                                {(
+                                    customer.mrr /
+                                    customer.attendances_individual_avg
                                 ).toFixed(2)}
                             </>
                         ) : (
@@ -180,7 +197,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
             </StyledTableRow>
 
             <StyledTableRow>
-                <TableCell style={{ padding: 0, paddingTop: 0 }} colSpan={7}>
+                <TableCell style={{ padding: 0, paddingTop: 0 }} colSpan={8}>
                     <Collapse in={expanded} timeout="auto" unmountOnExit>
                         <Table size="small">
                             <TableBody>
@@ -209,6 +226,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                                 {formatDate(detail.date)}
                                             </Typography>
                                         </TableCell>
+
                                         <TableCell
                                             align="center"
                                             width={COLUMN_WIDTH_MD}
@@ -220,6 +238,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                                 {detail.active_users.toFixed(2)}
                                             </Typography>
                                         </TableCell>
+
                                         <TableCell
                                             align="center"
                                             width={COLUMN_WIDTH_MD}
@@ -259,7 +278,23 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                                 color="primary"
                                                 variant="body2"
                                             >
-                                                {detail.attendances.toFixed(2)}
+                                                {detail.attendances_crew.toFixed(
+                                                    2
+                                                )}
+                                            </Typography>
+                                        </TableCell>
+
+                                        <TableCell
+                                            align="center"
+                                            width={COLUMN_WIDTH_MD}
+                                        >
+                                            <Typography
+                                                color="primary"
+                                                variant="body2"
+                                            >
+                                                {detail.attendances_individual.toFixed(
+                                                    2
+                                                )}
                                             </Typography>
                                         </TableCell>
 

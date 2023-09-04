@@ -105,9 +105,7 @@ export const XrayTable = ({
                             onClick={() => handleSort("active_users_avg")}
                         >
                             <Box className="display-flex justify-center">
-                                <Typography variant="h6">
-                                    Active Users
-                                </Typography>
+                                <Typography variant="h6">Users</Typography>
                                 {sortField === "active_users_avg" ? (
                                     <>
                                         {sortOrder === "asc" ? (
@@ -188,13 +186,44 @@ export const XrayTable = ({
                         </TableCell>
                         <TableCell
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("attendances_avg")}
+                            onClick={() => handleSort("attendances_crew_avg")}
+                        >
+                            <Box className="display-flex justify-center">
+                                <Typography variant="h6">Att. Crew</Typography>
+                                {sortField === "attendances_crew_avg" ? (
+                                    <>
+                                        {sortOrder === "asc" ? (
+                                            <ArrowUpIcon
+                                                fontSize="medium"
+                                                className="margin-top-4px margin-left-8px"
+                                            />
+                                        ) : (
+                                            <ArrowDownIcon
+                                                fontSize="medium"
+                                                className="margin-top-4px margin-left-8px"
+                                            />
+                                        )}
+                                    </>
+                                ) : (
+                                    <ArrowDoubleIcon
+                                        fontSize="medium"
+                                        className="margin-top-4px margin-left-8px"
+                                    />
+                                )}
+                            </Box>
+                        </TableCell>
+
+                        <TableCell
+                            width={COLUMN_WIDTH_MD}
+                            onClick={() =>
+                                handleSort("attendances_individual_avg")
+                            }
                         >
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">
-                                    Attendances
+                                    Att. Support
                                 </Typography>
-                                {sortField === "attendances_avg" ? (
+                                {sortField === "attendances_individual_avg" ? (
                                     <>
                                         {sortOrder === "asc" ? (
                                             <ArrowUpIcon
@@ -253,7 +282,7 @@ export const XrayTable = ({
                         <TableRow>
                             <TableCell
                                 align="center"
-                                colSpan={7}
+                                colSpan={8}
                                 padding="none"
                             >
                                 <Skeleton

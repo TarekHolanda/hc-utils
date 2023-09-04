@@ -25,6 +25,7 @@ export default function Page() {
 
     const [filterMonths, setFilterMonths] = useState(4);
     const [filterStatus, setFilterStatus] = useState("");
+    const [filterNoMrr, setFilterNoMrr] = useState(true);
     const [sortField, setSortField] = useState("name");
     const [sortOrder, setSortOrder] = useState("asc");
     const [search, setSearch] = useState("");
@@ -60,6 +61,7 @@ export default function Page() {
             order: sortOrder,
             filterMonths: filterMonths,
             filterStatus: filterStatus,
+            filterNoMrr: filterNoMrr,
             search: search,
         }).then((response) => {
             console.log(response.data);
@@ -90,7 +92,7 @@ export default function Page() {
 
     useEffect(() => {
         handleGetCustomers();
-    }, [sortField, sortOrder, filterMonths, filterStatus]);
+    }, [sortField, sortOrder, filterMonths, filterStatus, filterNoMrr]);
 
     if (status === "loading") {
         return <MyLoading loading={true} />;
@@ -166,9 +168,11 @@ export default function Page() {
         <Box className="margin-side-2rem">
             <XrayActionBar
                 filterMonths={filterMonths}
-                setFilterMonths={setFilterMonths}
                 filterStatus={filterStatus}
+                filterNoMrr={filterNoMrr}
+                setFilterMonths={setFilterMonths}
                 setFilterStatus={setFilterStatus}
+                setFilterNoMrr={setFilterNoMrr}
                 search={search}
                 setSearch={setSearch}
                 handleGetCustomers={handleGetCustomers}
