@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
@@ -9,6 +9,12 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ImageIcon from "@mui/icons-material/Image";
+import HideImageIcon from "@mui/icons-material/HideImage";
 
 import { QRCodeCanvas } from "qrcode.react";
 import JSZip from "jszip";
@@ -20,6 +26,13 @@ import { MySpacer } from "../components/MySpacer";
 import { MyUploadPageCenter } from "../components/MyUploadPageCenter";
 import { MyUploadBar } from "../components/MyUploadBar";
 
+const QR_LOGO = {
+    src: "./hc-icon-black.png",
+    height: 103,
+    width: 128,
+    excavate: true,
+};
+
 function PageContent(props) {
     if (!props.validCodes) {
         return MyUploadPageCenter(props);
@@ -30,11 +43,32 @@ function PageContent(props) {
 
 export default function Page() {
     const { data: session, status } = useSession();
+    const [logoOn, setLogoOn] = useState(true);
+    const [nameOn, setNameOn] = useState(true);
+    const [qrCodesNotFormatted, setQrCodesNotFormatted] = useState([]);
     const [qrCodes, setQrCodes] = useState([
         { description: "QR Code", data: "QR Code" },
     ]);
     const [validCodes, setValidCodes] = useState(false);
     const qrRef = useRef(null);
+
+    const updateLogoOn = (event, newLogoOn) => {
+        if (newLogoOn !== null && newLogoOn !== logoOn) {
+            setLogoOn(newLogoOn);
+        }
+    };
+
+    const updateNameOn = (event, newNameOn) => {
+        if (newNameOn !== null && newNameOn !== nameOn) {
+            setNameOn(newNameOn);
+        }
+    };
+
+    useEffect(() => {
+        if (validCodes) {
+            formatData();
+        }
+    }, [qrCodesNotFormatted, nameOn]);
 
     if (status === "loading") {
         return <MyLoading loading={true} />;
@@ -123,18 +157,23 @@ export default function Page() {
         }, 1000);
     };
 
-    const formatData = (fileRow) => {
-        let dataTemp = {
-            description:
-                fileRow["First Name"] +
-                " " +
-                fileRow["Last Name"] +
-                " - " +
-                fileRow["QR Code"],
-            data: fileRow["QR Code"],
-        };
+    const formatData = () => {
+        let dataFormatted = [];
 
-        return dataTemp;
+        qrCodesNotFormatted.forEach((fileRow) => {
+            dataFormatted.push({
+                description: nameOn
+                    ? fileRow["First Name"] +
+                      " " +
+                      fileRow["Last Name"] +
+                      " - " +
+                      fileRow["QR Code"]
+                    : fileRow["QR Code"],
+                data: fileRow["QR Code"],
+            });
+        });
+
+        setQrCodes(dataFormatted);
     };
 
     const onFileUploaded = (e) => {
@@ -143,13 +182,7 @@ export default function Page() {
                 header: true,
                 skipEmptyLines: true,
                 complete: function (results) {
-                    let dataFormatted = [];
-
-                    for (let i = 0; i < results.data.length; i++) {
-                        dataFormatted.push(formatData(results.data[i]));
-                    }
-
-                    setQrCodes(dataFormatted);
+                    setQrCodesNotFormatted(results.data);
                     setValidCodes(true);
                 },
             });
@@ -166,6 +199,52 @@ export default function Page() {
                     clearQRCodes={clearQRCodes}
                 />
 
+                {validCodes && (
+                    <Box className="display-flex justify-center">
+                        <Box className="text-center">
+                            <Typography variant="h6">HC Logo</Typography>
+                            <ToggleButtonGroup
+                                value={logoOn}
+                                exclusive
+                                onChange={updateLogoOn}
+                                aria-label="logo">
+                                <ToggleButton value={true} aria-label="logo on">
+                                    <ImageIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value={false}
+                                    aria-label="logo off">
+                                    <HideImageIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </Box>
+
+                        <MySpacer size={20} horizontal />
+
+                        <Divider orientation="vertical" flexItem />
+
+                        <MySpacer size={20} horizontal />
+
+                        <Box className="text-center">
+                            <Typography variant="h6">Name</Typography>
+                            <ToggleButtonGroup
+                                value={nameOn}
+                                exclusive
+                                onChange={updateNameOn}
+                                aria-label="name">
+                                <ToggleButton value={true} aria-label="name on">
+                                    <ImageIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value={false}
+                                    aria-label="name off">
+                                    <HideImageIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </Box>
+                    </Box>
+                )}
+
                 <MySpacer size={20} vertical />
 
                 {validCodes && (
@@ -173,24 +252,17 @@ export default function Page() {
                         <ImageList
                             sx={{ width: "auto", height: "auto" }}
                             cols={3}
-                            gap={64}
-                        >
+                            gap={64}>
                             {qrCodes.map((qrCode, index) => (
                                 <ImageListItem
                                     key={index}
-                                    sx={{ margin: "auto" }}
-                                >
+                                    sx={{ margin: "auto" }}>
                                     <QRCodeCanvas
                                         value={qrCode["data"]}
                                         id={"qrCode" + index}
                                         size={352}
                                         level={"H"}
-                                        imageSettings={{
-                                            src: "./hc-icon-black.png",
-                                            height: 38,
-                                            width: 48,
-                                            excavate: true,
-                                        }}
+                                        imageSettings={logoOn ? QR_LOGO : {}}
                                     />
 
                                     <ImageListItemBar
@@ -212,12 +284,7 @@ export default function Page() {
                                     id={"qrCode" + index}
                                     size={512}
                                     level={"H"}
-                                    imageSettings={{
-                                        src: "./hc-icon-black.png",
-                                        height: 103,
-                                        width: 128,
-                                        excavate: true,
-                                    }}
+                                    imageSettings={logoOn ? QR_LOGO : {}}
                                 />
                             </div>
                         );
