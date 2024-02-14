@@ -16,18 +16,18 @@ import Skeleton from "@mui/material/Skeleton";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 
-export const SprintsDialog = ({
-    modalOpen,
+export const SprintDialog = ({
+    sprintDialogOpen,
     sprint,
     loading,
-    loadingModal,
+    loadingDialog,
     handleSetSprint,
-    handleCloseModal,
+    handleCloseSprintDialog,
     handleAddUpdateSprint,
     handleDeleteSprint,
 }) => {
     return (
-        <Dialog open={modalOpen}>
+        <Dialog open={sprintDialogOpen} disableScrollLock>
             <FormControl>
                 <DialogTitle>Sprint #{sprint.index}</DialogTitle>
 
@@ -131,7 +131,7 @@ export const SprintsDialog = ({
 
                 <Divider />
 
-                {loadingModal ? (
+                {loadingDialog ? (
                     <Skeleton
                         variant="rectangular"
                         animation="wave"
@@ -153,7 +153,7 @@ export const SprintsDialog = ({
                         <Button
                             variant="outlined"
                             size="large"
-                            onClick={handleCloseModal}
+                            onClick={handleCloseSprintDialog}
                             className="width-128"
                         >
                             Cancel

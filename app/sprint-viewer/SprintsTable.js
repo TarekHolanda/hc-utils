@@ -79,7 +79,7 @@ const calculateAverage = (sprints, index) => {
     };
 };
 
-const MyRow = ({ row, styleClass, handleOpenModal }) => {
+const MyRow = ({ row, styleClass, handleOpenSprintDialog }) => {
     const {
         id,
         index,
@@ -94,7 +94,11 @@ const MyRow = ({ row, styleClass, handleOpenModal }) => {
         <StyledTableRow
             key={id}
             className={styleClass ? styleClass : ""}
-            onClick={handleOpenModal ? () => handleOpenModal(row) : null}
+            onClick={
+                handleOpenSprintDialog
+                    ? () => handleOpenSprintDialog(row)
+                    : null
+            }
         >
             <TableCell align="center">
                 <Typography variant="h6">
@@ -119,7 +123,7 @@ const MyRow = ({ row, styleClass, handleOpenModal }) => {
     );
 };
 
-const MyRows = ({ sprints, handleOpenModal }) => {
+const MyRows = ({ sprints, handleOpenSprintDialog }) => {
     if (!sprints?.length) {
         return;
     }
@@ -150,7 +154,7 @@ const MyRows = ({ sprints, handleOpenModal }) => {
             <MyRow
                 row={firstSprint}
                 key="current"
-                handleOpenModal={handleOpenModal}
+                handleOpenSprintDialog={handleOpenSprintDialog}
             />
 
             <MyRow
@@ -169,7 +173,7 @@ const MyRows = ({ sprints, handleOpenModal }) => {
                 <MyRow
                     row={sprint}
                     key={sprint.id}
-                    handleOpenModal={handleOpenModal}
+                    handleOpenSprintDialog={handleOpenSprintDialog}
                 />
             ))}
 
@@ -177,14 +181,14 @@ const MyRows = ({ sprints, handleOpenModal }) => {
                 <MyRow
                     row={sprint}
                     key={sprint.id}
-                    handleOpenModal={handleOpenModal}
+                    handleOpenSprintDialog={handleOpenSprintDialog}
                 />
             ))}
         </>
     );
 };
 
-export const SprintsTable = ({ loading, sprints, handleOpenModal }) => {
+export const SprintsTable = ({ loading, sprints, handleOpenSprintDialog }) => {
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 512 }}>
@@ -226,7 +230,7 @@ export const SprintsTable = ({ loading, sprints, handleOpenModal }) => {
                     ) : (
                         <MyRows
                             sprints={sprints}
-                            handleOpenModal={handleOpenModal}
+                            handleOpenSprintDialog={handleOpenSprintDialog}
                         />
                     )}
                 </TableBody>
