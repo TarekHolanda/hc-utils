@@ -95,7 +95,7 @@ export default function Page() {
     }, [sortField, sortOrder, filterMonths, filterStatus, filterNoMrr]);
 
     if (status === "loading") {
-        return <MyLoading loading={true} />;
+        return <MyLoading />;
     }
 
     if (status === "unauthenticated" || !session) {
@@ -200,8 +200,7 @@ export default function Page() {
 
             <Snackbar
                 open={showAlert}
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            >
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
                 <Alert severity={alertSeverity} variant="outlined">
                     {alertMessage}
                 </Alert>

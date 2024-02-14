@@ -80,7 +80,7 @@ export default function Page() {
     };
 
     if (status === "loading") {
-        return <MyLoading loading={true} />;
+        return <MyLoading />;
     }
 
     if (status === "unauthenticated" || !session) {
@@ -96,8 +96,7 @@ export default function Page() {
                     <Button
                         variant="outlined"
                         onClick={() => CopyToClipboard()}
-                        startIcon={<ContentCopyIcon />}
-                    >
+                        startIcon={<ContentCopyIcon />}>
                         Copy
                     </Button>
                 </Container>
@@ -163,8 +162,7 @@ export default function Page() {
             <Snackbar
                 open={toast}
                 autoHideDuration={2000}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            >
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
                 <Alert severity="info" variant="filled">
                     Copied to clipboard
                 </Alert>

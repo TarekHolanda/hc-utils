@@ -106,8 +106,7 @@ function buildQRCodeView(qrCodeData, description, index, size) {
                             ? styles.descriptionMedium
                             : styles.descriptionXsmall
                         : styles.descriptionSmall
-                }
-            >
+                }>
                 {description ? description : ""}
             </Text>
         </View>
@@ -140,8 +139,7 @@ function buildPDF(aux, size) {
                             ? styles.inlineNotSmall
                             : styles.inlineSmall
                     }
-                    key={"view" + i + j}
-                >
+                    key={"view" + i + j}>
                     {line}
                 </View>
             );
@@ -214,8 +212,8 @@ export default function Page() {
         }
     }, [qrCodes]);
 
-    if (status === "loading") {
-        return <MyLoading loading={true} />;
+    if (status === "loading" || loading) {
+        return <MyLoading />;
     }
 
     if (status === "unauthenticated" || !session) {
@@ -381,15 +379,13 @@ export default function Page() {
                                 value={logoOn}
                                 exclusive
                                 onChange={updateLogoOn}
-                                aria-label="logo"
-                            >
+                                aria-label="logo">
                                 <ToggleButton value={true} aria-label="logo on">
                                     <ImageIcon />
                                 </ToggleButton>
                                 <ToggleButton
                                     value={false}
-                                    aria-label="logo off"
-                                >
+                                    aria-label="logo off">
                                     <HideImageIcon />
                                 </ToggleButton>
                             </ToggleButtonGroup>
@@ -407,8 +403,7 @@ export default function Page() {
                                 value={quality}
                                 exclusive
                                 onChange={updateQuality}
-                                aria-label="quality"
-                            >
+                                aria-label="quality">
                                 <ToggleButton value="L" aria-label="low">
                                     <HorizontalRuleIcon />
                                 </ToggleButton>
@@ -436,12 +431,10 @@ export default function Page() {
                                 value={size}
                                 exclusive
                                 onChange={updateSize}
-                                aria-label="size"
-                            >
+                                aria-label="size">
                                 <ToggleButton
                                     value="xsmall"
-                                    aria-label="xsmall"
-                                >
+                                    aria-label="xsmall">
                                     <LooksOneIcon />
                                 </ToggleButton>
                                 <ToggleButton value="small" aria-label="small">
@@ -449,8 +442,7 @@ export default function Page() {
                                 </ToggleButton>
                                 <ToggleButton
                                     value="medium"
-                                    aria-label="medium"
-                                >
+                                    aria-label="medium">
                                     <Looks3Icon />
                                 </ToggleButton>
                                 <ToggleButton value="large" aria-label="large">
@@ -467,8 +459,7 @@ export default function Page() {
                     <Fade in={validCodes} timeout={500}>
                         <Box>
                             <PDFViewer
-                                style={{ width: "100%", height: "1192px" }}
-                            >
+                                style={{ width: "100%", height: "1192px" }}>
                                 <MyPdfPreview data={qrCodesPDF} />
                             </PDFViewer>
                         </Box>
@@ -491,52 +482,7 @@ export default function Page() {
                 </Box>
 
                 <MySpeedDial page={"scan-and-go"} />
-
-                <MyLoading loading={loading} />
             </Box>
         </Fade>
     );
 }
-
-// This is how we previewed QR Codes before the PDF
-// {oldQRCodesPreview(validCodes, qrCodes)}
-// function oldQRCodesPreview(validCodes, qrCodes) {
-//     return <Box sx={{ display: "none", marginTop: "96px" }}>
-//         <Fade in={validCodes} timeout={500}>
-//             <Grid
-//                 container
-//                 direction="row"
-//                 justifyContent="space-evenly"
-//                 alignItems="baseline"
-//                 className="bg-white color-black padding-bottom-32 qr-code-wrapper"
-//                 spacing={6}
-//             >
-//                 {qrCodes.map((qrCode, index) => (
-//                     <Grid
-//                         key={"grid-preview" + index}
-//                         item
-//                         xs={12}
-//                         sm={6}
-//                         md={2}
-//                     >
-//                         <QRCodeCanvas
-//                             value={qrCode["data"]}
-//                             id={"qrCode" + index}
-//                             key={"qrcode-preview" + index}
-//                             size={256}
-//                             level={"H"}
-//                             imageSettings={{
-//                                 src: "./hc-icon-black.png",
-//                                 height: 38,
-//                                 width: 48,
-//                                 excavate: true,
-//                             }} />
-//                         <span className="display-block padding-side-4 line-break-any font-size-24">
-//                             {qrCode["description"]}
-//                         </span>
-//                     </Grid>
-//                 ))}
-//             </Grid>
-//         </Fade>
-//     </Box>;
-// }
