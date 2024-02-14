@@ -13,15 +13,16 @@ import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
 import { MySpeedDial } from "../components/MySpeedDial";
 import { SprintsTable } from "./SprintsTable";
-import { SprintsDialog } from "./SprintsDialog";
+import { SprintDialog } from "./SprintDialog";
 import { SprintsActionBar } from "./SprintsActionBar";
+import { RulerDialog } from "./RulerDialog";
 
 export default function Page() {
     const { data: session, status } = useSession();
     const [sprints, setSprints] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [loadingModal, setLoadingModal] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
+    const [loadingDialog, setLoadingDialog] = useState(false);
+    const [sprintDialogOpen, setSprintDialogOpen] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertSeverity, setAlertSeverity] = useState("success");
@@ -33,6 +34,22 @@ export default function Page() {
         extraDeploys: "",
         delayed: false,
     });
+
+    const [rulerDialogOpen, setRulerDialogOpen] = useState(false);
+    const [ruler, setRuler] = useState({
+        monday: [1, 1, 1, 1],
+        tuesday: [2, 2, 2, 2],
+        wednesday: [3, 3, 3, 3],
+        thursday: [4, 4, 4, 4],
+        friday: [5, 5, 5, 5],
+    });
+
+    const handleSetRuler = (value, type) => {
+        setRuler((prevState) => ({
+            ...prevState,
+            [type]: value,
+        }));
+    };
 
     const handleGetSprints = () => {
         setLoading(true);
@@ -74,17 +91,17 @@ export default function Page() {
         redirect("/signin");
     }
 
-    const handleOpenModal = (current) => {
-        setModalOpen(true);
-        console.log("Current");
-        console.log(current);
+    const handleOpenSprintDialog = (current) => {
+        setSprintDialogOpen(true);
+        console.log("Current:", current);
         if (current && current.id) {
             setSprint(current);
         }
     };
 
-    const handleCloseModal = () => {
-        setModalOpen(false);
+    const handleCloseSprintDialog = () => {
+        setSprintDialogOpen(false);
+        setLoadingDialog(false);
         setSprint({
             index: "",
             totalPoints: "",
@@ -111,7 +128,7 @@ export default function Page() {
             );
             return;
         }
-        setLoadingModal(true);
+        setLoadingDialog(true);
 
         const sprintParam = {
             id: sprint.id || 0,
@@ -129,7 +146,7 @@ export default function Page() {
         handleAPI(url, sprintParam, method).then((response) => {
             if (response.error) {
                 handleAlert(response.error, "error");
-                setLoadingModal(false);
+                setLoadingDialog(false);
                 return;
             }
 
@@ -161,21 +178,13 @@ export default function Page() {
                 );
             }
 
-            setModalOpen(false);
-            setLoadingModal(false);
-            setSprint({
-                index: "",
-                totalPoints: "",
-                pointsMerged: "",
-                extraDeploys: "",
-                delayed: false,
-            });
+            handleCloseSprintDialog();
         });
     };
 
     const handleDeleteSprint = (event) => {
         event.preventDefault();
-        setLoadingModal(true);
+        setLoadingDialog(true);
 
         const method = "DELETE";
         const url = "sprints/" + sprint.id + "/delete";
@@ -183,7 +192,7 @@ export default function Page() {
         handleAPI(url, {}, method).then((response) => {
             if (response.error) {
                 handleAlert(response.error, "error");
-                setLoadingModal(false);
+                setLoadingDialog(false);
                 return;
             }
 
@@ -195,16 +204,19 @@ export default function Page() {
                 "Sprint #" + sprint.index + " deleted successfully",
                 "success"
             );
-            setModalOpen(false);
-            setLoadingModal(false);
-            setSprint({
-                index: "",
-                totalPoints: "",
-                pointsMerged: "",
-                extraDeploys: "",
-                delayed: false,
-            });
+
+            handleCloseSprintDialog();
         });
+    };
+
+    const handleOpenRulerDialog = () => {
+        console.log("Open Ruler");
+        setRulerDialogOpen(true);
+    };
+
+    const handleCloseRulerDialog = () => {
+        console.log("Close Ruler");
+        setRulerDialogOpen(false);
     };
 
     return (
@@ -213,30 +225,38 @@ export default function Page() {
                 sprintsAmount={sprintsAmount}
                 setSprintsAmount={setSprintsAmount}
                 handleGetSprints={handleGetSprints}
+                handleOpenRulerDialog={handleOpenRulerDialog}
             />
 
             <SprintsTable
                 loading={loading}
                 sprints={sprints}
-                handleOpenModal={handleOpenModal}
+                handleOpenSprintDialog={handleOpenSprintDialog}
             />
 
-            <SprintsDialog
-                modalOpen={modalOpen}
+            <SprintDialog
+                sprintDialogOpen={sprintDialogOpen}
                 sprint={sprint}
                 loading={loading}
-                loadingModal={loadingModal}
+                loadingDialog={loadingDialog}
                 handleSetSprint={handleSetSprint}
-                handleCloseModal={handleCloseModal}
+                handleCloseSprintDialog={handleCloseSprintDialog}
                 handleAddUpdateSprint={handleAddUpdateSprint}
                 handleDeleteSprint={handleDeleteSprint}
             />
 
+            <RulerDialog
+                rulerDialogOpen={rulerDialogOpen}
+                ruler={ruler}
+                handleSetRuler={handleSetRuler}
+                loading={loading}
+                loadingDialog={loadingDialog}
+                handleCloseRulerDialog={handleCloseRulerDialog}
+            />
+
             <MySpeedDial
                 page={"sprint-viewer"}
-                callback={() => {
-                    setModalOpen(true);
-                }}
+                callback={handleOpenSprintDialog}
             />
 
             <Snackbar

@@ -1,33 +1,35 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import Paper from "@mui/material/Paper";
 
 import { MyLoading } from "../components/MyLoading";
 import { MySpacer } from "../components/MySpacer";
-import { handleGet } from "../api/handleCallAPI";
 import { getPullRequestsAndReviews } from "./getPullRequestsAndReviews";
-import { set } from "date-fns";
 
-export default function Page() {
+export default function Page({ data }) {
     const { data: session, status } = useSession();
     const [loading, setLoading] = useState(true);
-    const [developers, setDevelopers] = useState([]);
+    const [devs, setDevs] = useState([]);
 
     useEffect(() => {
         getPullRequestsAndReviews()
-            .then((developers) => {
-                console.log(developers);
-                setDevelopers(developers);
+            .then((devs) => {
+                setDevs(devs);
                 setLoading(false);
             })
             .catch((error) => {
-                console.error("Error:", error.message);
+                console.error(error.message);
                 setLoading(false);
             });
     }, []);
@@ -43,51 +45,49 @@ export default function Page() {
     return (
         <>
             <Container>
-                <MySpacer vertical size={64} />
+                <MySpacer vertical size={32} />
 
-                <Typography variant="h4" component="h1" gutterBottom>
-                    GitHub Viewer
-                </Typography>
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Who</TableCell>
+                                <TableCell align="center">
+                                    Pull Requests
+                                </TableCell>
+                                <TableCell align="center">
+                                    Code Reviews
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {Object.keys(devs).map((dev) => {
+                                return (
+                                    <TableRow
+                                        key={dev}
+                                        sx={{
+                                            "&:last-child td, &:last-child th":
+                                                {
+                                                    border: 0,
+                                                },
+                                        }}>
+                                        <TableCell component="th" scope="row">
+                                            {devs[dev].name}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {devs[dev].pullRequests}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {devs[dev].reviews}
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
-                <MySpacer vertical size={64} />
-
-                <Box sx={{ display: "flex", flexDirection: "column" }}>
-                    {/* Loop on dict of developers where the key is their name */}
-                    {Object.keys(developers).map((developer) => {
-                        return (
-                            <Box
-                                key={developer}
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Typography
-                                    variant="body1"
-                                    component="p"
-                                    sx={{ width: 200 }}
-                                >
-                                    {developer}
-                                </Typography>
-                                <Typography
-                                    variant="body1"
-                                    component="p"
-                                    sx={{ width: 200 }}
-                                >
-                                    {developers[developer].pullRequests}
-                                </Typography>
-                                <Typography
-                                    variant="body1"
-                                    component="p"
-                                    sx={{ width: 200 }}
-                                >
-                                    {developers[developer].approvals}
-                                </Typography>
-                            </Box>
-                        );
-                    })}
-                </Box>
+                <MySpacer vertical size={32} />
             </Container>
         </>
     );
