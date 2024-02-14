@@ -84,7 +84,7 @@ export default function Page() {
     }, [sprintsAmount]);
 
     if (status === "loading") {
-        return <MyLoading loading={true} />;
+        return <MyLoading />;
     }
 
     if (status === "unauthenticated" || !session) {
@@ -93,7 +93,7 @@ export default function Page() {
 
     const handleOpenSprintDialog = (current) => {
         setSprintDialogOpen(true);
-        console.log("Current:", current);
+
         if (current && current.id) {
             setSprint(current);
         }
@@ -261,8 +261,7 @@ export default function Page() {
 
             <Snackbar
                 open={showAlert}
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            >
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
                 <Alert severity={alertSeverity} variant="outlined">
                     {alertMessage}
                 </Alert>

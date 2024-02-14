@@ -71,7 +71,7 @@ export default function Page() {
     }, [qrCodesNotFormatted, nameOn]);
 
     if (status === "loading") {
-        return <MyLoading loading={true} />;
+        return <MyLoading />;
     }
 
     if (status === "unauthenticated" || !session) {

@@ -114,13 +114,11 @@ const MyResourcesGrid = ({ title, resources }) => {
                         className="display-flex justify-center"
                         minWidth={"144px"}
                         minHeight={"144px"}
-                        key={resource.name + " grid"}
-                    >
+                        key={resource.name + " grid"}>
                         <Link target="_blank" href={resource.url}>
                             <Card
                                 className="pointer text-center height-100"
-                                elevation={6}
-                            >
+                                elevation={6}>
                                 <CardActionArea className="height-100">
                                     <CardContent>
                                         <Typography variant="h6">
@@ -145,7 +143,7 @@ export default function Page() {
     const isDev = DEV_EMAILS.includes(userEmail);
 
     if (status === "loading") {
-        return <MyLoading loading={true} />;
+        return <MyLoading />;
     }
 
     if (status === "unauthenticated" || !session) {

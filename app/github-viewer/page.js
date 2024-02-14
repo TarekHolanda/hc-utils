@@ -35,7 +35,7 @@ export default function Page({ data }) {
     }, []);
 
     if (status === "loading" || loading) {
-        return <MyLoading loading={true} />;
+        return <MyLoading />;
     }
 
     if (status === "unauthenticated" || !session) {
