@@ -2,21 +2,12 @@
 
 import React, { useState } from "react";
 
-import Button from "@mui/material/Button";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Divider from "@mui/material/Divider";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import IconButton from "@mui/material/IconButton";
-import Skeleton from "@mui/material/Skeleton";
-import Switch from "@mui/material/Switch";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Slide from "@mui/material/Slide";
@@ -24,18 +15,18 @@ import CloseIcon from "@mui/icons-material/Close";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { ListItemButton } from "@mui/material";
-import { MySpacer } from "../components/MySpacer";
-import CommentIcon from "@mui/icons-material/Comment";
-import Checkbox from "@mui/material/Checkbox";
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import WifiIcon from "@mui/icons-material/Wifi";
-import EditIcon from "@mui/icons-material/Edit";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
+import ScoreboardIcon from "@mui/icons-material/Scoreboard";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import PhonelinkSetupIcon from "@mui/icons-material/PhonelinkSetup";
+
+import { MySpacer } from "../components/MySpacer";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -68,7 +59,7 @@ const tasks = {
         name: "Merge Open PRs",
         icon: (
             <ListItemIcon>
-                <WifiIcon fontSize="small" />
+                <TroubleshootIcon fontSize="small" />
             </ListItemIcon>
         ),
     },
@@ -76,7 +67,7 @@ const tasks = {
         name: "Versioning Tests",
         icon: (
             <ListItemIcon>
-                <EditIcon fontSize="small" />
+                <ScoreboardIcon fontSize="small" />
             </ListItemIcon>
         ),
     },
@@ -84,7 +75,7 @@ const tasks = {
         name: "Acceptance Tests",
         icon: (
             <ListItemIcon>
-                <WifiIcon fontSize="small" />
+                <ThumbUpIcon fontSize="small" />
             </ListItemIcon>
         ),
     },
@@ -92,7 +83,7 @@ const tasks = {
         name: "Final & Plugin Tests",
         icon: (
             <ListItemIcon>
-                <EditIcon fontSize="small" />
+                <PhonelinkSetupIcon fontSize="small" />
             </ListItemIcon>
         ),
     },
@@ -115,6 +106,7 @@ const MyMenu = ({ anchorEl, open, handleCloseMenu, handleEdit }) => {
                         onClick={() => {
                             handleEdit(key);
                         }}
+                        key={"task" + key}
                         sx={{ width: 320, maxWidth: "100%" }}>
                         {tasks[key].icon}
                         <ListItemText>{tasks[key].name}</ListItemText>
@@ -234,7 +226,7 @@ export const RulerDialog = ({
         setAnchorEl(null);
     };
 
-    const handleLeftClick = (day, line, event) => {
+    const handleLeftClick = (event, day, line) => {
         const updatedDays = [...days];
         const updatedDay = updatedDays.find((a) => a.index === day.index);
         const updatedLine = updatedDay.lines.find(
@@ -246,22 +238,35 @@ export const RulerDialog = ({
         event.preventDefault();
     };
 
-    const handleRightClick = (event) => {
+    const handleRightClick = (event, day, line) => {
+        const updatedDays = [...days];
+        const updatedDay = updatedDays.find((a) => a.index === day.index);
+        const updatedLine = updatedDay.lines.find(
+            (a) => a.index === line.index
+        );
+
+        updatedLine.selected = true;
+        setDays(updatedDays);
         event.preventDefault();
         setAnchorEl(event.currentTarget);
     };
 
     const handleEdit = (task) => {
-        console.log(task);
         const updatedDays = [...days];
         updatedDays.forEach((day) => {
-            const updatedLine = day.lines.find(
+            const updatedLines = day.lines.filter(
                 (line) => line.selected === true
             );
-            console.log(updatedLine);
-            // updatedLine.task = "phaseFour";
+
+            if (updatedLines.length) {
+                updatedLines.forEach((line) => {
+                    line.task = task;
+                    line.selected = false;
+                });
+            }
         });
-        // setDays(updatedDays);
+        setDays(updatedDays);
+        handleCloseMenu();
     };
 
     return (
@@ -329,14 +334,18 @@ export const RulerDialog = ({
                                                 }
                                                 onClick={(event) => {
                                                     handleLeftClick(
+                                                        event,
                                                         day,
-                                                        line,
-                                                        event
+                                                        line
                                                     );
                                                 }}
-                                                onContextMenu={
-                                                    handleRightClick
-                                                }>
+                                                onContextMenu={(event) => {
+                                                    handleRightClick(
+                                                        event,
+                                                        day,
+                                                        line
+                                                    );
+                                                }}>
                                                 <ListItemButton className="text-center">
                                                     <ListItemText
                                                         primary={line.index}
