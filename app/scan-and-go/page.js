@@ -166,6 +166,31 @@ export default function Page() {
     const [loading, setLoading] = useState(false);
     const qrRef = useRef();
 
+    const generatePDF = (pdfSize) => {
+        let aux = [];
+
+        for (let i = 0; i < qrCodes.length; i++) {
+            const canvas = qrRef?.current?.querySelector("#qrCode" + i);
+            const qrCodeDataUri = canvas.toDataURL();
+            aux.push({
+                qrCodeDataUri: qrCodeDataUri,
+                description: qrCodes[i]["description"],
+            });
+        }
+
+        const table = buildPDF(aux, pdfSize);
+
+        setQrCodesPDF(table);
+
+        setTimeout(() => {
+            setValidCodes(true);
+        }, 1000);
+
+        setTimeout(() => {
+            stopLoading();
+        }, 2000);
+    };
+
     const updateSize = (event, newSize) => {
         if (newSize && newSize !== size) {
             setSize(newSize);
@@ -212,38 +237,13 @@ export default function Page() {
         }
     }, [qrCodes]);
 
-    if (status === "loading" || loading) {
+    if (status === "loading") {
         return <MyLoading />;
     }
 
     if (status === "unauthenticated" || !session) {
         redirect("/signin");
     }
-
-    const generatePDF = (pdfSize) => {
-        let aux = [];
-
-        for (let i = 0; i < qrCodes.length; i++) {
-            const canvas = qrRef?.current?.querySelector("#qrCode" + i);
-            const qrCodeDataUri = canvas.toDataURL();
-            aux.push({
-                qrCodeDataUri: qrCodeDataUri,
-                description: qrCodes[i]["description"],
-            });
-        }
-
-        const table = buildPDF(aux, pdfSize);
-
-        setQrCodesPDF(table);
-
-        setTimeout(() => {
-            setValidCodes(true);
-        }, 1000);
-
-        setTimeout(() => {
-            stopLoading();
-        }, 2000);
-    };
 
     const downloadQRCodes = async (e) => {
         e.preventDefault();
@@ -482,6 +482,11 @@ export default function Page() {
                 </Box>
 
                 <MySpeedDial page={"scan-and-go"} />
+                
+                {/* This loading needs to be here to give time to the QR Codes to load after render */}
+                {loading && (
+                    <MyLoading />
+                )}
             </Box>
         </Fade>
     );
