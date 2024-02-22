@@ -43,12 +43,12 @@ export const SprintsActionBar = ({
             <MySpacer size={16} horizontal />
 
             <Box>
-                <Button
+                {/* <Button
                     variant="outlined"
                     size="large"
                     onClick={handleOpenRulerDialog}>
                     Ruler
-                </Button>
+                </Button> */}
 
                 <MySpacer size={16} horizontal />
 

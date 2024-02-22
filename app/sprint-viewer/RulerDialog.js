@@ -17,6 +17,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
@@ -25,32 +26,65 @@ import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import ScoreboardIcon from "@mui/icons-material/Scoreboard";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import PhonelinkSetupIcon from "@mui/icons-material/PhonelinkSetup";
+import PendingIcon from '@mui/icons-material/Pending';
 
 import { MySpacer } from "../components/MySpacer";
+import { RULER_DEFAULT } from "../utils/constants";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
+    
     "&.phaseOne": {
         backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+        "& svg": {
+            color: theme.palette.primary.contrastText,
+        },
     },
     "&.phaseTwo": {
         backgroundColor: theme.palette.primary.dark,
+        color: theme.palette.primary.contrastText,
+        "& svg": {
+            color: theme.palette.primary.contrastText,
+        },
     },
     "&.phaseThree": {
         backgroundColor: theme.palette.success.light,
+        color: theme.palette.primary.contrastText,
+        "& svg": {
+            color: theme.palette.primary.contrastText,
+        },
     },
     "&.phaseFour": {
         backgroundColor: theme.palette.success.dark,
+        color: theme.palette.primary.contrastText,
+        "& svg": {
+            color: theme.palette.primary.contrastText,
+        },
+    },
+    "&.phaseFive": {
+        backgroundColor: theme.palette.error.main,
+        color: theme.palette.primary.contrastText,
+        "& svg": {
+            color: theme.palette.primary.contrastText,
+        },
     },
     "&:hover": {
         backgroundColor: theme.palette.action.hover,
+        color: theme.palette.primary.contrastText,
+        "& svg": {
+            color: theme.palette.primary.main,
+        },
     },
     "&.selected": {
-        color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.primary.light,
+        color: theme.palette.primary.contrastText,
+        "& svg": {
+            color: theme.palette.primary.dark,
+        },
     },
 }));
 
@@ -84,6 +118,14 @@ const tasks = {
         icon: (
             <ListItemIcon>
                 <PhonelinkSetupIcon fontSize="small" />
+            </ListItemIcon>
+        ),
+    },
+    phaseFive: {
+        name: "Buffer",
+        icon: (
+            <ListItemIcon>
+                <PendingIcon fontSize="small" />
             </ListItemIcon>
         ),
     },
@@ -125,100 +167,7 @@ export const RulerDialog = ({
     loadingDialog,
     handleCloseRulerDialog,
 }) => {
-    const [days, setDays] = useState([
-        {
-            index: 0,
-            name: "Monday",
-            lines: [
-                {
-                    index: 0,
-                    selected: false,
-                    task: "phaseOne",
-                },
-                {
-                    index: 1,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 2,
-                    selected: false,
-                    task: "phaseThree",
-                },
-                {
-                    index: 3,
-                    selected: false,
-                    task: "phaseFour",
-                },
-                {
-                    index: 4,
-                    selected: false,
-                    task: "phaseOne",
-                },
-                {
-                    index: 5,
-                    selected: false,
-                    task: "phaseOne",
-                },
-                {
-                    index: 6,
-                    selected: false,
-                    task: "phaseOne",
-                },
-                {
-                    index: 7,
-                    selected: false,
-                    task: "phaseOne",
-                },
-            ],
-        },
-        {
-            index: 1,
-            name: "Tuesday",
-            lines: [
-                {
-                    index: 0,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 1,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 2,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 3,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 4,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 5,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 6,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 7,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-            ],
-        },
-    ]);
+    const [days, setDays] = useState(RULER_DEFAULT);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -301,65 +250,60 @@ export const RulerDialog = ({
 
             <MySpacer size={16} vertical />
 
-            <Grid container spacing={0}>
+            <Stack direction="row" spacing={2}>
                 {days.map((day) => {
                     return (
-                        <Grid
-                            item
-                            xs={2}
-                            className="display-flex justify-center"
-                            key={"day" + day.index}>
-                            <Box className="width-100">
-                                <Typography
-                                    className="text-center"
-                                    variant="h6">
-                                    {day.name}
-                                </Typography>
+                        <Box className="width-100" key={"day" + day.index}>
+                            <Typography
+                                className="text-center"
+                                variant="h6">
+                                {day.name}
+                            </Typography>
 
-                                <List className="width-100">
-                                    {day.lines.map((line) => {
-                                        return (
-                                            <StyledListItem
-                                                key={
-                                                    "day" +
-                                                    day.index +
-                                                    "line" +
-                                                    line.index
-                                                }
-                                                disablePadding
-                                                className={
-                                                    line.selected
-                                                        ? "selected"
-                                                        : line.task
-                                                }
-                                                onClick={(event) => {
-                                                    handleLeftClick(
-                                                        event,
-                                                        day,
-                                                        line
-                                                    );
-                                                }}
-                                                onContextMenu={(event) => {
-                                                    handleRightClick(
-                                                        event,
-                                                        day,
-                                                        line
-                                                    );
-                                                }}>
-                                                <ListItemButton className="text-center">
-                                                    <ListItemText
-                                                        primary={line.index}
-                                                    />
-                                                </ListItemButton>
-                                            </StyledListItem>
-                                        );
-                                    })}
-                                </List>
-                            </Box>
-                        </Grid>
+                            <List className="width-100">
+                                {day.lines.map((line) => {
+                                    return (
+                                        <StyledListItem
+                                            key={
+                                                "day" +
+                                                day.index +
+                                                "line" +
+                                                line.index
+                                            }
+                                            disablePadding
+                                            className={
+                                                line.selected
+                                                    ? "selected"
+                                                    : line.task
+                                            }
+                                            onClick={(event) => {
+                                                handleLeftClick(
+                                                    event,
+                                                    day,
+                                                    line
+                                                );
+                                            }}
+                                            onContextMenu={(event) => {
+                                                handleRightClick(
+                                                    event,
+                                                    day,
+                                                    line
+                                                );
+                                            }}>
+                                            <ListItemButton className="text-right">
+                                                {tasks[line.task].icon}
+                                                <ListItemText
+                                                    primary={line.index}
+                                                />
+                                            </ListItemButton>
+                                        </StyledListItem>
+                                    );
+                                })}
+                            </List>
+                        </Box>
                     );
                 })}
-            </Grid>
+            </Stack>
 
             <MyMenu
                 anchorEl={anchorEl}
