@@ -53,7 +53,7 @@ export default function Page() {
 
     const handleGetSprints = () => {
         setLoading(true);
-        handleGet("sprints", { pageSize: sprintsAmount }).then((response) => {
+        handleGet("sprints/list", { pageSize: sprintsAmount }).then((response) => {
             if (response.error) {
                 handleAlert(response.error, "error");
                 setLoading(false);
