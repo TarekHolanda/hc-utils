@@ -53,29 +53,29 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const calculateAverage = (sprints, index) => {
     const randomID = Math.floor(Math.random() * 10) + 1;
 
-    const totalPoints = sprints.reduce((acc, sprint) => {
-        return acc + sprint.totalPoints;
+    const total_points = sprints.reduce((acc, sprint) => {
+        return acc + sprint.total_points;
     }, 0);
 
-    const pointsMerged = sprints.reduce((acc, sprint) => {
-        return acc + sprint.pointsMerged;
+    const points_merged = sprints.reduce((acc, sprint) => {
+        return acc + sprint.points_merged;
     }, 0);
 
     const pointsLeft = sprints.reduce((acc, sprint) => {
-        return acc + (sprint.totalPoints - sprint.pointsMerged);
+        return acc + (sprint.total_points - sprint.points_merged);
     }, 0);
 
-    const extraDeploys = sprints.reduce((acc, sprint) => {
-        return acc + sprint.extraDeploys;
+    const extra_deploys = sprints.reduce((acc, sprint) => {
+        return acc + sprint.extra_deploys;
     }, 0);
 
     return {
         id: randomID,
         index: index,
-        totalPoints: (totalPoints / sprints.length).toFixed(2),
-        pointsMerged: (pointsMerged / sprints.length).toFixed(2),
+        total_points: (total_points / sprints.length).toFixed(2),
+        points_merged: (points_merged / sprints.length).toFixed(2),
         pointsLeft: (pointsLeft / sprints.length).toFixed(2),
-        extraDeploys: (extraDeploys / sprints.length).toFixed(2),
+        extra_deploys: (extra_deploys / sprints.length).toFixed(2),
     };
 };
 
@@ -83,11 +83,11 @@ const MyRow = ({ row, styleClass, handleOpenSprintDialog }) => {
     const {
         id,
         index,
-        totalPoints,
-        pointsMerged,
+        total_points,
+        points_merged,
         pointsLeft,
-        extraDeploys,
-        delayed,
+        extra_deploys,
+        date_delay,
     } = row;
 
     return (
@@ -98,26 +98,25 @@ const MyRow = ({ row, styleClass, handleOpenSprintDialog }) => {
                 handleOpenSprintDialog
                     ? () => handleOpenSprintDialog(row)
                     : null
-            }
-        >
+            }>
             <TableCell align="center">
                 <Typography variant="h6">
-                    {index} <span>{delayed ? "(delayed)" : ""}</span>
+                    {index} <span>{date_delay ? "(delayed)" : ""}</span>
                 </Typography>
             </TableCell>
             <TableCell align="center">
-                <Typography variant="h6">{totalPoints}</Typography>
+                <Typography variant="h6">{total_points}</Typography>
             </TableCell>
             <TableCell align="center">
-                <Typography variant="h6">{pointsMerged}</Typography>
+                <Typography variant="h6">{points_merged}</Typography>
             </TableCell>
             <TableCell align="center">
                 <Typography variant="h6">
-                    {pointsLeft || totalPoints - pointsMerged}
+                    {pointsLeft || total_points - points_merged}
                 </Typography>
             </TableCell>
             <TableCell align="center">
-                <Typography variant="h6">{extraDeploys}</Typography>
+                <Typography variant="h6">{extra_deploys}</Typography>
             </TableCell>
         </StyledTableRow>
     );
@@ -132,11 +131,11 @@ const MyRows = ({ sprints, handleOpenSprintDialog }) => {
     const firstSprint = sprints[0];
     // Last Sprints not delayed
     const sprintsNotDelayed = sprints.filter(
-        (sprint, index) => index !== 0 && !sprint.delayed
+        (sprint, index) => index !== 0 && !sprint.date_delay
     );
     // Last Sprints delayed
     const sprintsDelayed = sprints.filter(
-        (sprint, index) => index !== 0 && sprint.delayed
+        (sprint, index) => index !== 0 && sprint.date_delay
     );
 
     const avgSprintsNotDelayed = calculateAverage(
@@ -217,8 +216,7 @@ export const SprintsTable = ({ loading, sprints, handleOpenSprintDialog }) => {
                             <TableCell
                                 align="center"
                                 colSpan={5}
-                                padding="none"
-                            >
+                                padding="none">
                                 <Skeleton
                                     variant="rectangular"
                                     animation="wave"

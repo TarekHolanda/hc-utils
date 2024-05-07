@@ -29,10 +29,10 @@ export default function Page() {
     const [sprintsAmount, setSprintsAmount] = useState("10");
     const [sprint, setSprint] = useState({
         index: "",
-        totalPoints: "",
-        pointsMerged: "",
-        extraDeploys: "",
-        delayed: false,
+        total_points: "",
+        points_merged: "",
+        extra_deploys: "",
+        date_delay: false,
     });
 
     const [rulerDialogOpen, setRulerDialogOpen] = useState(false);
@@ -53,17 +53,19 @@ export default function Page() {
 
     const handleGetSprints = () => {
         setLoading(true);
-        handleGet("sprints", { pageSize: sprintsAmount }).then((response) => {
-            if (response.error) {
-                handleAlert(response.error, "error");
+        handleGet("sprints/list", { pageSize: sprintsAmount }).then(
+            (response) => {
+                if (response.error) {
+                    handleAlert(response.error, "error");
+                    setLoading(false);
+
+                    return;
+                }
+
+                setSprints(response.data);
                 setLoading(false);
-
-                return;
             }
-
-            setSprints(response.data);
-            setLoading(false);
-        });
+        );
     };
 
     const handleAlert = (
@@ -104,10 +106,10 @@ export default function Page() {
         setLoadingDialog(false);
         setSprint({
             index: "",
-            totalPoints: "",
-            pointsMerged: "",
-            extraDeploys: "",
-            delayed: false,
+            total_points: "",
+            points_merged: "",
+            extra_deploys: "",
+            date_delay: false,
         });
     };
 
@@ -121,7 +123,7 @@ export default function Page() {
     const handleAddUpdateSprint = (event) => {
         event.preventDefault();
 
-        if (!sprint.index || !sprint.totalPoints) {
+        if (!sprint.index || !sprint.total_points) {
             handleAlert(
                 "Sprint Index and Total Points are required",
                 "warning"
@@ -133,10 +135,10 @@ export default function Page() {
         const sprintParam = {
             id: sprint.id || 0,
             index: sprint.index,
-            totalPoints: sprint.totalPoints,
-            pointsMerged: sprint.pointsMerged || 0,
-            extraDeploys: sprint.extraDeploys || 0,
-            delayed: sprint.delayed || false,
+            total_points: sprint.total_points,
+            points_merged: sprint.points_merged || 0,
+            extra_deploys: sprint.extra_deploys || 0,
+            date_delay: sprint.date_delay || false,
         };
         const method = sprint.id ? "PUT" : "POST";
         const url = sprint.id
