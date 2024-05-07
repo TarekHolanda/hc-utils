@@ -191,6 +191,18 @@ export default function Page() {
         }, 2000);
     };
 
+    useEffect(() => {
+        if (qrCodes.length > 0) {
+            setTimeout(() => {
+                generatePDF(size);
+            }, 1000);
+        }
+    }, [qrCodes]);
+
+    if (status === "unauthenticated" || !session) {
+        redirect("/signin");
+    }
+
     const updateSize = (event, newSize) => {
         if (newSize && newSize !== size) {
             setSize(newSize);
@@ -228,22 +240,6 @@ export default function Page() {
             }
         }
     };
-
-    useEffect(() => {
-        if (qrCodes.length > 0) {
-            setTimeout(() => {
-                generatePDF(size);
-            }, 1000);
-        }
-    }, [qrCodes]);
-
-    if (status === "loading") {
-        return <MyLoading />;
-    }
-
-    if (status === "unauthenticated" || !session) {
-        redirect("/signin");
-    }
 
     const downloadQRCodes = async (e) => {
         e.preventDefault();
@@ -482,11 +478,9 @@ export default function Page() {
                 </Box>
 
                 <MySpeedDial page={"scan-and-go"} />
-                
-                {/* This loading needs to be here to give time to the QR Codes to load after render */}
-                {loading && (
-                    <MyLoading />
-                )}
+
+                {/* This loading needs to be here, so the QR Codes can load after render */}
+                {loading && <MyLoading />}
             </Box>
         </Fade>
     );

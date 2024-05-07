@@ -24,7 +24,6 @@ export const XrayDialog = ({
     handleCloseDialog,
     handleUpdateCustomer,
 }) => {
-    console.log("Call Dialog:", customer);
     return (
         <Dialog open={dialogOpen} disableScrollLock>
             <FormControl>
@@ -66,23 +65,20 @@ export const XrayDialog = ({
                         onChange={(event) => {
                             handleSetCustomer(event.target.value, "status");
                         }}
-                        disabled={loading}
-                    >
+                        disabled={loading}>
                         <MenuItem
                             value={1}
                             sx={{
                                 color: (theme) =>
                                     `${theme.palette.success.main}`,
-                            }}
-                        >
+                            }}>
                             Good
                         </MenuItem>
                         <MenuItem
                             value={2}
                             sx={{
                                 color: (theme) => `${theme.palette.info.dark}`,
-                            }}
-                        >
+                            }}>
                             Onboarding
                         </MenuItem>
                         <MenuItem
@@ -90,8 +86,7 @@ export const XrayDialog = ({
                             sx={{
                                 color: (theme) =>
                                     `${theme.palette.warning.light}`,
-                            }}
-                        >
+                            }}>
                             Churn
                         </MenuItem>
                         <MenuItem
@@ -99,24 +94,21 @@ export const XrayDialog = ({
                             sx={{
                                 color: (theme) =>
                                     `${theme.palette.warning.main}`,
-                            }}
-                        >
+                            }}>
                             Inactive
                         </MenuItem>
                         <MenuItem
                             value={5}
                             sx={{
                                 color: (theme) => `${theme.palette.error.dark}`,
-                            }}
-                        >
+                            }}>
                             Low Risk
                         </MenuItem>
                         <MenuItem
                             value={6}
                             sx={{
                                 color: (theme) => `${theme.palette.error.main}`,
-                            }}
-                        >
+                            }}>
                             Medium Risk
                         </MenuItem>
                         <MenuItem
@@ -124,8 +116,7 @@ export const XrayDialog = ({
                             sx={{
                                 color: (theme) =>
                                     `${theme.palette.error.light}`,
-                            }}
-                        >
+                            }}>
                             High Risk
                         </MenuItem>
                     </TextField>
@@ -236,16 +227,14 @@ export const XrayDialog = ({
                             variant="outlined"
                             size="large"
                             onClick={handleCloseDialog}
-                            className="width-128"
-                        >
+                            className="width-128">
                             Cancel
                         </Button>
                         <Button
                             variant="outlined"
                             size="large"
                             onClick={handleUpdateCustomer}
-                            className="width-128"
-                        >
+                            className="width-128">
                             Save
                         </Button>
                     </DialogActions>

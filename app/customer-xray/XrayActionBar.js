@@ -3,12 +3,12 @@ import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import IconButton from "@mui/material/IconButton";
 import SyncIcon from "@mui/icons-material/Sync";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 
 import { MySpacer } from "../components/MySpacer";
+import { MyIconButton } from "../components/MyIconButton";
 
 export const XrayActionBar = ({
     filterMonths,
@@ -26,8 +26,7 @@ export const XrayActionBar = ({
             component="form"
             autoComplete="off"
             size="small"
-            className="display-flex justify-space-between padding-top-2rem padding-bottom-1rem"
-        >
+            className="display-flex justify-space-between padding-top-2rem padding-bottom-1rem">
             <Box>
                 <TextField
                     select
@@ -38,8 +37,7 @@ export const XrayActionBar = ({
                     onChange={(event) => {
                         setFilterMonths(event.target.value);
                     }}
-                    SelectProps={{ MenuProps: { disableScrollLock: true } }}
-                >
+                    SelectProps={{ MenuProps: { disableScrollLock: true } }}>
                     <MenuItem value={1}>1 month</MenuItem>
                     <MenuItem value={2}>2 months</MenuItem>
                     <MenuItem value={3}>3 months</MenuItem>
@@ -61,8 +59,7 @@ export const XrayActionBar = ({
                     onChange={(event) => {
                         setFilterStatus(event.target.value);
                     }}
-                    SelectProps={{ MenuProps: { disableScrollLock: true } }}
-                >
+                    SelectProps={{ MenuProps: { disableScrollLock: true } }}>
                     <MenuItem value={""}>All</MenuItem>
                     <MenuItem value={1}>Good</MenuItem>
                     <MenuItem value={2}>Onboarding</MenuItem>
@@ -109,13 +106,12 @@ export const XrayActionBar = ({
 
                 <MySpacer size={16} horizontal />
 
-                <IconButton
-                    aria-label="sync"
-                    size="large"
+                <MyIconButton
+                    color="primary"
                     onClick={handleGetCustomers}
-                >
+                    size="large">
                     <SyncIcon fontSize="inherit" />
-                </IconButton>
+                </MyIconButton>
             </Box>
         </Box>
     );

@@ -16,6 +16,7 @@ import { SprintsTable } from "./SprintsTable";
 import { SprintDialog } from "./SprintDialog";
 import { SprintsActionBar } from "./SprintsActionBar";
 import { RulerDialog } from "./RulerDialog";
+import { RULER_DEFAULT_DAY } from "../utils/constants";
 
 export default function Page() {
     const { data: session, status } = useSession();
@@ -23,47 +24,35 @@ export default function Page() {
     const [loading, setLoading] = useState(false);
     const [loadingDialog, setLoadingDialog] = useState(false);
     const [sprintDialogOpen, setSprintDialogOpen] = useState(false);
+    const [rulerDialogOpen, setRulerDialogOpen] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertSeverity, setAlertSeverity] = useState("success");
     const [sprintsAmount, setSprintsAmount] = useState("10");
     const [sprint, setSprint] = useState({
         index: "",
-        totalPoints: "",
-        pointsMerged: "",
-        extraDeploys: "",
-        delayed: false,
+        total_points: "",
+        points_merged: "",
+        extra_deploys: "",
+        date_delay: false,
+        process_delay: false,
     });
-
-    const [rulerDialogOpen, setRulerDialogOpen] = useState(false);
-    const [ruler, setRuler] = useState({
-        monday: [1, 1, 1, 1],
-        tuesday: [2, 2, 2, 2],
-        wednesday: [3, 3, 3, 3],
-        thursday: [4, 4, 4, 4],
-        friday: [5, 5, 5, 5],
-    });
-
-    const handleSetRuler = (value, type) => {
-        setRuler((prevState) => ({
-            ...prevState,
-            [type]: value,
-        }));
-    };
 
     const handleGetSprints = () => {
         setLoading(true);
-        handleGet("sprints", { pageSize: sprintsAmount }).then((response) => {
-            if (response.error) {
-                handleAlert(response.error, "error");
+        handleGet("sprints/list", { pageSize: sprintsAmount }).then(
+            (response) => {
+                if (response.error) {
+                    handleAlert(response.error, "error");
+                    setLoading(false);
+
+                    return;
+                }
+
+                setSprints(response.data);
                 setLoading(false);
-
-                return;
             }
-
-            setSprints(response.data);
-            setLoading(false);
-        });
+        );
     };
 
     const handleAlert = (
@@ -91,24 +80,35 @@ export default function Page() {
         redirect("/signin");
     }
 
-    const handleOpenSprintDialog = (current) => {
+    const handleOpenSprintDialog = (event, current) => {
+        event.stopPropagation();
         setSprintDialogOpen(true);
 
         if (current && current.id) {
+            if (!current.ruler?.days) {
+                current.ruler = {
+                    days: [{ index: 0, lines: RULER_DEFAULT_DAY }],
+                };
+            }
+
             setSprint(current);
         }
     };
 
-    const handleCloseSprintDialog = () => {
+    const handleCloseDialogs = () => {
         setSprintDialogOpen(false);
-        setLoadingDialog(false);
-        setSprint({
-            index: "",
-            totalPoints: "",
-            pointsMerged: "",
-            extraDeploys: "",
-            delayed: false,
-        });
+        setRulerDialogOpen(false);
+        setTimeout(() => {
+            setLoadingDialog(false);
+            setSprint({
+                index: "",
+                total_points: "",
+                points_merged: "",
+                extra_deploys: "",
+                date_delay: false,
+                process_delay: false,
+            });
+        }, 500);
     };
 
     const handleSetSprint = (value, type) => {
@@ -119,9 +119,9 @@ export default function Page() {
     };
 
     const handleAddUpdateSprint = (event) => {
-        event.preventDefault();
+        event?.preventDefault();
 
-        if (!sprint.index || !sprint.totalPoints) {
+        if (!sprint.index || !sprint.total_points) {
             handleAlert(
                 "Sprint Index and Total Points are required",
                 "warning"
@@ -133,11 +133,14 @@ export default function Page() {
         const sprintParam = {
             id: sprint.id || 0,
             index: sprint.index,
-            totalPoints: sprint.totalPoints,
-            pointsMerged: sprint.pointsMerged || 0,
-            extraDeploys: sprint.extraDeploys || 0,
-            delayed: sprint.delayed || false,
+            total_points: sprint.total_points,
+            points_merged: sprint.points_merged || 0,
+            extra_deploys: sprint.extra_deploys || 0,
+            date_delay: sprint.date_delay || false,
+            process_delay: sprint.process_delay || false,
+            ruler: sprint.ruler || {},
         };
+
         const method = sprint.id ? "PUT" : "POST";
         const url = sprint.id
             ? "sprints/" + sprint.id + "/update"
@@ -150,35 +153,36 @@ export default function Page() {
                 return;
             }
 
+            handleAlert(
+                "Sprint #" +
+                    sprint.index +
+                    (sprint.id ? " updated" : "  added") +
+                    " successfully",
+                "success"
+            );
+
             if (sprint.id) {
-                const newSprints = sprints.map((sprintCurrent) => {
-                    if (sprintCurrent.id === response.data.id) {
-                        return response.data;
+                const updatedSprints = sprints.map((currentSprint) => {
+                    if (currentSprint.id === sprint.id) {
+                        return sprint;
                     }
 
-                    return sprintCurrent;
+                    return currentSprint;
                 });
 
-                setSprints(newSprints);
-                handleAlert(
-                    "Sprint #" + sprint.index + " updated successfully",
-                    "success"
-                );
+                setSprints(updatedSprints);
             } else {
-                const newSprints = [...sprints, response.data]
+                const updatedSprints = [...sprints, response.data]
                     .sort((a, b) => b.index - a.index)
                     .slice(
                         0,
                         sprintsAmount === "0" ? sprints.length : sprintsAmount
                     );
-                setSprints(newSprints);
-                handleAlert(
-                    "Sprint #" + sprint.index + " added successfully",
-                    "success"
-                );
+
+                setSprints(updatedSprints);
             }
 
-            handleCloseSprintDialog();
+            handleCloseDialogs();
         });
     };
 
@@ -205,18 +209,30 @@ export default function Page() {
                 "success"
             );
 
-            handleCloseSprintDialog();
+            handleCloseDialogs();
         });
     };
 
-    const handleOpenRulerDialog = () => {
-        console.log("Open Ruler");
-        setRulerDialogOpen(true);
+    const handleUpdateRuler = (sprintSet) => {
+        for (let day of sprintSet?.ruler?.days) {
+            for (let line of day.lines) {
+                delete line.selected;
+            }
+        }
+
+        handleAddUpdateSprint();
     };
 
-    const handleCloseRulerDialog = () => {
-        console.log("Close Ruler");
-        setRulerDialogOpen(false);
+    const handleOpenRulerDialog = (sprintSet) => {
+        setRulerDialogOpen(true);
+
+        if (!sprintSet?.ruler?.days) {
+            sprintSet.ruler = {
+                days: [{ index: 0, lines: RULER_DEFAULT_DAY }],
+            };
+        }
+
+        setSprint(sprintSet);
     };
 
     return (
@@ -225,13 +241,13 @@ export default function Page() {
                 sprintsAmount={sprintsAmount}
                 setSprintsAmount={setSprintsAmount}
                 handleGetSprints={handleGetSprints}
-                handleOpenRulerDialog={handleOpenRulerDialog}
             />
 
             <SprintsTable
                 loading={loading}
                 sprints={sprints}
                 handleOpenSprintDialog={handleOpenSprintDialog}
+                handleOpenRulerDialog={handleOpenRulerDialog}
             />
 
             <SprintDialog
@@ -240,18 +256,18 @@ export default function Page() {
                 loading={loading}
                 loadingDialog={loadingDialog}
                 handleSetSprint={handleSetSprint}
-                handleCloseSprintDialog={handleCloseSprintDialog}
+                handleCloseDialogs={handleCloseDialogs}
                 handleAddUpdateSprint={handleAddUpdateSprint}
                 handleDeleteSprint={handleDeleteSprint}
             />
 
             <RulerDialog
                 rulerDialogOpen={rulerDialogOpen}
-                ruler={ruler}
-                handleSetRuler={handleSetRuler}
-                loading={loading}
+                sprint={sprint}
                 loadingDialog={loadingDialog}
-                handleCloseRulerDialog={handleCloseRulerDialog}
+                handleSetSprint={handleSetSprint}
+                handleUpdateRuler={handleUpdateRuler}
+                handleCloseDialogs={handleCloseDialogs}
             />
 
             <MySpeedDial
@@ -261,8 +277,8 @@ export default function Page() {
 
             <Snackbar
                 open={showAlert}
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
-                <Alert severity={alertSeverity} variant="outlined">
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+                <Alert severity={alertSeverity} variant="filled">
                     {alertMessage}
                 </Alert>
             </Snackbar>

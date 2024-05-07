@@ -64,7 +64,6 @@ export default function Page() {
             filterNoMrr: filterNoMrr,
             search: search,
         }).then((response) => {
-            console.log(response.data);
             if (response.error) {
                 handleAlert(response.error, "error");
                 setLoading(false);

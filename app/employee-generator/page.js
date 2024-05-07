@@ -275,6 +275,8 @@ export default function Page() {
                     </Fade>
                 )}
 
+                <MySpacer size={20} horizontal />
+
                 <div ref={qrRef} className="display-none">
                     {qrCodes.map((qrCode, index) => {
                         return (

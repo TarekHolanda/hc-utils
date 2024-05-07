@@ -21,8 +21,7 @@ export function MyUploadBar(props) {
                 variant="outlined"
                 size="large"
                 component="label"
-                startIcon={<UploadIcon />}
-            >
+                startIcon={<UploadIcon />}>
                 Upload
                 <input
                     hidden
@@ -40,8 +39,7 @@ export function MyUploadBar(props) {
                 variant="outlined"
                 size="large"
                 onClick={props.downloadQRCodes}
-                startIcon={<DownloadIcon />}
-            >
+                startIcon={<DownloadIcon />}>
                 Download ZIP
             </Button>
 
@@ -53,12 +51,10 @@ export function MyUploadBar(props) {
                         size="large"
                         component="label"
                         startIcon={<PdfIcon />}
-                        className="pdf-button"
-                    >
+                        className="pdf-button">
                         <PDFDownloadLink
                             document={props.pdfPreview}
-                            fileName="QR Codes.pdf"
-                        >
+                            fileName="QR Codes.pdf">
                             {({}) => "Download PDF"}
                         </PDFDownloadLink>
                     </Button>
@@ -71,8 +67,7 @@ export function MyUploadBar(props) {
                 variant="outlined"
                 size="large"
                 onClick={props.clearQRCodes}
-                startIcon={<DeleteIcon />}
-            >
+                startIcon={<DeleteIcon />}>
                 Clear
             </Button>
         </Box>
