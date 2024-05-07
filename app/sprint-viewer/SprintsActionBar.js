@@ -3,19 +3,17 @@
 import React from "react";
 
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import SyncIcon from "@mui/icons-material/Sync";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 
 import { MySpacer } from "../components/MySpacer";
+import { MyIconButton } from "../components/MyIconButton";
 
 export const SprintsActionBar = ({
     sprintsAmount,
     setSprintsAmount,
     handleGetSprints,
-    handleOpenRulerDialog,
 }) => {
     return (
         <Box
@@ -43,21 +41,12 @@ export const SprintsActionBar = ({
             <MySpacer size={16} horizontal />
 
             <Box>
-                <Button
-                    variant="outlined"
-                    size="large"
-                    onClick={handleOpenRulerDialog}>
-                    Ruler
-                </Button>
-
-                <MySpacer size={16} horizontal />
-
-                <IconButton
-                    aria-label="sync"
-                    size="large"
-                    onClick={handleGetSprints}>
+                <MyIconButton
+                    color="primary"
+                    onClick={handleGetSprints}
+                    size="large">
                     <SyncIcon fontSize="inherit" />
-                </IconButton>
+                </MyIconButton>
             </Box>
         </Box>
     );

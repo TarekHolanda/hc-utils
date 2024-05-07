@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 
-import { useTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
@@ -25,37 +25,43 @@ import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import ScoreboardIcon from "@mui/icons-material/Scoreboard";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import PhonelinkSetupIcon from "@mui/icons-material/PhonelinkSetup";
+import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
+import Skeleton from "@mui/material/Skeleton";
 
 import { MySpacer } from "../components/MySpacer";
+import { RULER_DEFAULT_DAY } from "../utils/constants";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
-    "&.phaseOne": {
-        backgroundColor: theme.palette.primary.main,
+    "&.merge": {
+        backgroundColor: theme.palette.cyan.dark,
     },
-    "&.phaseTwo": {
-        backgroundColor: theme.palette.primary.dark,
+    "&.version": {
+        backgroundColor: theme.palette.cyan.main,
     },
-    "&.phaseThree": {
-        backgroundColor: theme.palette.success.light,
+    "&.accept": {
+        backgroundColor: theme.palette.success.main,
     },
-    "&.phaseFour": {
-        backgroundColor: theme.palette.success.dark,
+    "&.final": {
+        backgroundColor: theme.palette.info.main,
+    },
+    "&.none": {
+        backgroundColor: theme.palette.blueGrey.main,
     },
     "&:hover": {
-        backgroundColor: theme.palette.action.hover,
+        backgroundColor: theme.palette.blueGrey.light,
     },
     "&.selected": {
-        color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.primary.light,
+        color: theme.palette.blueGrey.dark,
+        backgroundColor: theme.palette.blueGrey.contrastText,
     },
 }));
 
 const tasks = {
-    phaseOne: {
+    merge: {
         name: "Merge Open PRs",
         icon: (
             <ListItemIcon>
@@ -63,7 +69,7 @@ const tasks = {
             </ListItemIcon>
         ),
     },
-    phaseTwo: {
+    version: {
         name: "Versioning Tests",
         icon: (
             <ListItemIcon>
@@ -71,7 +77,7 @@ const tasks = {
             </ListItemIcon>
         ),
     },
-    phaseThree: {
+    accept: {
         name: "Acceptance Tests",
         icon: (
             <ListItemIcon>
@@ -79,7 +85,7 @@ const tasks = {
             </ListItemIcon>
         ),
     },
-    phaseFour: {
+    final: {
         name: "Final & Plugin Tests",
         icon: (
             <ListItemIcon>
@@ -87,6 +93,27 @@ const tasks = {
             </ListItemIcon>
         ),
     },
+    none: {
+        name: "None",
+        icon: (
+            <ListItemIcon>
+                <IndeterminateCheckBoxIcon fontSize="small" />
+            </ListItemIcon>
+        ),
+    },
+};
+
+const weekdays = {
+    0: "Monday",
+    1: "Tuesday",
+    2: "Wednesday",
+    3: "Thursday",
+    4: "Friday",
+    5: "Monday",
+    6: "Tuesday",
+    7: "Wednesday",
+    8: "Thursday",
+    9: "Friday",
 };
 
 const MyMenu = ({ anchorEl, open, handleCloseMenu, handleEdit }) => {
@@ -119,106 +146,12 @@ const MyMenu = ({ anchorEl, open, handleCloseMenu, handleEdit }) => {
 
 export const RulerDialog = ({
     rulerDialogOpen,
-    ruler,
-    handleSetRuler,
-    loading,
+    sprint,
     loadingDialog,
-    handleCloseRulerDialog,
+    handleSetSprint,
+    handleUpdateRuler,
+    handleCloseDialogs,
 }) => {
-    const [days, setDays] = useState([
-        {
-            index: 0,
-            name: "Monday",
-            lines: [
-                {
-                    index: 0,
-                    selected: false,
-                    task: "phaseOne",
-                },
-                {
-                    index: 1,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 2,
-                    selected: false,
-                    task: "phaseThree",
-                },
-                {
-                    index: 3,
-                    selected: false,
-                    task: "phaseFour",
-                },
-                {
-                    index: 4,
-                    selected: false,
-                    task: "phaseOne",
-                },
-                {
-                    index: 5,
-                    selected: false,
-                    task: "phaseOne",
-                },
-                {
-                    index: 6,
-                    selected: false,
-                    task: "phaseOne",
-                },
-                {
-                    index: 7,
-                    selected: false,
-                    task: "phaseOne",
-                },
-            ],
-        },
-        {
-            index: 1,
-            name: "Tuesday",
-            lines: [
-                {
-                    index: 0,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 1,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 2,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 3,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 4,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 5,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 6,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-                {
-                    index: 7,
-                    selected: false,
-                    task: "phaseTwo",
-                },
-            ],
-        },
-    ]);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -226,47 +159,93 @@ export const RulerDialog = ({
         setAnchorEl(null);
     };
 
-    const handleLeftClick = (event, day, line) => {
-        const updatedDays = [...days];
-        const updatedDay = updatedDays.find((a) => a.index === day.index);
-        const updatedLine = updatedDay.lines.find(
-            (a) => a.index === line.index
-        );
+    const handleLeftClick = (event, dayIndex, lineIndex) => {
+        const newData = sprint.ruler.days;
 
-        updatedLine.selected = !line.selected;
-        setDays(updatedDays);
+        newData[dayIndex] = {
+            ...newData[dayIndex],
+            lines: [...newData[dayIndex].lines],
+        };
+
+        newData[dayIndex].lines[lineIndex] = {
+            ...newData[dayIndex].lines[lineIndex],
+            selected: !newData[dayIndex].lines[lineIndex].selected,
+        };
+
+        const updatedRuler = {
+            ...sprint.ruler,
+            days: newData,
+        };
+
+        handleSetSprint(updatedRuler, "ruler");
         event.preventDefault();
     };
 
-    const handleRightClick = (event, day, line) => {
-        const updatedDays = [...days];
-        const updatedDay = updatedDays.find((a) => a.index === day.index);
-        const updatedLine = updatedDay.lines.find(
-            (a) => a.index === line.index
-        );
+    const handleRightClick = (event, dayIndex, lineIndex) => {
+        const newData = sprint.ruler.days;
 
-        updatedLine.selected = true;
-        setDays(updatedDays);
+        newData[dayIndex] = {
+            ...newData[dayIndex],
+            lines: [...newData[dayIndex].lines],
+        };
+
+        newData[dayIndex].lines[lineIndex] = {
+            ...newData[dayIndex].lines[lineIndex],
+            selected: true,
+        };
+
+        const updatedRuler = {
+            ...sprint.ruler,
+            days: newData,
+        };
+
+        handleSetSprint(updatedRuler, "ruler");
         event.preventDefault();
         setAnchorEl(event.currentTarget);
     };
 
     const handleEdit = (task) => {
-        const updatedDays = [...days];
-        updatedDays.forEach((day) => {
-            const updatedLines = day.lines.filter(
-                (line) => line.selected === true
-            );
+        const updatedDays = sprint.ruler.days.map((day) => ({
+            ...day,
+            lines: day.lines.map((line) => ({
+                ...line,
+                task: line.selected ? task : line.task,
+                selected: false,
+            })),
+        }));
 
-            if (updatedLines.length) {
-                updatedLines.forEach((line) => {
-                    line.task = task;
-                    line.selected = false;
-                });
-            }
-        });
-        setDays(updatedDays);
+        const updatedRuler = {
+            ...sprint.ruler,
+            days: updatedDays,
+        };
+
+        handleSetSprint(updatedRuler, "ruler");
         handleCloseMenu();
+    };
+
+    const handleAddDay = () => {
+        if (sprint.ruler.days.length < 10) {
+            const newDay = {
+                index: sprint.ruler.days.length,
+                lines: RULER_DEFAULT_DAY,
+            };
+
+            const updatedRuler = {
+                ...sprint.ruler,
+                days: [...sprint.ruler.days, newDay],
+            };
+
+            handleSetSprint(updatedRuler, "ruler");
+        }
+    };
+
+    const handleRemoveDay = () => {
+        const updatedRuler = {
+            ...sprint.ruler,
+            days: sprint.ruler.days.slice(0, -1),
+        };
+
+        handleSetSprint(updatedRuler, "ruler");
     };
 
     return (
@@ -280,7 +259,7 @@ export const RulerDialog = ({
                     <IconButton
                         edge="start"
                         color="inherit"
-                        onClick={handleCloseRulerDialog}
+                        onClick={handleCloseDialogs}
                         aria-label="close">
                         <CloseIcon />
                     </IconButton>
@@ -291,75 +270,104 @@ export const RulerDialog = ({
                         Deploy Week - Estimation
                     </Typography>
                     <Button
-                        autoFocus
-                        color="inherit"
-                        onClick={handleCloseRulerDialog}>
-                        Close
+                        variant="contained"
+                        size="large"
+                        disabled={loadingDialog}
+                        onClick={() => handleUpdateRuler(sprint)}>
+                        Save
                     </Button>
                 </Toolbar>
             </AppBar>
 
             <MySpacer size={16} vertical />
 
-            <Grid container spacing={0}>
-                {days.map((day) => {
-                    return (
-                        <Grid
-                            item
-                            xs={2}
-                            className="display-flex justify-center"
-                            key={"day" + day.index}>
-                            <Box className="width-100">
-                                <Typography
-                                    className="text-center"
-                                    variant="h6">
-                                    {day.name}
-                                </Typography>
+            {loadingDialog ? (
+                <Skeleton variant="rectangular" animation="wave" height={256} />
+            ) : (
+                <Grid container spacing={0}>
+                    {sprint?.ruler?.days.map((day) => {
+                        return (
+                            <Grid
+                                item
+                                xs={2}
+                                className="display-flex justify-center"
+                                key={"day" + day.index}>
+                                <Box className="width-100">
+                                    <Typography
+                                        className="text-center"
+                                        variant="h6">
+                                        {weekdays[day.index]}
+                                    </Typography>
 
-                                <List className="width-100">
-                                    {day.lines.map((line) => {
-                                        return (
-                                            <StyledListItem
-                                                key={
-                                                    "day" +
-                                                    day.index +
-                                                    "line" +
-                                                    line.index
-                                                }
-                                                disablePadding
-                                                className={
-                                                    line.selected
-                                                        ? "selected"
-                                                        : line.task
-                                                }
-                                                onClick={(event) => {
-                                                    handleLeftClick(
-                                                        event,
-                                                        day,
-                                                        line
-                                                    );
-                                                }}
-                                                onContextMenu={(event) => {
-                                                    handleRightClick(
-                                                        event,
-                                                        day,
-                                                        line
-                                                    );
-                                                }}>
-                                                <ListItemButton className="text-center">
-                                                    <ListItemText
-                                                        primary={line.index}
-                                                    />
-                                                </ListItemButton>
-                                            </StyledListItem>
-                                        );
-                                    })}
-                                </List>
-                            </Box>
-                        </Grid>
-                    );
-                })}
-            </Grid>
+                                    <List className="width-100">
+                                        {day.lines.map((line) => {
+                                            return (
+                                                <StyledListItem
+                                                    key={
+                                                        "day" +
+                                                        day.index +
+                                                        "line" +
+                                                        line.index
+                                                    }
+                                                    disablePadding
+                                                    className={
+                                                        line.selected
+                                                            ? "selected"
+                                                            : line.task
+                                                    }
+                                                    onClick={(event) => {
+                                                        handleLeftClick(
+                                                            event,
+                                                            day.index,
+                                                            line.index
+                                                        );
+                                                    }}
+                                                    onContextMenu={(event) => {
+                                                        handleRightClick(
+                                                            event,
+                                                            day.index,
+                                                            line.index
+                                                        );
+                                                    }}>
+                                                    <ListItemButton className="text-center">
+                                                        <ListItemText
+                                                            primary={
+                                                                tasks[line.task]
+                                                                    .name
+                                                            }
+                                                        />
+                                                    </ListItemButton>
+                                                </StyledListItem>
+                                            );
+                                        })}
+                                    </List>
+                                </Box>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
+            )}
+
+            {!loadingDialog && (
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        color="blueGrey"
+                        onClick={handleRemoveDay}
+                        className="width-128">
+                        Remove
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        color="blueGrey"
+                        onClick={handleAddDay}
+                        className="width-128">
+                        Add Day
+                    </Button>
+                </DialogActions>
+            )}
 
             <MyMenu
                 anchorEl={anchorEl}

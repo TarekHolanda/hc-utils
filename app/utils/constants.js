@@ -34,3 +34,26 @@ export const COLUMN_WIDTH_LG = "18%";
 export const COLUMN_WIDTH_MD = "12%";
 
 export const COLUMN_WIDTH_SM = "10%";
+
+export const RULER_DEFAULT_DAY = [
+    {
+        index: 0,
+        task: "none",
+        selected: false,
+    },
+    {
+        index: 1,
+        task: "none",
+        selected: false,
+    },
+    {
+        index: 2,
+        task: "none",
+        selected: false,
+    },
+    {
+        index: 3,
+        task: "none",
+        selected: false,
+    },
+];

@@ -11,10 +11,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import IconButton from "@mui/material/IconButton";
 import Skeleton from "@mui/material/Skeleton";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
+
+import { MyIconButton } from "../components/MyIconButton";
 
 export const SprintDialog = ({
     sprintDialogOpen,
@@ -22,7 +23,7 @@ export const SprintDialog = ({
     loading,
     loadingDialog,
     handleSetSprint,
-    handleCloseSprintDialog,
+    handleCloseDialogs,
     handleAddUpdateSprint,
     handleDeleteSprint,
 }) => {
@@ -53,7 +54,7 @@ export const SprintDialog = ({
                                 "index"
                             );
                         }}
-                        disabled={loading}
+                        disabled={loading || loadingDialog}
                     />
 
                     <TextField
@@ -67,14 +68,14 @@ export const SprintDialog = ({
                             inputMode: "numeric",
                             pattern: "[0-9]*",
                         }}
-                        value={sprint.totalPoints}
+                        value={sprint.total_points}
                         onChange={(event) => {
                             handleSetSprint(
                                 parseInt(event.target.value) || "",
-                                "totalPoints"
+                                "total_points"
                             );
                         }}
-                        disabled={loading}
+                        disabled={loading || loadingDialog}
                     />
 
                     <TextField
@@ -88,14 +89,14 @@ export const SprintDialog = ({
                             inputMode: "numeric",
                             pattern: "[0-9]*",
                         }}
-                        value={sprint.pointsMerged}
+                        value={sprint.points_merged}
                         onChange={(event) => {
                             handleSetSprint(
                                 parseInt(event.target.value) || "",
-                                "pointsMerged"
+                                "points_merged"
                             );
                         }}
-                        disabled={loading}
+                        disabled={loading || loadingDialog}
                     />
 
                     <TextField
@@ -109,22 +110,22 @@ export const SprintDialog = ({
                             inputMode: "numeric",
                             pattern: "[0-9]*",
                         }}
-                        value={sprint.extraDeploys}
+                        value={sprint.extra_deploys}
                         onChange={(event) => {
                             handleSetSprint(
                                 parseInt(event.target.value) || "",
-                                "extraDeploys"
+                                "extra_deploys"
                             );
                         }}
-                        disabled={loading}
+                        disabled={loading || loadingDialog}
                     />
 
                     <FormControlLabel
-                        control={<Switch />}
+                        control={<Switch disabled={loading || loadingDialog} />}
                         label="Delayed"
-                        value={sprint.delayed}
+                        value={sprint.date_delay}
                         onChange={(event) => {
-                            handleSetSprint(event.target.checked, "delayed");
+                            handleSetSprint(event.target.checked, "date_delay");
                         }}
                     />
                 </DialogContent>
@@ -140,30 +141,25 @@ export const SprintDialog = ({
                 ) : (
                     <DialogActions>
                         {sprint.id && (
-                            <IconButton
-                                aria-label="delete"
-                                size="large"
-                                onClick={handleDeleteSprint}
-                                sx={{ position: "absolute", left: "4px" }}
+                            <MyIconButton
                                 color="error"
-                            >
+                                sx={{ position: "absolute", left: "4px" }}
+                                onClick={handleDeleteSprint}>
                                 <DeleteOutlineIcon fontSize="inherit" />
-                            </IconButton>
+                            </MyIconButton>
                         )}
                         <Button
-                            variant="outlined"
+                            variant="contained"
                             size="large"
-                            onClick={handleCloseSprintDialog}
-                            className="width-128"
-                        >
+                            onClick={handleCloseDialogs}
+                            className="width-128">
                             Cancel
                         </Button>
                         <Button
-                            variant="outlined"
+                            variant="contained"
                             size="large"
                             onClick={handleAddUpdateSprint}
-                            className="width-128"
-                        >
+                            className="width-128">
                             Save
                         </Button>
                     </DialogActions>
