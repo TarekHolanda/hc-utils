@@ -132,6 +132,14 @@ a {
     text-align: center;
 }
 
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
 .box-center-page {
     height: calc(100vh - 128px);
 }
