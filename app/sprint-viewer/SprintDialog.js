@@ -121,11 +121,33 @@ export const SprintDialog = ({
                     />
 
                     <FormControlLabel
-                        control={<Switch disabled={loading || loadingDialog} />}
-                        label="Delayed"
+                        control={
+                            <Switch
+                                checked={sprint.date_delay}
+                                disabled={loading || loadingDialog}
+                            />
+                        }
+                        label="Date Delay"
                         value={sprint.date_delay}
                         onChange={(event) => {
                             handleSetSprint(event.target.checked, "date_delay");
+                        }}
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={sprint.process_delay}
+                                disabled={loading || loadingDialog}
+                            />
+                        }
+                        label="Process Delay"
+                        value={sprint.process_delay}
+                        onChange={(event) => {
+                            handleSetSprint(
+                                event.target.checked,
+                                "process_delay"
+                            );
                         }}
                     />
                 </DialogContent>
