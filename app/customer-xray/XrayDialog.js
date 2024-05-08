@@ -66,59 +66,13 @@ export const XrayDialog = ({
                             handleSetCustomer(event.target.value, "status");
                         }}
                         disabled={loading}>
-                        <MenuItem
-                            value={1}
-                            sx={{
-                                color: (theme) =>
-                                    `${theme.palette.success.main}`,
-                            }}>
-                            Good
-                        </MenuItem>
-                        <MenuItem
-                            value={2}
-                            sx={{
-                                color: (theme) => `${theme.palette.info.dark}`,
-                            }}>
-                            Onboarding
-                        </MenuItem>
-                        <MenuItem
-                            value={3}
-                            sx={{
-                                color: (theme) =>
-                                    `${theme.palette.warning.light}`,
-                            }}>
-                            Churn
-                        </MenuItem>
-                        <MenuItem
-                            value={4}
-                            sx={{
-                                color: (theme) =>
-                                    `${theme.palette.warning.main}`,
-                            }}>
-                            Inactive
-                        </MenuItem>
-                        <MenuItem
-                            value={5}
-                            sx={{
-                                color: (theme) => `${theme.palette.error.dark}`,
-                            }}>
-                            Low Risk
-                        </MenuItem>
-                        <MenuItem
-                            value={6}
-                            sx={{
-                                color: (theme) => `${theme.palette.error.main}`,
-                            }}>
-                            Medium Risk
-                        </MenuItem>
-                        <MenuItem
-                            value={7}
-                            sx={{
-                                color: (theme) =>
-                                    `${theme.palette.error.light}`,
-                            }}>
-                            High Risk
-                        </MenuItem>
+                        <MenuItem value={1}>Good</MenuItem>
+                        <MenuItem value={2}>Onboarding</MenuItem>
+                        <MenuItem value={5}>Low Risk</MenuItem>
+                        <MenuItem value={6}>Medium Risk</MenuItem>
+                        <MenuItem value={7}>High Risk</MenuItem>
+                        <MenuItem value={3}>Churn</MenuItem>
+                        <MenuItem value={4}>Inactive</MenuItem>
                     </TextField>
 
                     <FormControlLabel
@@ -224,14 +178,14 @@ export const XrayDialog = ({
                 ) : (
                     <DialogActions>
                         <Button
-                            variant="outlined"
+                            variant="contained"
                             size="large"
                             onClick={handleCloseDialog}
                             className="width-128">
                             Cancel
                         </Button>
                         <Button
-                            variant="outlined"
+                            variant="contained"
                             size="large"
                             onClick={handleUpdateCustomer}
                             className="width-128">

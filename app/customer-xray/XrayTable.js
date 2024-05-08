@@ -13,6 +13,7 @@ import ArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ArrowDoubleIcon from "@mui/icons-material/UnfoldMore";
 import Box from "@mui/material/Box";
+import styled from "@mui/material/styles/styled";
 
 import { XrayRow } from "./XrayRow";
 import {
@@ -20,6 +21,13 @@ import {
     COLUMN_WIDTH_MD,
     COLUMN_WIDTH_SM,
 } from "../utils/constants";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    "&:hover": {
+        cursor: "pointer",
+        backgroundColor: theme.palette.blueGrey.light,
+    },
+}));
 
 export const XrayTable = ({
     loading,
@@ -34,11 +42,10 @@ export const XrayTable = ({
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
-                    <TableRow className="pointer">
-                        <TableCell
+                    <TableRow>
+                        <StyledTableCell
                             width={COLUMN_WIDTH_LG}
-                            onClick={() => handleSort("name")}
-                        >
+                            onClick={() => handleSort("name")}>
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">
                                     Last {filterMonths} months
@@ -46,8 +53,7 @@ export const XrayTable = ({
                                 <Typography
                                     color="primary"
                                     variant="body2"
-                                    className="margin-top-6px margin-left-8px"
-                                >
+                                    className="margin-top-6px margin-left-8px">
                                     ({customers.length})
                                 </Typography>
                                 {sortField === "name" ? (
@@ -71,11 +77,11 @@ export const XrayTable = ({
                                     />
                                 )}
                             </Box>
-                        </TableCell>
-                        <TableCell
+                        </StyledTableCell>
+
+                        <StyledTableCell
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("mrr")}
-                        >
+                            onClick={() => handleSort("mrr")}>
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">MRR</Typography>
                                 {sortField === "mrr" ? (
@@ -99,11 +105,11 @@ export const XrayTable = ({
                                     />
                                 )}
                             </Box>
-                        </TableCell>
-                        <TableCell
+                        </StyledTableCell>
+
+                        <StyledTableCell
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("active_users_avg")}
-                        >
+                            onClick={() => handleSort("active_users_avg")}>
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">Users</Typography>
                                 {sortField === "active_users_avg" ? (
@@ -127,11 +133,11 @@ export const XrayTable = ({
                                     />
                                 )}
                             </Box>
-                        </TableCell>
-                        <TableCell
+                        </StyledTableCell>
+
+                        <StyledTableCell
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("active_users_price")}
-                        >
+                            onClick={() => handleSort("active_users_price")}>
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">User Price</Typography>
                                 {sortField === "active_users_price" ? (
@@ -155,11 +161,11 @@ export const XrayTable = ({
                                     />
                                 )}
                             </Box>
-                        </TableCell>
-                        <TableCell
+                        </StyledTableCell>
+
+                        <StyledTableCell
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("reports_avg")}
-                        >
+                            onClick={() => handleSort("reports_avg")}>
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">Reports</Typography>
                                 {sortField === "reports_avg" ? (
@@ -183,11 +189,11 @@ export const XrayTable = ({
                                     />
                                 )}
                             </Box>
-                        </TableCell>
-                        <TableCell
+                        </StyledTableCell>
+
+                        <StyledTableCell
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("attendances_crew_avg")}
-                        >
+                            onClick={() => handleSort("attendances_crew_avg")}>
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">Att. Crew</Typography>
                                 {sortField === "attendances_crew_avg" ? (
@@ -211,14 +217,13 @@ export const XrayTable = ({
                                     />
                                 )}
                             </Box>
-                        </TableCell>
+                        </StyledTableCell>
 
-                        <TableCell
+                        <StyledTableCell
                             width={COLUMN_WIDTH_MD}
                             onClick={() =>
                                 handleSort("attendances_individual_avg")
-                            }
-                        >
+                            }>
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">
                                     Att. Support
@@ -244,12 +249,11 @@ export const XrayTable = ({
                                     />
                                 )}
                             </Box>
-                        </TableCell>
+                        </StyledTableCell>
 
-                        <TableCell
+                        <StyledTableCell
                             width={COLUMN_WIDTH_SM}
-                            onClick={() => handleSort("status")}
-                        >
+                            onClick={() => handleSort("status")}>
                             <Box className="display-flex justify-center">
                                 <Typography variant="h6">Status</Typography>
                                 {sortField === "status" ? (
@@ -273,7 +277,7 @@ export const XrayTable = ({
                                     />
                                 )}
                             </Box>
-                        </TableCell>
+                        </StyledTableCell>
                     </TableRow>
                 </TableHead>
 
@@ -283,8 +287,7 @@ export const XrayTable = ({
                             <TableCell
                                 align="center"
                                 colSpan={8}
-                                padding="none"
-                            >
+                                padding="none">
                                 <Skeleton
                                     variant="rectangular"
                                     animation="wave"
