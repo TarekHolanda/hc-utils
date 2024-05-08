@@ -23,15 +23,15 @@ import {
 } from "../utils/constants";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&.expanded": {
-        backgroundColor: theme.palette.action.selected,
+    "&.row-even": {
+        backgroundColor: theme.palette.blueGrey.main,
     },
-    "&:hover": {
+    "&.row-odd": {
+        backgroundColor: theme.palette.blueGrey.dark,
+    },
+    "&.row-even:hover, &.row-odd:hover": {
         cursor: "pointer",
-        backgroundColor: theme.palette.action.hover,
-    },
-    "&:last-child td, &:last-child th": {
-        border: 0,
+        backgroundColor: theme.palette.blueGrey.light,
     },
     "& td.good": {
         backgroundColor: theme.palette.success.main,
@@ -39,20 +39,23 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "& td.onboarding": {
         backgroundColor: theme.palette.info.dark,
     },
-    "& td.churn": {
-        backgroundColor: theme.palette.warning.light,
-    },
-    "& td.inactive": {
-        backgroundColor: theme.palette.warning.main,
-    },
-    "& td.high-risk": {
-        backgroundColor: theme.palette.error.dark,
+    "& td.low-risk": {
+        backgroundColor: theme.palette.warning.dark,
     },
     "& td.medium-risk": {
         backgroundColor: theme.palette.error.main,
     },
-    "& td.low-risk": {
-        backgroundColor: theme.palette.error.light,
+    "& td.high-risk": {
+        backgroundColor: theme.palette.error.dark,
+    },
+    "& td.inactive": {
+        backgroundColor: theme.palette.grey.main,
+    },
+    "& td.churn": {
+        backgroundColor: theme.palette.grey.light,
+    },
+    "&:last-child td, &:last-child th": {
+        border: 0,
     },
 }));
 
@@ -72,12 +75,10 @@ const MyMenu = ({ anchorEl, open, handleCloseMenu, handleEdit }) => {
             MenuListProps={{
                 "aria-labelledby": "basic-button",
             }}
-            disableScrollLock={true}
-        >
+            disableScrollLock={true}>
             <MenuItem
                 onClick={handleEdit}
-                sx={{ width: 320, maxWidth: "100%" }}
-            >
+                sx={{ width: 320, maxWidth: "100%" }}>
                 <ListItemIcon>
                     <EditIcon fontSize="small" />
                 </ListItemIcon>
@@ -113,9 +114,10 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
     return (
         <>
             <StyledTableRow
-                className={expanded ? "expanded" : ""}
-                onClick={handleExpand}
-            >
+                className={`${expanded ? "expanded" : ""} ${
+                    index % 2 === 0 ? "row-even" : "row-odd"
+                }`}
+                onClick={handleExpand}>
                 <TableCell onContextMenu={handleContextMenu}>
                     {index + 1}. {customer.name}
                 </TableCell>
@@ -133,8 +135,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                             !customer.active_users_price
                                 ? "error"
                                 : "primary"
-                        }
-                    >
+                        }>
                         ${customer.active_users_price.toFixed(2)}
                     </Typography>
                 </TableCell>
@@ -190,8 +191,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                 <TableCell
                     align="center"
                     onContextMenu={handleContextMenu}
-                    className={CUSTOMER_STATUS[customer.status].class}
-                >
+                    className={CUSTOMER_STATUS[customer.status].class}>
                     {CUSTOMER_STATUS[customer.status].label}
                 </TableCell>
             </StyledTableRow>
@@ -208,10 +208,10 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                             <TableCell
                                                 align="center"
                                                 width={COLUMN_WIDTH_LG}
+                                                className="no-border"
                                                 rowSpan={
                                                     customer.details.length
-                                                }
-                                            >
+                                                }>
                                                 <Typography variant="body2">
                                                     {customer.comment}
                                                 </Typography>
@@ -220,8 +220,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
 
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH_MD}
-                                        >
+                                            width={COLUMN_WIDTH_MD}>
                                             <Typography variant="body2">
                                                 {formatDate(detail.date)}
                                             </Typography>
@@ -229,25 +228,21 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
 
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH_MD}
-                                        >
+                                            width={COLUMN_WIDTH_MD}>
                                             <Typography
                                                 color="primary"
-                                                variant="body2"
-                                            >
+                                                variant="body2">
                                                 {detail.active_users.toFixed(2)}
                                             </Typography>
                                         </TableCell>
 
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH_MD}
-                                        >
+                                            width={COLUMN_WIDTH_MD}>
                                             {detail.active_users > 0 ? (
                                                 <Typography
                                                     color="primary"
-                                                    variant="body2"
-                                                >
+                                                    variant="body2">
                                                     $
                                                     {(
                                                         customer.mrr /
@@ -258,26 +253,23 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                                 "-"
                                             )}
                                         </TableCell>
+
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH_MD}
-                                        >
+                                            width={COLUMN_WIDTH_MD}>
                                             <Typography
                                                 color="primary"
-                                                variant="body2"
-                                            >
+                                                variant="body2">
                                                 {detail.reports.toFixed(2)}
                                             </Typography>
                                         </TableCell>
 
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH_MD}
-                                        >
+                                            width={COLUMN_WIDTH_MD}>
                                             <Typography
                                                 color="primary"
-                                                variant="body2"
-                                            >
+                                                variant="body2">
                                                 {detail.attendances_crew.toFixed(
                                                     2
                                                 )}
@@ -286,12 +278,10 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
 
                                         <TableCell
                                             align="center"
-                                            width={COLUMN_WIDTH_MD}
-                                        >
+                                            width={COLUMN_WIDTH_MD}>
                                             <Typography
                                                 color="primary"
-                                                variant="body2"
-                                            >
+                                                variant="body2">
                                                 {detail.attendances_individual.toFixed(
                                                     2
                                                 )}
@@ -303,10 +293,10 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                             <TableCell
                                                 align="center"
                                                 width={COLUMN_WIDTH_LG}
+                                                className="no-border"
                                                 rowSpan={
                                                     customer.details.length
-                                                }
-                                            >
+                                                }>
                                                 <Typography variant="body2">
                                                     {customer.use_inspector &&
                                                         "Inspector, "}

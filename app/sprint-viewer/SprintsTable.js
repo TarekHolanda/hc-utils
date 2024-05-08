@@ -29,9 +29,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         cursor: "pointer",
         backgroundColor: theme.palette.blueGrey.light,
     },
-    "&:last-child td, &:last-child th": {
-        border: 0,
-    },
 }));
 
 const calculateAverage = (sprints, index) => {

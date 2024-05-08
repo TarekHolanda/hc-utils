@@ -6,6 +6,12 @@ import MenuItem from "@mui/material/MenuItem";
 import SyncIcon from "@mui/icons-material/Sync";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import SearchIcon from "@mui/icons-material/Search";
+import FormControl from "@mui/material/FormControl";
+import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import IconButton from "@mui/material/IconButton";
 
 import { MySpacer } from "../components/MySpacer";
 import { MyIconButton } from "../components/MyIconButton";
@@ -87,22 +93,30 @@ export const XrayActionBar = ({
             </Box>
 
             <Box>
-                <TextField
-                    id="outlined-basic"
-                    label="Search"
-                    variant="outlined"
-                    type="search"
-                    value={search}
-                    className="width-256"
-                    onChange={(event) => {
-                        setSearch(event.target.value);
-                    }}
-                    onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                            handleGetCustomers();
+                <FormControl variant="outlined">
+                    <InputLabel htmlFor="search-customer">Search...</InputLabel>
+                    <OutlinedInput
+                        id="search-customer"
+                        type={"search"}
+                        label="Search"
+                        value={search}
+                        onChange={(event) => {
+                            setSearch(event.target.value);
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                                handleGetCustomers();
+                            }
+                        }}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton edge="end">
+                                    <SearchIcon />
+                                </IconButton>
+                            </InputAdornment>
                         }
-                    }}
-                />
+                    />
+                </FormControl>
 
                 <MySpacer size={16} horizontal />
 
