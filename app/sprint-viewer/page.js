@@ -16,7 +16,7 @@ import { SprintsTable } from "./SprintsTable";
 import { SprintDialog } from "./SprintDialog";
 import { SprintsActionBar } from "./SprintsActionBar";
 import { RulerDialog } from "./RulerDialog";
-import { RULER_DEFAULT_DAY } from "../utils/constants";
+import { RULER_DEFAULT_WEEK } from "../utils/constants";
 
 export default function Page() {
     const { data: session, status } = useSession();
@@ -87,7 +87,7 @@ export default function Page() {
         if (current && current.id) {
             if (!current.ruler?.days) {
                 current.ruler = {
-                    days: [{ index: 0, lines: RULER_DEFAULT_DAY }],
+                    days: RULER_DEFAULT_WEEK,
                 };
             }
 
@@ -228,7 +228,7 @@ export default function Page() {
 
         if (!sprintSet?.ruler?.days) {
             sprintSet.ruler = {
-                days: [{ index: 0, lines: RULER_DEFAULT_DAY }],
+                days: RULER_DEFAULT_WEEK,
             };
         }
 

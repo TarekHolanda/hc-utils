@@ -23,13 +23,27 @@ const names = {
     12614592: "Tárek",
     131719288: "Tárek",
 };
+
+const currentDate = new Date();
+
+// Calculate start date (10 days ago)
+const startDate = new Date(currentDate);
+startDate.setDate(currentDate.getDate() - 14);
+
+// Format dates as strings
+const startDateStr = startDate.toISOString();
+const currentDateStr = currentDate.toISOString();
+
 let devs = {};
 
 async function getPullRequestsByRepository(repository) {
-    const url = `https://api.github.com/repos/HeavyConnected/${repository}/pulls?state=all`;
+    const url = `https://api.github.com/search/issues?q=repo:HeavyConnected/${repository}+is:pr+created:>${startDateStr}`;
 
     try {
-        const response = await fetch(url, { headers });
+        const response = await fetch(url, {
+            headers,
+            state: "all",
+        });
 
         if (response.ok) {
             return await response.json();
@@ -44,15 +58,17 @@ async function getPullRequestsByRepository(repository) {
 
 async function countApprovedReviews(repository) {
     const allPullRequests = await getPullRequestsByRepository(repository);
+
     if (!allPullRequests) {
         return false;
     }
 
     try {
-        for (const pullRequest of allPullRequests) {
-            const reviewsUrl = pullRequest.url + "/reviews";
+        for (const pullRequest of allPullRequests.items) {
+            const reviewsUrl = `https://api.github.com/repos/HeavyConnected/${repository}/pulls/${pullRequest.number}/reviews`;
             const reviewsResponse = await fetch(reviewsUrl, { headers });
             const reviews = await reviewsResponse.json();
+            console.log(reviews);
 
             if (devs[pullRequest.user.id]) {
                 devs[pullRequest.user.id].pullRequests++;
@@ -63,6 +79,8 @@ async function countApprovedReviews(repository) {
                         : pullRequest.user.login,
                     pullRequests: 1,
                     reviews: 0,
+                    approved: 0,
+                    changes_requested: 0,
                 };
             }
 
@@ -70,6 +88,7 @@ async function countApprovedReviews(repository) {
                 if (review.state === "APPROVED") {
                     if (devs[review.user.id]) {
                         devs[review.user.id].reviews++;
+                        devs[review.user.id].approved++;
                     } else {
                         devs[review.user.id] = {
                             name: names[review.user.id]
@@ -77,6 +96,23 @@ async function countApprovedReviews(repository) {
                                 : review.user.login,
                             pullRequests: 0,
                             reviews: 1,
+                            approved: 1,
+                            changes_requested: 0,
+                        };
+                    }
+                } else if (review.state === "CHANGES_REQUESTED") {
+                    if (devs[review.user.id]) {
+                        devs[review.user.id].reviews++;
+                        devs[review.user.id].changes_requested++;
+                    } else {
+                        devs[review.user.id] = {
+                            name: names[review.user.id]
+                                ? names[review.user.id]
+                                : review.user.login,
+                            pullRequests: 0,
+                            reviews: 1,
+                            approved: 0,
+                            changes_requested: 1,
                         };
                     }
                 }

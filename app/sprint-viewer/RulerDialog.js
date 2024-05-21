@@ -17,7 +17,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
@@ -31,7 +30,7 @@ import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox
 import Skeleton from "@mui/material/Skeleton";
 
 import { MySpacer } from "../components/MySpacer";
-import { RULER_DEFAULT_DAY } from "../utils/constants";
+import { RULER_DEFAULT_FRIDAY } from "../utils/constants";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -96,7 +95,7 @@ const tasks = {
         ),
     },
     none: {
-        name: "None",
+        name: "Buffer",
         icon: (
             <ListItemIcon>
                 <IndeterminateCheckBoxIcon fontSize="small" />
@@ -229,7 +228,7 @@ export const RulerDialog = ({
         if (sprint.ruler.days.length < 10) {
             const newDay = {
                 index: sprint.ruler.days.length,
-                lines: RULER_DEFAULT_DAY,
+                lines: RULER_DEFAULT_FRIDAY,
             };
 
             const updatedRuler = {
@@ -286,12 +285,12 @@ export const RulerDialog = ({
             {loadingDialog ? (
                 <Skeleton variant="rectangular" animation="wave" height={256} />
             ) : (
-                <Grid container spacing={0}>
+                <Grid container spacing={0} columns={5}>
                     {sprint?.ruler?.days.map((day) => {
                         return (
                             <Grid
                                 item
-                                xs={2}
+                                xs={1}
                                 className="display-flex justify-center"
                                 key={"day" + day.index}>
                                 <Box className="width-100">

@@ -58,19 +58,16 @@ export default function Page({ data }) {
                                 <TableCell align="center">
                                     Code Reviews
                                 </TableCell>
+                                <TableCell align="center">Approvals</TableCell>
+                                <TableCell align="center">
+                                    Changes Requested
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {Object.keys(devs).map((dev) => {
                                 return (
-                                    <TableRow
-                                        key={dev}
-                                        sx={{
-                                            "&:last-child td, &:last-child th":
-                                                {
-                                                    border: 0,
-                                                },
-                                        }}>
+                                    <TableRow key={dev}>
                                         <TableCell component="th" scope="row">
                                             {devs[dev].name}
                                         </TableCell>
@@ -79,6 +76,12 @@ export default function Page({ data }) {
                                         </TableCell>
                                         <TableCell align="center">
                                             {devs[dev].reviews}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {devs[dev].approved}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {devs[dev].changes_requested}
                                         </TableCell>
                                     </TableRow>
                                 );
