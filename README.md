@@ -3,12 +3,15 @@
 This project uses [NextJS](https://nextjs.org) and [Material UI](https://mui.com/material-ui).
 
 First, run:
+
 `git clone https://github.com/TarekHolanda/hc-utils.git`
 
 Then, run:
+
 `npm i`
 
 Then, run:
+
 `npm run dev`
 
 The HC Utils Dashboard will run on [http://localhost:3000](http://localhost:3000).
