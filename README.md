@@ -1,34 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
+This project uses [NextJS](https://nextjs.org) and [Material UI](https://mui.com/material-ui).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+First, run:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`git clone https://github.com/TarekHolanda/hc-utils.git`
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Then, run:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+`npm i`
 
-## Learn More
+Then, run:
 
-To learn more about Next.js, take a look at the following resources:
+`npm run dev`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The HC Utils Dashboard will run on [http://localhost:3000](http://localhost:3000).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+The pages auto-update as you edit the files.
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is set to automatically deploy the master branch to production.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Be sure to test all your changes before merging a pull request on the master branch.
+
+The production of this project can be found on [https://hc-utils.vercel.app/](https://hc-utils.vercel.app/).
+
+## More
+
+The API of this project is [here](https://github.com/HeavyConnected/HC-Utils-API).
+
+If you have any questions or suggestions, talk to Tárek.
