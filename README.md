@@ -1,34 +1,25 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
+This project uses [NextJS](https://nextjs.org) and [Material UI](https://mui.com/material-ui).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+First, run:
+`git clone https://github.com/TarekHolanda/hc-utils.git`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then, run:
+`npm i`
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Then, run:
+`npm run dev`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The HC Utils Dashboard will run on [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+The pages auto-update as you edit the files.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is set to automatically deploy the master branch to production.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Be sure to test all your changes before merging a pull request on the master branch.
 
-## Deploy on Vercel
+The production of this project can be found on [https://hc-utils.vercel.app/](https://hc-utils.vercel.app/).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
