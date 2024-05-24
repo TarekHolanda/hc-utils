@@ -26,3 +26,8 @@ Be sure to test all your changes before merging a pull request on the master bra
 
 The production of this project can be found on [https://hc-utils.vercel.app/](https://hc-utils.vercel.app/).
 
+## More
+
+The API of this project is [here](https://github.com/HeavyConnected/HC-Utils-API).
+
+If you have any questions or suggestions, talk to Tárek.
