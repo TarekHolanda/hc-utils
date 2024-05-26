@@ -71,7 +71,7 @@ export default function Page({ data }) {
     const [sortOrder, setSortOrder] = useState("asc");
     const [startDate, setStartDate] = useState(
         new Date(
-            new Date().setDate(new Date().getDate() - 5)
+            new Date().setDate(new Date().getDate() - 14)
         ).toLocaleDateString("en-CA")
     );
     const [endDate, setEndDate] = useState(
