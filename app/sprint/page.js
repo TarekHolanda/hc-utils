@@ -9,7 +9,7 @@ import Container from "@mui/material/Container";
 import Snackbar from "@mui/material/Snackbar";
 
 import { handleGet, handleAPI } from "../api/handleCallAPI";
-import { MyLoading } from "../components/MyLoading";
+import { MyLoadingPage } from "../components/MyLoadingPage";
 import { MySpacer } from "../components/MySpacer";
 import { MySpeedDial } from "../components/MySpeedDial";
 import { SprintsTable } from "./SprintsTable";
@@ -73,7 +73,7 @@ export default function Page() {
     }, [sprintsAmount]);
 
     if (status === "loading") {
-        return <MyLoading />;
+        return <MyLoadingPage />;
     }
 
     if (status === "unauthenticated" || !session) {
@@ -270,10 +270,7 @@ export default function Page() {
                 handleCloseDialogs={handleCloseDialogs}
             />
 
-            <MySpeedDial
-                page={"sprint-viewer"}
-                callback={handleOpenSprintDialog}
-            />
+            <MySpeedDial page={"sprint"} callback={handleOpenSprintDialog} />
 
             <Snackbar
                 open={showAlert}

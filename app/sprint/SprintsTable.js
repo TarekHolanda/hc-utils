@@ -1,9 +1,6 @@
-"use client";
-
 import React from "react";
 
 import Paper from "@mui/material/Paper";
-import Skeleton from "@mui/material/Skeleton";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -15,10 +12,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import ErrorIcon from "@mui/icons-material/Error";
 import { styled } from "@mui/material/styles";
 
+import { MyHeadCell } from "../components/MyHeadCell";
+import { MyLoadingRow } from "../components/MyLoadingRow";
 import { MyIconButton } from "../components/MyIconButton";
 import { MyTooltip } from "../components/MyTooltip";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    height: 64,
     "&:nth-of-type(odd)": {
         backgroundColor: theme.palette.blueGrey.main,
     },
@@ -28,6 +28,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:hover": {
         cursor: "pointer",
         backgroundColor: theme.palette.blueGrey.light,
+    },
+    "& td": {
+        padding: 0,
     },
 }));
 
@@ -209,47 +212,59 @@ export const SprintsTable = ({
             <Table sx={{ minWidth: 512 }}>
                 <TableHead>
                     <TableRow>
-                        <TableCell align="center" width={"20%"}>
-                            <Typography variant="h5">Sprint #</Typography>
-                        </TableCell>
-                        <TableCell align="center" width={"15%"}>
-                            <Typography variant="h5">Total Points</Typography>
-                        </TableCell>
-                        <TableCell align="center" width={"15%"}>
-                            <Typography variant="h5">Merged</Typography>
-                        </TableCell>
-                        <TableCell align="center" width={"15%"}>
-                            <Typography variant="h5">Points Left</Typography>
-                        </TableCell>
-                        <TableCell align="center" width={"15%"}>
-                            <Typography variant="h5">Extra Deploys</Typography>
-                        </TableCell>
-                        <TableCell align="center" width={"5%"}>
-                            <Typography variant="h5">Date Delay</Typography>
-                        </TableCell>
-                        <TableCell align="center" width={"5%"}>
-                            <Typography variant="h5">Process Delay</Typography>
-                        </TableCell>
-                        <TableCell align="center" width={"10%"}>
-                            <Typography variant="h5">Edit</Typography>
-                        </TableCell>
+                        <MyHeadCell
+                            id="sprint"
+                            label={"Sprint #"}
+                            width={"20%"}
+                        />
+
+                        <MyHeadCell
+                            id="total_points"
+                            label={"Total Points"}
+                            width={"15%"}
+                        />
+
+                        <MyHeadCell
+                            id="points_merged"
+                            label={"Merged"}
+                            width={"15%"}
+                        />
+
+                        <MyHeadCell
+                            id="points_left"
+                            label={"Points Left"}
+                            width={"15%"}
+                        />
+
+                        <MyHeadCell
+                            id="extra_deploys"
+                            label={"Extra Deploys"}
+                            width={"15%"}
+                        />
+
+                        <MyHeadCell
+                            id="date_delay"
+                            label={"Date Delay"}
+                            width={"5%"}
+                        />
+
+                        <MyHeadCell
+                            id="process_delay"
+                            label={"Process Delay"}
+                            width={"5%"}
+                        />
+
+                        <MyHeadCell
+                            id="edit_sprint"
+                            label={"Edit"}
+                            width={"10%"}
+                        />
                     </TableRow>
                 </TableHead>
+
                 <TableBody>
                     {loading ? (
-                        <TableRow>
-                            <TableCell
-                                align="center"
-                                colSpan={8}
-                                padding="none">
-                                <Skeleton
-                                    variant="rectangular"
-                                    animation="wave"
-                                    width="100%"
-                                    height={64}
-                                />
-                            </TableCell>
-                        </TableRow>
+                        <MyLoadingRow colSpan={8} height={64} />
                     ) : (
                         <MyRows
                             sprints={sprints}

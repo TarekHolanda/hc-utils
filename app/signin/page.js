@@ -7,14 +7,14 @@ import { redirect } from "next/navigation";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
 
-import { MyLoading } from "../components/MyLoading";
+import { MyLoadingPage } from "../components/MyLoadingPage";
 import SignInCard from "../core/SignInCard";
 
 export default function Page() {
     const { data: session, status } = useSession();
 
     if (status === "loading") {
-        return <MyLoading />;
+        return <MyLoadingPage />;
     }
 
     if (status === "unauthenticated" || !session) {

@@ -29,7 +29,7 @@ import { View, Text, PDFViewer, Image } from "@react-pdf/renderer";
 
 import { formatData } from "./formatData";
 import { MySpacer } from "../components/MySpacer";
-import { MyLoading } from "../components/MyLoading";
+import { MyLoadingPage } from "../components/MyLoadingPage";
 import { MyPdfPreview } from "../components/MyPdfPreview";
 import { styles } from "./styles";
 import { MyUploadPageCenter } from "../components/MyUploadPageCenter";
@@ -480,7 +480,7 @@ export default function Page() {
                 <MySpeedDial page={"scan-and-go"} />
 
                 {/* This loading needs to be here, so the QR Codes can load after render */}
-                {loading && <MyLoading />}
+                {loading && <MyLoadingPage />}
             </Box>
         </Fade>
     );

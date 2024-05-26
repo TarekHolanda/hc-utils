@@ -9,7 +9,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Box from "@mui/material/Box";
 
 import { handleGet, handleAPI } from "../api/handleCallAPI";
-import { MyLoading } from "../components/MyLoading";
+import { MyLoadingPage } from "../components/MyLoadingPage";
 import { MySpacer } from "../components/MySpacer";
 import { XrayActionBar } from "./XrayActionBar";
 import { XrayTable } from "./XrayTable";
@@ -94,7 +94,7 @@ export default function Page() {
     }, [sortField, sortOrder, filterMonths, filterStatus, filterNoMrr]);
 
     if (status === "loading") {
-        return <MyLoading />;
+        return <MyLoadingPage />;
     }
 
     if (status === "unauthenticated" || !session) {

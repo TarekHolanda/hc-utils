@@ -12,25 +12,24 @@ import { Fade } from "@mui/material";
 const CARDS = {
     "employee-generator": {
         title: "Employee Generator",
-        description: "QR Codes with Names and IDs for Employees",
+        description: "QR Codes with Names and IDs for Employees.",
         image: "./farm-worker.jpg",
     },
     "scan-and-go": {
         title: "Scan & Go",
         description:
-            "QR Codes to auto populate checklists, locations, and more",
+            "QR Codes to auto populate checklists, locations, and more.",
         image: "./qrcode.jpg",
     },
     "email-signature": {
         title: "Email Signature",
         description:
-            "Update your email signature from our official HC Template",
+            "Update your email signature from our official HC Template.",
         image: "./email.jpg",
     },
-    "sprint-viewer": {
-        title: "Sprints History",
-        description:
-            "Review past sprints and plan the next one. More tools coming soon!",
+    sprint: {
+        title: "Sprints View",
+        description: "Review past sprints and plan the next one.",
         image: "./chart.jpg",
     },
     resources: {
@@ -43,8 +42,8 @@ const CARDS = {
         description: "Customers status and activity. Updated every week.",
         image: "./customer-xray.jpg",
     },
-    "github-viewer": {
-        title: "GitHub Viewer",
+    github: {
+        title: "GitHub View",
         description: "Pull Requests and Reviews from GitHub.",
         image: "./github.jpg",
     },
@@ -53,7 +52,7 @@ const CARDS = {
 export const MyLink = ({ path }) => {
     return (
         <Fade in={true} timeout={1000}>
-            <Card className="pointer home-card">
+            <Card className="home-card">
                 <CardActionArea>
                     <CardMedia
                         component="img"

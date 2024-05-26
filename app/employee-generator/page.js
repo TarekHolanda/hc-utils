@@ -21,7 +21,7 @@ import JSZip from "jszip";
 import saveAs from "file-saver";
 import Papa from "papaparse";
 
-import { MyLoading } from "../components/MyLoading";
+import { MyLoadingPage } from "../components/MyLoadingPage";
 import { MySpacer } from "../components/MySpacer";
 import { MyUploadPageCenter } from "../components/MyUploadPageCenter";
 import { MyUploadBar } from "../components/MyUploadBar";
@@ -71,7 +71,7 @@ export default function Page() {
     }, [qrCodesNotFormatted, nameOn]);
 
     if (status === "loading") {
-        return <MyLoading />;
+        return <MyLoadingPage />;
     }
 
     if (status === "unauthenticated" || !session) {

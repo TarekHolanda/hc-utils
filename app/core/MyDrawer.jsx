@@ -45,9 +45,9 @@ const drawerList = [
         link: "/email-signature",
     },
     {
-        title: "Sprint Viewer",
+        title: "Sprint View",
         icon: <QueryStatsIcon />,
-        link: "/sprint-viewer",
+        link: "/sprint",
     },
     {
         title: "Resources",
@@ -64,15 +64,15 @@ const adminList = [
     },
 ];
 
-const superAdminList = [];
-
-const devList = [
+const superAdminList = [
     {
-        title: "GitHub Viewer",
+        title: "GitHub View",
         icon: <GitHubIcon />,
-        link: "/github-viewer",
+        link: "/github",
     },
 ];
+
+const devList = [];
 
 export const MyDrawer = ({
     resolvedTheme,

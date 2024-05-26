@@ -119,17 +119,26 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                 }`}
                 onClick={handleExpand}>
                 <TableCell onContextMenu={handleContextMenu}>
-                    {index + 1}. {customer.name}
+                    <Typography variant="body1">
+                        {index + 1}. {customer.name}
+                    </Typography>
                 </TableCell>
+
                 <TableCell align="center" onContextMenu={handleContextMenu}>
-                    ${customer.mrr.toFixed(2)}
+                    <Typography variant="body1">
+                        ${customer.mrr.toFixed(2)}
+                    </Typography>
                 </TableCell>
+
                 <TableCell align="center" onContextMenu={handleContextMenu}>
-                    {customer.active_users_avg.toFixed(2)}
+                    <Typography variant="body1">
+                        {customer.active_users_avg.toFixed(2)}
+                    </Typography>
                 </TableCell>
+
                 <TableCell align="center" onContextMenu={handleContextMenu}>
                     <Typography
-                        variant="body2"
+                        variant="body1"
                         color={
                             customer.active_users_price > 100 ||
                             !customer.active_users_price
@@ -140,7 +149,9 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     </Typography>
                 </TableCell>
                 <TableCell align="center" onContextMenu={handleContextMenu}>
-                    {customer.reports_avg.toFixed(2)}
+                    <Typography variant="body1">
+                        {customer.reports_avg.toFixed(2)}
+                    </Typography>
 
                     <Typography color="primary" variant="body2">
                         {customer.reports_avg > 0 ? (
@@ -156,7 +167,9 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     </Typography>
                 </TableCell>
                 <TableCell align="center" onContextMenu={handleContextMenu}>
-                    {customer.attendances_crew_avg.toFixed(2)}
+                    <Typography variant="body1">
+                        {customer.attendances_crew_avg.toFixed(2)}
+                    </Typography>
 
                     <Typography color="primary" variant="body2">
                         {customer.attendances_crew_avg > 0 ? (
@@ -172,7 +185,9 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     </Typography>
                 </TableCell>
                 <TableCell align="center" onContextMenu={handleContextMenu}>
-                    {customer.attendances_individual_avg.toFixed(2)}
+                    <Typography variant="body1">
+                        {customer.attendances_individual_avg.toFixed(2)}
+                    </Typography>
 
                     <Typography color="primary" variant="body2">
                         {customer.attendances_individual_avg > 0 ? (
@@ -192,7 +207,9 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     align="center"
                     onContextMenu={handleContextMenu}
                     className={CUSTOMER_STATUS[customer.status].class}>
-                    {CUSTOMER_STATUS[customer.status].label}
+                    <Typography variant="body1">
+                        {CUSTOMER_STATUS[customer.status].label}
+                    </Typography>
                 </TableCell>
             </StyledTableRow>
 
