@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import Button from "@mui/material/Button";
@@ -174,7 +172,8 @@ export const SprintDialog = ({
                             variant="contained"
                             size="large"
                             onClick={handleCloseDialogs}
-                            className="width-128">
+                            className="width-128"
+                            color="blueGrey">
                             Cancel
                         </Button>
                         <Button

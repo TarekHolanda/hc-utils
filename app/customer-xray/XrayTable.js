@@ -1,33 +1,20 @@
 import React from "react";
 
-import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
 import Paper from "@mui/material/Paper";
-import Skeleton from "@mui/material/Skeleton";
-import ArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import ArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import ArrowDoubleIcon from "@mui/icons-material/UnfoldMore";
-import Box from "@mui/material/Box";
-import styled from "@mui/material/styles/styled";
 
+import { MyHeadCell } from "../components/MyHeadCell";
+import { MyLoadingRow } from "../components/MyLoadingRow";
 import { XrayRow } from "./XrayRow";
 import {
     COLUMN_WIDTH_LG,
     COLUMN_WIDTH_MD,
     COLUMN_WIDTH_SM,
 } from "../utils/constants";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    "&:hover": {
-        cursor: "pointer",
-        backgroundColor: theme.palette.blueGrey.light,
-    },
-}));
 
 export const XrayTable = ({
     loading,
@@ -43,259 +30,84 @@ export const XrayTable = ({
             <Table>
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell
+                        <MyHeadCell
+                            id="name"
+                            label={`Last ${filterMonths} months`}
+                            subLabel={`(${customers.length})`}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
                             width={COLUMN_WIDTH_LG}
-                            onClick={() => handleSort("name")}>
-                            <Box className="display-flex justify-center">
-                                <Typography variant="h6">
-                                    Last {filterMonths} months
-                                </Typography>
-                                <Typography
-                                    color="primary"
-                                    variant="body2"
-                                    className="margin-top-6px margin-left-8px">
-                                    ({customers.length})
-                                </Typography>
-                                {sortField === "name" ? (
-                                    <>
-                                        {sortOrder === "asc" ? (
-                                            <ArrowUpIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        ) : (
-                                            <ArrowDownIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        )}
-                                    </>
-                                ) : (
-                                    <ArrowDoubleIcon
-                                        fontSize="medium"
-                                        className="margin-top-4px margin-left-8px"
-                                    />
-                                )}
-                            </Box>
-                        </StyledTableCell>
+                        />
 
-                        <StyledTableCell
+                        <MyHeadCell
+                            id="mrr"
+                            label={"MRR"}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("mrr")}>
-                            <Box className="display-flex justify-center">
-                                <Typography variant="h6">MRR</Typography>
-                                {sortField === "mrr" ? (
-                                    <>
-                                        {sortOrder === "asc" ? (
-                                            <ArrowUpIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        ) : (
-                                            <ArrowDownIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        )}
-                                    </>
-                                ) : (
-                                    <ArrowDoubleIcon
-                                        fontSize="medium"
-                                        className="margin-top-4px margin-left-8px"
-                                    />
-                                )}
-                            </Box>
-                        </StyledTableCell>
+                        />
 
-                        <StyledTableCell
+                        <MyHeadCell
+                            id="active_users_avg"
+                            label={"Users"}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("active_users_avg")}>
-                            <Box className="display-flex justify-center">
-                                <Typography variant="h6">Users</Typography>
-                                {sortField === "active_users_avg" ? (
-                                    <>
-                                        {sortOrder === "asc" ? (
-                                            <ArrowUpIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        ) : (
-                                            <ArrowDownIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        )}
-                                    </>
-                                ) : (
-                                    <ArrowDoubleIcon
-                                        fontSize="medium"
-                                        className="margin-top-4px margin-left-8px"
-                                    />
-                                )}
-                            </Box>
-                        </StyledTableCell>
+                        />
 
-                        <StyledTableCell
+                        <MyHeadCell
+                            id="active_users_price"
+                            label={"User Price"}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("active_users_price")}>
-                            <Box className="display-flex justify-center">
-                                <Typography variant="h6">User Price</Typography>
-                                {sortField === "active_users_price" ? (
-                                    <>
-                                        {sortOrder === "asc" ? (
-                                            <ArrowUpIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        ) : (
-                                            <ArrowDownIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        )}
-                                    </>
-                                ) : (
-                                    <ArrowDoubleIcon
-                                        fontSize="medium"
-                                        className="margin-top-4px margin-left-8px"
-                                    />
-                                )}
-                            </Box>
-                        </StyledTableCell>
+                        />
 
-                        <StyledTableCell
+                        <MyHeadCell
+                            id="reports_avg"
+                            label={"Reports"}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("reports_avg")}>
-                            <Box className="display-flex justify-center">
-                                <Typography variant="h6">Reports</Typography>
-                                {sortField === "reports_avg" ? (
-                                    <>
-                                        {sortOrder === "asc" ? (
-                                            <ArrowUpIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        ) : (
-                                            <ArrowDownIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        )}
-                                    </>
-                                ) : (
-                                    <ArrowDoubleIcon
-                                        fontSize="medium"
-                                        className="margin-top-4px margin-left-8px"
-                                    />
-                                )}
-                            </Box>
-                        </StyledTableCell>
+                        />
 
-                        <StyledTableCell
+                        <MyHeadCell
+                            id="attendances_crew_avg"
+                            label={"Att. Crew"}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
                             width={COLUMN_WIDTH_MD}
-                            onClick={() => handleSort("attendances_crew_avg")}>
-                            <Box className="display-flex justify-center">
-                                <Typography variant="h6">Att. Crew</Typography>
-                                {sortField === "attendances_crew_avg" ? (
-                                    <>
-                                        {sortOrder === "asc" ? (
-                                            <ArrowUpIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        ) : (
-                                            <ArrowDownIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        )}
-                                    </>
-                                ) : (
-                                    <ArrowDoubleIcon
-                                        fontSize="medium"
-                                        className="margin-top-4px margin-left-8px"
-                                    />
-                                )}
-                            </Box>
-                        </StyledTableCell>
+                        />
 
-                        <StyledTableCell
+                        <MyHeadCell
+                            id="attendances_individual_avg"
+                            label={"Att. Support"}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
                             width={COLUMN_WIDTH_MD}
-                            onClick={() =>
-                                handleSort("attendances_individual_avg")
-                            }>
-                            <Box className="display-flex justify-center">
-                                <Typography variant="h6">
-                                    Att. Support
-                                </Typography>
-                                {sortField === "attendances_individual_avg" ? (
-                                    <>
-                                        {sortOrder === "asc" ? (
-                                            <ArrowUpIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        ) : (
-                                            <ArrowDownIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        )}
-                                    </>
-                                ) : (
-                                    <ArrowDoubleIcon
-                                        fontSize="medium"
-                                        className="margin-top-4px margin-left-8px"
-                                    />
-                                )}
-                            </Box>
-                        </StyledTableCell>
+                        />
 
-                        <StyledTableCell
+                        <MyHeadCell
+                            id="status"
+                            label={"Status"}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
                             width={COLUMN_WIDTH_SM}
-                            onClick={() => handleSort("status")}>
-                            <Box className="display-flex justify-center">
-                                <Typography variant="h6">Status</Typography>
-                                {sortField === "status" ? (
-                                    <>
-                                        {sortOrder === "asc" ? (
-                                            <ArrowUpIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        ) : (
-                                            <ArrowDownIcon
-                                                fontSize="medium"
-                                                className="margin-top-4px margin-left-8px"
-                                            />
-                                        )}
-                                    </>
-                                ) : (
-                                    <ArrowDoubleIcon
-                                        fontSize="medium"
-                                        className="margin-top-4px margin-left-8px"
-                                    />
-                                )}
-                            </Box>
-                        </StyledTableCell>
+                        />
                     </TableRow>
                 </TableHead>
 
                 <TableBody>
                     {loading ? (
-                        <TableRow>
-                            <TableCell
-                                align="center"
-                                colSpan={8}
-                                padding="none">
-                                <Skeleton
-                                    variant="rectangular"
-                                    animation="wave"
-                                    width="100%"
-                                    height={64}
-                                />
-                            </TableCell>
-                        </TableRow>
+                        <MyLoadingRow colSpan={8} height={64} />
                     ) : (
                         <>
                             {customers.map((customer, index) => (

@@ -14,7 +14,7 @@ import Alert from "@mui/material/Alert";
 
 import DOMPurify from "dompurify";
 
-import { MyLoading } from "../components/MyLoading";
+import { MyLoadingPage } from "../components/MyLoadingPage";
 import { MySpacer } from "../components/MySpacer";
 import { MyEmailSignature } from "./MyEmailSignature";
 
@@ -80,7 +80,7 @@ export default function Page() {
     };
 
     if (status === "loading") {
-        return <MyLoading />;
+        return <MyLoadingPage />;
     }
 
     if (status === "unauthenticated" || !session) {

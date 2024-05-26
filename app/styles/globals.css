@@ -60,12 +60,12 @@ a {
     justify-content: space-between;
 }
 
-.align-center {
-    align-items: center;
+.white-space-pre-line {
+    white-space: pre-line;
 }
 
-.pointer {
-    cursor: pointer;
+.align-center {
+    align-items: center;
 }
 
 .signin-card {

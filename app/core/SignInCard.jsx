@@ -12,8 +12,7 @@ const SignInCard = () => {
     return (
         <Card
             onClick={() => signIn("google", { callbackUrl })}
-            className="pointer signin-card text-center"
-        >
+            className="signin-card text-center">
             <CardActionArea>
                 <CardMedia
                     component="img"

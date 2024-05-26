@@ -13,7 +13,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 
-import { MyLoading } from "../components/MyLoading";
+import { MyLoadingPage } from "../components/MyLoadingPage";
 import { MySpacer } from "../components/MySpacer";
 
 const ADMIN_EMAILS = process.env.ADMIN_EMAILS.split(",");
@@ -117,7 +117,7 @@ const MyResourcesGrid = ({ title, resources }) => {
                         key={resource.name + " grid"}>
                         <Link target="_blank" href={resource.url}>
                             <Card
-                                className="pointer text-center height-100"
+                                className="text-center height-100"
                                 elevation={6}>
                                 <CardActionArea className="height-100">
                                     <CardContent>
@@ -143,7 +143,7 @@ export default function Page() {
     const isDev = DEV_EMAILS.includes(userEmail);
 
     if (status === "loading") {
-        return <MyLoading />;
+        return <MyLoadingPage />;
     }
 
     if (status === "unauthenticated" || !session) {

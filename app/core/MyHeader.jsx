@@ -41,8 +41,7 @@ const getLoginButton = (status, toggleDrawer) => {
                     <IconButton
                         aria-label="open menu"
                         style={{ color: "#fff" }}
-                        onClick={toggleDrawer(true)}
-                    >
+                        onClick={toggleDrawer(true)}>
                         <MenuIcon />
                     </IconButton>
                 </MyTooltip>
@@ -57,10 +56,10 @@ const pages = {
     "/employee-generator": "HC Utils - Employee Generator",
     "/scan-and-go": "HC Utils - Scan & Go",
     "/email-signature": "HC Utils - Email Signature",
-    "/sprint-viewer": "HC Utils - Sprint Viewer",
+    "/sprint": "HC Utils - Sprint View",
     "/resources": "HC Utils - Resources",
     "/customer-xray": "HC Utils - Customer X-Ray",
-    "/github-viewer": "HC Utils - GitHub Viewer",
+    "/github": "HC Utils - GitHub View",
 };
 
 const Header = () => {
@@ -82,8 +81,7 @@ const Header = () => {
     return (
         <AppBar
             position="static"
-            style={{ background: "#2A63B2", width: "100vw" }}
-        >
+            style={{ background: "#2A63B2", width: "100vw" }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 0 }}>
@@ -100,8 +98,7 @@ const Header = () => {
                     <Typography
                         variant="h6"
                         component="div"
-                        sx={{ flexGrow: 1, textAlign: "center" }}
-                    >
+                        sx={{ flexGrow: 1, textAlign: "center" }}>
                         {pages[currentPage]}
                     </Typography>
 
@@ -114,8 +111,7 @@ const Header = () => {
                 open={drawerOpen}
                 onClose={toggleDrawer(false)}
                 onClick={toggleDrawer(false)}
-                ModalProps={{ disableScrollLock: true }}
-            >
+                ModalProps={{ disableScrollLock: true }}>
                 <MyDrawer
                     resolvedTheme={resolvedTheme}
                     setTheme={setTheme}

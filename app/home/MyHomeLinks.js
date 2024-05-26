@@ -15,14 +15,14 @@ const adminList = [
     },
 ];
 
-const superAdminList = [];
-
-const devList = [
+const superAdminList = [
     {
-        link: "/github-viewer",
-        path: "github-viewer",
+        link: "/github",
+        path: "github",
     },
 ];
+
+const devList = [];
 
 export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
     return (
@@ -37,8 +37,7 @@ export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
                     md={4} // 900 to 1200
                     lg={3} // 1200 to 1536
                     xl={3} // 1536px and up
-                    className="display-flex justify-center"
-                >
+                    className="display-flex justify-center">
                     <Link href={"/employee-generator"}>
                         <MyLink path={"employee-generator"} />
                     </Link>
@@ -51,8 +50,7 @@ export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
                     md={4}
                     lg={3}
                     xl={3}
-                    className="display-flex justify-center"
-                >
+                    className="display-flex justify-center">
                     <Link href={"/scan-and-go"}>
                         <MyLink path={"scan-and-go"} />
                     </Link>
@@ -65,8 +63,7 @@ export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
                     md={4}
                     lg={3}
                     xl={3}
-                    className="display-flex justify-center"
-                >
+                    className="display-flex justify-center">
                     <Link href={"/email-signature"}>
                         <MyLink path={"email-signature"} />
                     </Link>
@@ -79,10 +76,9 @@ export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
                     md={12}
                     lg={3}
                     xl={3}
-                    className="display-flex justify-center"
-                >
-                    <Link href={"/sprint-viewer"}>
-                        <MyLink path={"sprint-viewer"} />
+                    className="display-flex justify-center">
+                    <Link href={"/sprint"}>
+                        <MyLink path={"sprint"} />
                     </Link>
                 </Grid>
 
@@ -93,8 +89,7 @@ export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
                     md={12}
                     lg={3}
                     xl={3}
-                    className="display-flex justify-center"
-                >
+                    className="display-flex justify-center">
                     <Link href={"/resources"}>
                         <MyLink path={"resources"} />
                     </Link>
@@ -110,8 +105,7 @@ export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
                             lg={3}
                             xl={3}
                             className="display-flex justify-center"
-                            key={item.link + index}
-                        >
+                            key={item.link + index}>
                             <Link href={item.link}>
                                 <MyLink path={item.path} />
                             </Link>
@@ -128,8 +122,7 @@ export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
                             lg={3}
                             xl={3}
                             className="display-flex justify-center"
-                            key={item.link + index}
-                        >
+                            key={item.link + index}>
                             <Link href={item.link}>
                                 <MyLink path={item.path} />
                             </Link>
@@ -146,8 +139,7 @@ export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
                             lg={3}
                             xl={3}
                             className="display-flex justify-center"
-                            key={item.link + index}
-                        >
+                            key={item.link + index}>
                             <Link href={item.link}>
                                 <MyLink path={item.path} />
                             </Link>
