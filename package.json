@@ -1,6 +1,6 @@
 {
   "name": "hc-utils",
-  "version": "0.1.0",
+  "version": "24.5.28",
   "private": true,
   "scripts": {
     "dev": "next dev",
