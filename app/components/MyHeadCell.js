@@ -8,6 +8,7 @@ import { styled } from "@mui/material/styles";
 import { MySortIcon } from "./MySortIcon";
 
 const StyledHeadCell = styled(TableCell)(({ theme }) => ({
+    backgroundColor: theme.palette.grey.dark,
     "&:hover": {
         cursor: "pointer",
         backgroundColor: theme.palette.blueGrey.light,

@@ -26,8 +26,8 @@ export const XrayTable = ({
     handleOpenDialog,
 }) => {
     return (
-        <TableContainer component={Paper}>
-            <Table>
+        <TableContainer component={Paper} sx={{ overflowX: "initial" }}>
+            <Table stickyHeader>
                 <TableHead>
                     <TableRow>
                         <MyHeadCell
