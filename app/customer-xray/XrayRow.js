@@ -168,15 +168,15 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                 </TableCell>
                 <TableCell align="center" onContextMenu={handleContextMenu}>
                     <Typography variant="body1">
-                        {customer.attendances_crew_avg.toFixed(2)}
+                        {customer.timecards_crew_avg.toFixed(2)}
                     </Typography>
 
                     <Typography color="primary" variant="body2">
-                        {customer.attendances_crew_avg > 0 ? (
+                        {customer.timecards_crew_avg > 0 ? (
                             <>
                                 $
                                 {(
-                                    customer.mrr / customer.attendances_crew_avg
+                                    customer.mrr / customer.timecards_crew_avg
                                 ).toFixed(2)}
                             </>
                         ) : (
@@ -186,16 +186,16 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                 </TableCell>
                 <TableCell align="center" onContextMenu={handleContextMenu}>
                     <Typography variant="body1">
-                        {customer.attendances_individual_avg.toFixed(2)}
+                        {customer.timecards_individual_avg.toFixed(2)}
                     </Typography>
 
                     <Typography color="primary" variant="body2">
-                        {customer.attendances_individual_avg > 0 ? (
+                        {customer.timecards_individual_avg > 0 ? (
                             <>
                                 $
                                 {(
                                     customer.mrr /
-                                    customer.attendances_individual_avg
+                                    customer.timecards_individual_avg
                                 ).toFixed(2)}
                             </>
                         ) : (
@@ -287,7 +287,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                             <Typography
                                                 color="primary"
                                                 variant="body2">
-                                                {detail.attendances_crew.toFixed(
+                                                {detail.timecards_crew.toFixed(
                                                     2
                                                 )}
                                             </Typography>
@@ -299,7 +299,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                             <Typography
                                                 color="primary"
                                                 variant="body2">
-                                                {detail.attendances_individual.toFixed(
+                                                {detail.timecards_individual.toFixed(
                                                     2
                                                 )}
                                             </Typography>
