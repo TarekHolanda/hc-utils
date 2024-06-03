@@ -77,8 +77,8 @@ export const XrayTable = ({
                         />
 
                         <MyHeadCell
-                            id="attendances_crew_avg"
-                            label={"Att. Crew"}
+                            id="timecards_crew_avg"
+                            label={"Crew Timecards"}
                             sortField={sortField}
                             sortOrder={sortOrder}
                             handleSort={handleSort}
@@ -86,8 +86,8 @@ export const XrayTable = ({
                         />
 
                         <MyHeadCell
-                            id="attendances_individual_avg"
-                            label={"Att. Support"}
+                            id="timecards_individual_avg"
+                            label={"Individual Timecards"}
                             sortField={sortField}
                             sortOrder={sortOrder}
                             handleSort={handleSort}

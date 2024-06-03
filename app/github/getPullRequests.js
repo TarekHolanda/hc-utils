@@ -57,7 +57,7 @@ async function getReviewsByPullRequest(repository, pullRequestNumber) {
         return [];
     }
 }
-let counter = 0;
+
 function initializeDeveloper(devs, userId, username) {
     if (!devs[userId]) {
         devs[userId] = {
