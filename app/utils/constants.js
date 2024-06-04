@@ -4,28 +4,36 @@ export const CUSTOMER_STATUS = {
         class: "good",
     },
     2: {
+        label: "Recently Deployed",
+        class: "recently-deployed",
+    },
+    3: {
         label: "Onboarding",
         class: "onboarding",
     },
-    3: {
-        label: "Churn",
-        class: "churn",
-    },
     4: {
-        label: "Inactive",
-        class: "inactive",
+        label: "Risky",
+        class: "risky",
     },
     5: {
-        label: "Low Risk",
-        class: "low-risk",
+        label: "Onboard at Risk",
+        class: "onboard-at-risk",
     },
     6: {
-        label: "Medium Risk",
-        class: "medium-risk",
+        label: "New Deal",
+        class: "new-deal",
     },
     7: {
-        label: "High Risk",
-        class: "high-risk",
+        label: "Ganaz",
+        class: "ganaz",
+    },
+    8: {
+        label: "Churned",
+        class: "churned",
+    },
+    9: {
+        label: "Other",
+        class: "other",
     },
 };
 

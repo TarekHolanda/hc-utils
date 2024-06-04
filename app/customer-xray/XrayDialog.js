@@ -67,12 +67,14 @@ export const XrayDialog = ({
                         }}
                         disabled={loading}>
                         <MenuItem value={1}>Good</MenuItem>
-                        <MenuItem value={2}>Onboarding</MenuItem>
-                        <MenuItem value={5}>Low Risk</MenuItem>
-                        <MenuItem value={6}>Medium Risk</MenuItem>
-                        <MenuItem value={7}>High Risk</MenuItem>
-                        <MenuItem value={3}>Churn</MenuItem>
-                        <MenuItem value={4}>Inactive</MenuItem>
+                        <MenuItem value={2}>Recently Deployed</MenuItem>
+                        <MenuItem value={3}>Onboarding</MenuItem>
+                        <MenuItem value={4}>Risky</MenuItem>
+                        <MenuItem value={5}>Onboard at Risk</MenuItem>
+                        <MenuItem value={6}>New Deal</MenuItem>
+                        <MenuItem value={7}>Ganaz</MenuItem>
+                        <MenuItem value={8}>Churned</MenuItem>
+                        <MenuItem value={9}>Other</MenuItem>
                     </TextField>
 
                     <FormControlLabel

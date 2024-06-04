@@ -36,22 +36,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "& td.good": {
         backgroundColor: theme.palette.success.main,
     },
-    "& td.onboarding": {
+    "& td.recently-deployed": {
         backgroundColor: theme.palette.info.dark,
     },
-    "& td.low-risk": {
-        backgroundColor: theme.palette.warning.dark,
+    "& td.onboarding": {
+        backgroundColor: theme.palette.secondary.dark,
     },
-    "& td.medium-risk": {
+    "& td.risky": {
         backgroundColor: theme.palette.error.main,
     },
-    "& td.high-risk": {
-        backgroundColor: theme.palette.error.dark,
+    "& td.onboard-at-risk": {
+        backgroundColor: theme.palette.error.main,
     },
-    "& td.inactive": {
+    "& td.new-deal": {
+        backgroundColor: theme.palette.cyan.main,
+    },
+    "& td.ganaz": {
+        backgroundColor: theme.palette.warning.dark,
+    },
+    "& td.churned": {
         backgroundColor: theme.palette.grey.main,
     },
-    "& td.churn": {
+    "& td.other": {
         backgroundColor: theme.palette.grey.light,
     },
     "&:last-child td, &:last-child th": {
