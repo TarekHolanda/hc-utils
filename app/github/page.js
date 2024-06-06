@@ -90,7 +90,6 @@ export default function Page({ data }) {
         setProgress(1);
         getPullRequests(startDate, endDate, setProgress)
             .then((developers) => {
-                console.log(developers);
                 setDevs(developers);
                 setLoading(false);
                 setLoadingPRs(false);
