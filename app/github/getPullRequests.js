@@ -7,21 +7,20 @@ const repositories = [
     "HeavyConnected/HC-Api",
 ];
 const names = {
-    6921206: "Araújo",
-    10663242: "Carlos",
-    98056463: "Daniel",
-    35413910: "Davi",
-    15142247: "Eudálio",
-    12729685: "Flávio",
-    58297601: "Gusta",
-    39544919: "Gustavo",
-    103042520: "Iraneide",
-    17833462: "Kerley",
-    5270702: "Mardson",
-    32681732: "Max",
-    9063829: "Paulo Rennê",
-    12614592: "Tárek",
-    131719288: "Tárek",
+    albenorfilho: "Araújo",
+    domi4662: "Carlos",
+    "daviteixeira-btm": "Davi",
+    dielfilho: "Davi",
+    Eudalio: "Eudálio",
+    "flavio-barros": "Flávio",
+    gustavomts: "Gustavo",
+    IraneideNascimento: "Iraneide",
+    ivensgustavo: "Gusta Ivens",
+    kerleysol: "Kerley",
+    mardsonferreira: "Mardson",
+    "Max-Wendel": "Max",
+    paulorenne: "Paulo Rennê",
+    TarekHolanda: "Tárek",
 };
 
 async function fetchJson(url) {
@@ -58,10 +57,10 @@ async function getReviewsByPullRequest(repository, pullRequestNumber) {
     }
 }
 
-function initializeDeveloper(devs, userId, username) {
-    if (!devs[userId]) {
-        devs[userId] = {
-            name: names[userId] || username,
+function initializeDeveloper(devs, username) {
+    if (!devs[username]) {
+        devs[username] = {
+            name: names[username] || username,
             pullRequests: 0,
             reviews: 0,
             approved: 0,
@@ -70,17 +69,18 @@ function initializeDeveloper(devs, userId, username) {
     }
 }
 
-function updateDeveloper(devs, review, username) {
-    initializeDeveloper(devs, review.user.id, username);
+function updateDeveloper(devs, review) {
+    initializeDeveloper(devs, review.user.login);
+    console.log(review.user.login, ":", review.state);
 
-    if (review.state === "APPROVED") {
-        devs[review.user.id].approved++;
-        devs[review.user.id].reviews++;
+    if (review.state === "APPROVED" || review.state === "DISMISSED") {
+        devs[review.user.login].approved++;
+        devs[review.user.login].reviews++;
     }
 
     if (review.state === "CHANGES_REQUESTED") {
-        devs[review.user.id].changesRequested++;
-        devs[review.user.id].reviews++;
+        devs[review.user.login].changesRequested++;
+        devs[review.user.login].reviews++;
     }
 }
 
@@ -102,19 +102,14 @@ async function getDataByRepository(devs, repository, startDate, endDate) {
                     repository,
                     pullRequest.number
                 );
+                // 2, 27, 26, 25
+                console.log(reviews);
 
-                initializeDeveloper(
-                    devs,
-                    pullRequest.user.id,
-                    pullRequest.user.login,
-                    true
-                );
+                initializeDeveloper(devs, pullRequest.user.login);
 
-                devs[pullRequest.user.id].pullRequests++;
+                devs[pullRequest.user.login].pullRequests++;
 
-                reviews.forEach((review) =>
-                    updateDeveloper(devs, review, pullRequest.user.login)
-                );
+                reviews.forEach((review) => updateDeveloper(devs, review));
             })
         );
     } catch (error) {
