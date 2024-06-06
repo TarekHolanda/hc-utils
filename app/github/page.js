@@ -77,7 +77,7 @@ export default function Page({ data }) {
     const [endDate, setEndDate] = useState(
         new Date().toLocaleDateString("en-CA")
     );
-    const [devs, setDevs] = useState([]);
+    const [devs, setDevs] = useState({});
     const sortedDevs = sortDictKeys(devs, sortField, sortOrder);
 
     useEffect(() => {
@@ -90,6 +90,7 @@ export default function Page({ data }) {
         setProgress(1);
         getPullRequests(startDate, endDate, setProgress)
             .then((developers) => {
+                console.log(developers);
                 setDevs(developers);
                 setLoading(false);
                 setLoadingPRs(false);
