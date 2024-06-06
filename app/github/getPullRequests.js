@@ -8,6 +8,7 @@ const repositories = [
 ];
 const names = {
     albenorfilho: "Araújo",
+    ChristyanMoraes: "Christyan",
     domi4662: "Carlos",
     "daviteixeira-btm": "Davi",
     dielfilho: "Davi",
@@ -17,6 +18,7 @@ const names = {
     IraneideNascimento: "Iraneide",
     ivensgustavo: "Gusta Ivens",
     kerleysol: "Kerley",
+    laninhapereira: "Laninha",
     mardsonferreira: "Mardson",
     "Max-Wendel": "Max",
     paulorenne: "Paulo Rennê",
@@ -34,7 +36,8 @@ async function fetchJson(url) {
 }
 
 async function getPullRequestsByRepository(repository, startDate, endDate) {
-    const url = `https://api.github.com/search/issues?q=repo:HeavyConnected/${repository}+is:pr+created:${startDate}..${endDate}`;
+    const url = `https://api.github.com/search/issues?q=repo:HeavyConnected/${repository}+is:pr+created:${startDate}..${endDate}&per_page=100`;
+    // To use pagination: &page=2
 
     try {
         return await fetchJson(url);
@@ -65,22 +68,24 @@ function initializeDeveloper(devs, username) {
             reviews: 0,
             approved: 0,
             changesRequested: 0,
+            links: [],
         };
     }
 }
 
 function updateDeveloper(devs, review) {
     initializeDeveloper(devs, review.user.login);
-    console.log(review.user.login, ":", review.state);
 
     if (review.state === "APPROVED" || review.state === "DISMISSED") {
         devs[review.user.login].approved++;
         devs[review.user.login].reviews++;
+        devs[review.user.login].links.push(review.html_url);
     }
 
     if (review.state === "CHANGES_REQUESTED") {
         devs[review.user.login].changesRequested++;
         devs[review.user.login].reviews++;
+        devs[review.user.login].links.push(review.html_url);
     }
 }
 
@@ -102,8 +107,6 @@ async function getDataByRepository(devs, repository, startDate, endDate) {
                     repository,
                     pullRequest.number
                 );
-                // 2, 27, 26, 25
-                console.log(reviews);
 
                 initializeDeveloper(devs, pullRequest.user.login);
 
