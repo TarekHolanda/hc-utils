@@ -56,9 +56,9 @@ const pages = {
     "/employee-generator": "HC Utils - Employee Generator",
     "/scan-and-go": "HC Utils - Scan & Go",
     "/email-signature": "HC Utils - Email Signature",
-    "/sprint": "HC Utils - Sprint View",
+    "/sprints": "HC Utils - Sprints View",
     "/resources": "HC Utils - Resources",
-    "/customer-xray": "HC Utils - Customer X-Ray",
+    "/customer": "HC Utils - Customers X-Ray",
     "/github": "HC Utils - GitHub View",
 };
 

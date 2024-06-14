@@ -45,9 +45,9 @@ const drawerList = [
         link: "/email-signature",
     },
     {
-        title: "Sprint View",
+        title: "Sprints View",
         icon: <QueryStatsIcon />,
-        link: "/sprint",
+        link: "/sprints",
     },
     {
         title: "Resources",
@@ -58,9 +58,9 @@ const drawerList = [
 
 const adminList = [
     {
-        title: "Customer X-Ray",
+        title: "Customers X-Ray",
         icon: <AutoGraphIcon />,
-        link: "/customer-xray",
+        link: "/customers",
     },
 ];
 

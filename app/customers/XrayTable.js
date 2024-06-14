@@ -32,7 +32,7 @@ export const XrayTable = ({
                     <TableRow>
                         <MyHeadCell
                             id="name"
-                            label={`Last ${filterMonths} months`}
+                            label={`${filterMonths} Months`}
                             subLabel={`(${customers.length})`}
                             sortField={sortField}
                             sortOrder={sortOrder}
@@ -95,6 +95,24 @@ export const XrayTable = ({
                         />
 
                         <MyHeadCell
+                            id="employees_tracked_avg"
+                            label={"Emp. Tracked"}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
+                            width={COLUMN_WIDTH_MD}
+                        />
+
+                        <MyHeadCell
+                            id="employees_exported_avg"
+                            label={"Emp. Exported"}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            handleSort={handleSort}
+                            width={COLUMN_WIDTH_MD}
+                        />
+
+                        <MyHeadCell
                             id="status"
                             label={"Status"}
                             sortField={sortField}
@@ -107,7 +125,7 @@ export const XrayTable = ({
 
                 <TableBody>
                     {loading ? (
-                        <MyLoadingRow colSpan={8} height={64} />
+                        <MyLoadingRow colSpan={10} height={64} />
                     ) : (
                         <>
                             {customers.map((customer, index) => (
