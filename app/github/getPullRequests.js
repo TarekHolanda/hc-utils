@@ -68,7 +68,6 @@ function initializeDeveloper(devs, username) {
             reviews: 0,
             approved: 0,
             changesRequested: 0,
-            links: [],
         };
     }
 }
@@ -79,13 +78,11 @@ function updateDeveloper(devs, review) {
     if (review.state === "APPROVED" || review.state === "DISMISSED") {
         devs[review.user.login].approved++;
         devs[review.user.login].reviews++;
-        devs[review.user.login].links.push(review.html_url);
     }
 
     if (review.state === "CHANGES_REQUESTED") {
         devs[review.user.login].changesRequested++;
         devs[review.user.login].reviews++;
-        devs[review.user.login].links.push(review.html_url);
     }
 }
 
