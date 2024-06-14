@@ -66,7 +66,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const StyledInternalRow = styled(TableRow)(({ theme }) => ({
-    "&:last-child td, &:last-child th": {
+    "& td": {
         border: 0,
     },
 }));
@@ -154,6 +154,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                         ${customer.active_users_price.toFixed(2)}
                     </Typography>
                 </TableCell>
+
                 <TableCell align="center" onContextMenu={handleContextMenu}>
                     <Typography variant="body1">
                         {customer.reports_avg.toFixed(2)}
@@ -172,6 +173,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                         )}
                     </Typography>
                 </TableCell>
+
                 <TableCell align="center" onContextMenu={handleContextMenu}>
                     <Typography variant="body1">
                         {customer.timecards_crew_avg.toFixed(2)}
@@ -190,6 +192,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                         )}
                     </Typography>
                 </TableCell>
+
                 <TableCell align="center" onContextMenu={handleContextMenu}>
                     <Typography variant="body1">
                         {customer.timecards_individual_avg.toFixed(2)}
@@ -209,6 +212,47 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                         )}
                     </Typography>
                 </TableCell>
+
+                <TableCell align="center" onContextMenu={handleContextMenu}>
+                    <Typography variant="body1">
+                        {customer.employees_tracked_avg.toFixed(2)}
+                    </Typography>
+
+                    <Typography color="primary" variant="body2">
+                        {customer.employees_tracked_avg > 0 ? (
+                            <>
+                                $
+                                {(
+                                    customer.mrr /
+                                    customer.employees_tracked_avg
+                                ).toFixed(2)}
+                            </>
+                        ) : (
+                            "-"
+                        )}
+                    </Typography>
+                </TableCell>
+
+                <TableCell align="center" onContextMenu={handleContextMenu}>
+                    <Typography variant="body1">
+                        {customer.employees_exported_avg.toFixed(2)}
+                    </Typography>
+
+                    <Typography color="primary" variant="body2">
+                        {customer.employees_exported_avg > 0 ? (
+                            <>
+                                $
+                                {(
+                                    customer.mrr /
+                                    customer.employees_exported_avg
+                                ).toFixed(2)}
+                            </>
+                        ) : (
+                            "-"
+                        )}
+                    </Typography>
+                </TableCell>
+
                 <TableCell
                     align="center"
                     onContextMenu={handleContextMenu}
@@ -220,7 +264,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
             </StyledTableRow>
 
             <StyledTableRow>
-                <TableCell style={{ padding: 0, paddingTop: 0 }} colSpan={8}>
+                <TableCell style={{ padding: 0, paddingTop: 0 }} colSpan={10}>
                     <Collapse in={expanded} timeout="auto" unmountOnExit>
                         <Table size="small">
                             <TableBody>
@@ -311,11 +355,35 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                             </Typography>
                                         </TableCell>
 
+                                        <TableCell
+                                            align="center"
+                                            width={COLUMN_WIDTH_MD}>
+                                            <Typography
+                                                color="primary"
+                                                variant="body2">
+                                                {detail.employees_tracked.toFixed(
+                                                    2
+                                                )}
+                                            </Typography>
+                                        </TableCell>
+
+                                        <TableCell
+                                            align="center"
+                                            width={COLUMN_WIDTH_MD}>
+                                            <Typography
+                                                color="primary"
+                                                variant="body2">
+                                                {detail.employees_exported.toFixed(
+                                                    2
+                                                )}
+                                            </Typography>
+                                        </TableCell>
+
                                         {detail.date ===
                                             customer.details[0].date && (
                                             <TableCell
                                                 align="center"
-                                                width={COLUMN_WIDTH_LG}
+                                                width={COLUMN_WIDTH_SM}
                                                 className="no-border"
                                                 rowSpan={
                                                     customer.details.length

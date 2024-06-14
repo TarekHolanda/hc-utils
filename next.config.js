@@ -19,6 +19,20 @@ const nextConfig = {
         DEV_EMAILS: process.env.DEV_EMAILS,
         GITHUB_TOKEN: process.env.GITHUB_TOKEN,
     },
+    async redirects() {
+        return [
+            {
+                source: "/sprint",
+                destination: "/sprints",
+                permanent: true,
+            },
+            {
+                source: "/customer-xray",
+                destination: "/customers",
+                permanent: true,
+            },
+        ];
+    },
 };
 
 module.exports = nextConfig;

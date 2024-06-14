@@ -10,8 +10,8 @@ import { MySpacer } from "../components/MySpacer";
 
 const adminList = [
     {
-        link: "/customer-xray",
-        path: "customer-xray",
+        link: "/customers",
+        path: "customers",
     },
 ];
 
@@ -77,8 +77,8 @@ export const MyHomeLinks = ({ isAdmin, isSuperAdmin, isDev }) => {
                     lg={3}
                     xl={3}
                     className="display-flex justify-center">
-                    <Link href={"/sprint"}>
-                        <MyLink path={"sprint"} />
+                    <Link href={"/sprints"}>
+                        <MyLink path={"sprints"} />
                     </Link>
                 </Grid>
 

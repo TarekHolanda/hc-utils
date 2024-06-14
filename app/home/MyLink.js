@@ -27,7 +27,7 @@ const CARDS = {
             "Update your email signature from our official HC Template.",
         image: "./email.jpg",
     },
-    sprint: {
+    sprints: {
         title: "Sprints View",
         description: "Review past sprints and plan the next one.",
         image: "./chart.jpg",
@@ -37,7 +37,7 @@ const CARDS = {
         description: "Find links and internal tools. All in one place.",
         image: "./paperclips.jpg",
     },
-    "customer-xray": {
+    customers: {
         title: "Customers X-Ray",
         description: "Customers status and activity. Updated every week.",
         image: "./customer-xray.jpg",

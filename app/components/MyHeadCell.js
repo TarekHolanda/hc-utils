@@ -56,24 +56,20 @@ export const MyHeadCell = (props) => {
         <StyledHeadCell width={width || "auto"} onClick={onSortClick}>
             <Box className="display-flex justify-center text-center">
                 <Typography variant="h6">{label || id}</Typography>
-
-                {subLabel && (
-                    <Typography
-                        color="primary"
-                        variant="body2"
-                        className="margin-top-6px margin-left-8px">
-                        {subLabel}
-                    </Typography>
-                )}
-
-                {isSortValid && (
-                    <MySortIcon
-                        current={id}
-                        order={sortOrder}
-                        field={sortField}
-                    />
-                )}
             </Box>
+
+            {subLabel && (
+                <Typography
+                    color="primary"
+                    variant="body2"
+                    className="text-center">
+                    {subLabel}
+                </Typography>
+            )}
+
+            {isSortValid && (
+                <MySortIcon current={id} order={sortOrder} field={sortField} />
+            )}
         </StyledHeadCell>
     );
 };

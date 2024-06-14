@@ -56,7 +56,7 @@ export default function Page() {
 
     const handleGetCustomers = () => {
         setLoading(true);
-        handleGet("customers", {
+        handleGet("customers/list", {
             sort: sortField,
             order: sortOrder,
             filterMonths: filterMonths,
