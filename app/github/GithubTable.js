@@ -9,6 +9,8 @@ import Paper from "@mui/material/Paper";
 import { MyHeadCell } from "../components/MyHeadCell";
 import { GithubTableBody } from "./GithubTableBody";
 
+const COLUMN_WIDTH = "20%";
+
 export const GithubTable = ({
     devs,
     sortedDevs,
@@ -18,8 +20,8 @@ export const GithubTable = ({
     loadingPRs,
 }) => {
     return (
-        <TableContainer component={Paper}>
-            <Table>
+        <TableContainer component={Paper} sx={{ overflowX: "initial" }}>
+            <Table stickyHeader>
                 <TableHead>
                     <TableRow>
                         <MyHeadCell
@@ -28,6 +30,7 @@ export const GithubTable = ({
                             handleSort={handleSort}
                             sortField={sortField}
                             sortOrder={sortOrder}
+                            width={COLUMN_WIDTH}
                         />
 
                         <MyHeadCell
@@ -36,6 +39,7 @@ export const GithubTable = ({
                             handleSort={handleSort}
                             sortField={sortField}
                             sortOrder={sortOrder}
+                            width={COLUMN_WIDTH}
                         />
 
                         <MyHeadCell
@@ -44,6 +48,7 @@ export const GithubTable = ({
                             handleSort={handleSort}
                             sortField={sortField}
                             sortOrder={sortOrder}
+                            width={COLUMN_WIDTH}
                         />
 
                         <MyHeadCell
@@ -52,6 +57,7 @@ export const GithubTable = ({
                             handleSort={handleSort}
                             sortField={sortField}
                             sortOrder={sortOrder}
+                            width={COLUMN_WIDTH}
                         />
 
                         <MyHeadCell
@@ -60,6 +66,7 @@ export const GithubTable = ({
                             handleSort={handleSort}
                             sortField={sortField}
                             sortOrder={sortOrder}
+                            width={COLUMN_WIDTH}
                         />
                     </TableRow>
                 </TableHead>

@@ -11,7 +11,7 @@ const names = {
     ChristyanMoraes: "Christyan",
     domi4662: "Carlos",
     "daviteixeira-btm": "Davi",
-    dielfilho: "Davi",
+    dielfilho: "Daniel",
     Eudalio: "Eudálio",
     "flavio-barros": "Flávio",
     gustavomts: "Gustavo",
