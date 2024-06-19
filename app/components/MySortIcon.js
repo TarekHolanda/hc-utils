@@ -7,7 +7,6 @@ import ArrowDoubleIcon from "@mui/icons-material/UnfoldMore";
 export const MySortIcon = (props) => {
     const iconClasses =
         "position-absolute right-0 top-0 bottom-0 margin-auto-0";
-    const iconClasses2 = "";
 
     return (
         <>
