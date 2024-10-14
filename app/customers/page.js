@@ -4,16 +4,28 @@ import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 
+import { styled } from "@mui/material/styles";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
+import Typography from "@mui/material/Typography";
 
 import { handleGet, handleAPI } from "../api/handleCallAPI";
+import { formatCurrency } from "../utils/formatCurrency";
 import { MyLoadingPage } from "../components/MyLoadingPage";
 import { MySpacer } from "../components/MySpacer";
 import { XrayActionBar } from "./XrayActionBar";
 import { XrayTable } from "./XrayTable";
-import { XrayDialog } from "./XrayDialog";
+import { XrayDialog } from "./XrayDialog"
+import { MyTooltip } from "../components/MyTooltip"
+
+const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: "24px",
+    borderRadius: 4,
+}));
+
+const ARR_GOAL = 1700000;
 
 export default function Page() {
     const { data: session, status } = useSession();
@@ -29,6 +41,9 @@ export default function Page() {
     const [sortField, setSortField] = useState("name");
     const [sortOrder, setSortOrder] = useState("asc");
     const [search, setSearch] = useState("");
+    const [currentArr, setCurrentArr] = useState(0);
+    const [currentArrPercentage, setCurrentArrPercentage] = useState(0);
+    const [scrollToCustomer, setScrollToCustomer] = useState(0);
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [loadingDialog, setLoadingDialog] = useState(false);
@@ -54,6 +69,23 @@ export default function Page() {
         }
     };
 
+    const scrollTo = () => {
+        if (scrollToCustomer === 0) return;
+
+        const row = document.querySelector("#customer-row-" + scrollToCustomer);
+        if (row) {
+            const previousRow = row.previousElementSibling;
+            if (previousRow) {
+                const previousOfPreviousRow = previousRow.previousElementSibling;
+                if (previousOfPreviousRow) {
+                    previousOfPreviousRow.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }
+        }
+
+        setScrollToCustomer(0);
+    };
+
     const handleGetCustomers = () => {
         setLoading(true);
         handleGet("customers/list", {
@@ -72,6 +104,8 @@ export default function Page() {
             }
 
             setCustomers(response.data);
+            setCurrentArr(response.total_arr);
+            setCurrentArrPercentage(Math.round((response.total_arr / ARR_GOAL) * 100));
             setLoading(false);
         });
     };
@@ -92,6 +126,10 @@ export default function Page() {
     useEffect(() => {
         handleGetCustomers();
     }, [sortField, sortOrder, filterMonths, filterStatus, filterNoMrr]);
+
+    useEffect(() => {
+        scrollTo();
+    }, [customers]);
 
     if (status === "loading") {
         return <MyLoadingPage />;
@@ -159,6 +197,7 @@ export default function Page() {
                 setDialogOpen(false);
                 setLoadingDialog(false);
                 handleGetCustomers();
+                setScrollToCustomer(customer.id);
             }
         );
     };
@@ -176,6 +215,23 @@ export default function Page() {
                 setSearch={setSearch}
                 handleGetCustomers={handleGetCustomers}
             />
+
+            <Box position="relative" display="inline-flex" width="100%">
+                <MyTooltip title={`Current: ${formatCurrency(currentArr)} | Goal: ${formatCurrency(ARR_GOAL)}`} placement="top">
+                    <StyledLinearProgress variant="determinate" value={loading ? 0 : currentArrPercentage} className="width-100" />
+                </MyTooltip>
+
+                <Box
+                    position="absolute"
+                    top="50%"
+                    left="50%"
+                    style={{ transform: "translate(-50%, -50%)" }}
+                >
+                    <Typography variant="h6" color="blueGrey.dark">
+                        {loading ? "Loading ARR Goal..." : `${currentArrPercentage}%`}
+                    </Typography>
+                </Box>
+            </Box>
 
             <XrayTable
                 loading={loading}
