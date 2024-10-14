@@ -6,6 +6,10 @@ First, run:
 
 `git clone https://github.com/TarekHolanda/hc-utils.git`
 
+Then, add this file on the root:
+
+`.env`
+
 Then, run:
 
 `npm i`

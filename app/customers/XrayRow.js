@@ -107,7 +107,8 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
         setAnchorEl(null);
     };
 
-    const handleEdit = () => {
+    const handleEdit = (event) => {
+        event.preventDefault();
         handleOpenDialog(customer);
         handleCloseMenu();
     };
@@ -117,32 +118,50 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
         setAnchorEl(event.currentTarget);
     };
 
+    const getUseCases = () => {
+        const useCases = [
+            customer.use_inspector && "Inspector",
+            customer.use_timekeeper && "TimeKeeper",
+            customer.use_training && "Training",
+            customer.use_analytics && "Analytics",
+            customer.use_selfaudit && "Self Audit"
+        ].filter(Boolean);
+    
+        if (useCases.length > 0) {
+            return `(${useCases.join(", ")})`;
+        }
+
+        return "";
+    };
+
     return (
         <>
             <StyledTableRow
                 className={`${expanded ? "expanded" : ""} ${
                     index % 2 === 0 ? "row-even" : "row-odd"
                 }`}
-                onClick={handleExpand}>
-                <TableCell onContextMenu={handleContextMenu}>
+                onClick={handleExpand}
+                id={"customer-row-" + customer.id}
+                >
+                <TableCell onContextMenu={handleEdit}>
                     <Typography variant="body1">
                         {index + 1}. {customer.name}
                     </Typography>
                 </TableCell>
 
-                <TableCell align="center" onContextMenu={handleContextMenu}>
+                <TableCell align="center" onContextMenu={handleEdit}>
                     <Typography variant="body1">
                         ${customer.mrr.toFixed(2)}
                     </Typography>
                 </TableCell>
 
-                <TableCell align="center" onContextMenu={handleContextMenu}>
+                <TableCell align="center" onContextMenu={handleEdit}>
                     <Typography variant="body1">
                         {customer.active_users_avg.toFixed(2)}
                     </Typography>
                 </TableCell>
 
-                <TableCell align="center" onContextMenu={handleContextMenu}>
+                <TableCell align="center" onContextMenu={handleEdit}>
                     <Typography
                         variant="body1"
                         color={
@@ -155,7 +174,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     </Typography>
                 </TableCell>
 
-                <TableCell align="center" onContextMenu={handleContextMenu}>
+                <TableCell align="center" onContextMenu={handleEdit}>
                     <Typography variant="body1">
                         {customer.reports_avg.toFixed(2)}
                     </Typography>
@@ -174,7 +193,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     </Typography>
                 </TableCell>
 
-                <TableCell align="center" onContextMenu={handleContextMenu}>
+                <TableCell align="center" onContextMenu={handleEdit}>
                     <Typography variant="body1">
                         {customer.timecards_crew_avg.toFixed(2)}
                     </Typography>
@@ -193,7 +212,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     </Typography>
                 </TableCell>
 
-                <TableCell align="center" onContextMenu={handleContextMenu}>
+                <TableCell align="center" onContextMenu={handleEdit}>
                     <Typography variant="body1">
                         {customer.timecards_individual_avg.toFixed(2)}
                     </Typography>
@@ -213,7 +232,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     </Typography>
                 </TableCell>
 
-                <TableCell align="center" onContextMenu={handleContextMenu}>
+                <TableCell align="center" onContextMenu={handleEdit}>
                     <Typography variant="body1">
                         {customer.employees_tracked_avg.toFixed(2)}
                     </Typography>
@@ -233,7 +252,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                     </Typography>
                 </TableCell>
 
-                <TableCell align="center" onContextMenu={handleContextMenu}>
+                <TableCell align="center" onContextMenu={handleEdit}>
                     <Typography variant="body1">
                         {customer.employees_exported_avg.toFixed(2)}
                     </Typography>
@@ -255,7 +274,7 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
 
                 <TableCell
                     align="center"
-                    onContextMenu={handleContextMenu}
+                    onContextMenu={handleEdit}
                     className={CUSTOMER_STATUS[customer.status].class}>
                     <Typography variant="body1">
                         {CUSTOMER_STATUS[customer.status].label}
@@ -385,20 +404,13 @@ export const XrayRow = ({ customer, index, handleOpenDialog }) => {
                                                 align="center"
                                                 width={COLUMN_WIDTH_SM}
                                                 className="no-border"
-                                                rowSpan={
-                                                    customer.details.length
-                                                }>
+                                                rowSpan={customer.details.length}>
                                                 <Typography variant="body2">
-                                                    {customer.use_inspector &&
-                                                        "Inspector, "}
-                                                    {customer.use_timekeeper &&
-                                                        "TimeKeeper, "}
-                                                    {customer.use_training &&
-                                                        "Training, "}
-                                                    {customer.use_analytics &&
-                                                        "Analytics, "}
-                                                    {customer.use_selfaudit &&
-                                                        "Self Audit"}
+                                                    {customer.children.join(", ")}
+                                                </Typography>
+                                                
+                                                <Typography variant="caption">
+                                                    {getUseCases()}
                                                 </Typography>
                                             </TableCell>
                                         )}

@@ -58,7 +58,7 @@ const pages = {
     "/email-signature": "HC Utils - Email Signature",
     "/sprints": "HC Utils - Sprints View",
     "/resources": "HC Utils - Resources",
-    "/customer": "HC Utils - Customers X-Ray",
+    "/customers": "HC Utils - Customers X-Ray",
     "/github": "HC Utils - GitHub View",
 };
 
