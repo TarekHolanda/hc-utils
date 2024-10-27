@@ -25,6 +25,7 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
     borderRadius: 4,
 }));
 
+const ARR_LAST_YEAR = 1307692.31;
 const ARR_GOAL = 1700000;
 
 export default function Page() {
@@ -41,9 +42,12 @@ export default function Page() {
     const [sortField, setSortField] = useState("name");
     const [sortOrder, setSortOrder] = useState("asc");
     const [search, setSearch] = useState("");
-    const [currentArr, setCurrentArr] = useState(0);
-    const [currentArrPercentage, setCurrentArrPercentage] = useState(0);
     const [scrollToCustomer, setScrollToCustomer] = useState(0);
+
+    const [currentArr, setCurrentArr] = useState(0);
+    const [showGrowthGoal, setShowGrowthGoal] = useState(false);
+    const [totalArrPercentage, setTotalArrPercentage] = useState(0);
+    const [growthArrPercentage, setGrowthArrPercentage] = useState(0);
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [loadingDialog, setLoadingDialog] = useState(false);
@@ -104,8 +108,12 @@ export default function Page() {
             }
 
             setCustomers(response.data);
-            setCurrentArr(response.total_arr);
-            setCurrentArrPercentage(Math.round((response.total_arr / ARR_GOAL) * 100));
+            setCurrentArr(response.current_arr);
+            setTotalArrPercentage(Math.round((response.current_arr / ARR_GOAL) * 100));
+
+            const growth = response.current_arr - ARR_LAST_YEAR;
+            const goal = ARR_GOAL - ARR_LAST_YEAR;
+            setGrowthArrPercentage(Math.round((growth / goal) * 100));
             setLoading(false);
         });
     };
@@ -217,9 +225,41 @@ export default function Page() {
             />
 
             <Box position="relative" display="inline-flex" width="100%">
-                <MyTooltip title={`Current: ${formatCurrency(currentArr)} | Goal: ${formatCurrency(ARR_GOAL)}`} placement="top">
-                    <StyledLinearProgress variant="determinate" value={loading ? 0 : currentArrPercentage} className="width-100" />
-                </MyTooltip>
+                {showGrowthGoal ? (
+                    <MyTooltip
+                        placement="top"
+                        style={{ cursor: "pointer" }}
+                        title={
+                            <span>
+                                Current Growth: {formatCurrency(currentArr - ARR_LAST_YEAR)}
+                                <br/>
+                                Growth Goal: {formatCurrency(ARR_GOAL - ARR_LAST_YEAR)}
+                            </span>
+                        }
+                        onClick={() => {
+                            setShowGrowthGoal(false);
+                        }}
+                    >
+                        <StyledLinearProgress variant="determinate" value={loading ? 0 : growthArrPercentage > 100 ? 100 : growthArrPercentage} className="width-100" />
+                    </MyTooltip>
+                ) : (
+                    <MyTooltip
+                        placement="top"
+                        style={{ cursor: "pointer" }}
+                        title={
+                            <span>
+                                Current ARR: {formatCurrency(currentArr)}
+                                <br/>
+                                ARR Goal: {formatCurrency(ARR_GOAL)}
+                            </span>
+                        }
+                        onClick={() => {
+                            setShowGrowthGoal(true);
+                        }}
+                    >
+                        <StyledLinearProgress variant="determinate" value={loading ? 0 : totalArrPercentage > 100 ? 100 : totalArrPercentage} className="width-100" />
+                    </MyTooltip>
+                )}
 
                 <Box
                     position="absolute"
@@ -228,7 +268,7 @@ export default function Page() {
                     style={{ transform: "translate(-50%, -50%)" }}
                 >
                     <Typography variant="h6" color="blueGrey.dark">
-                        {loading ? "Loading ARR Goal..." : `${currentArrPercentage}%`}
+                        {loading ? "Loading ARR Goal..." : `${showGrowthGoal ? growthArrPercentage : totalArrPercentage}%`}
                     </Typography>
                 </Box>
             </Box>
