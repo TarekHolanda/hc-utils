@@ -118,6 +118,27 @@ export const SprintDialog = ({
                         disabled={loading || loadingDialog}
                     />
 
+                    <TextField
+                        margin="dense"
+                        id="sprint-pr-inclusions"
+                        label="PR Inclusions"
+                        type="number"
+                        fullWidth
+                        variant="outlined"
+                        inputProps={{
+                            inputMode: "numeric",
+                            pattern: "[0-9]*",
+                        }}
+                        value={sprint.pr_inclusions}
+                        onChange={(event) => {
+                            handleSetSprint(
+                                parseInt(event.target.value) || "",
+                                "pr_inclusions"
+                            );
+                        }}
+                        disabled={loading || loadingDialog}
+                    />
+
                     <FormControlLabel
                         control={
                             <Switch

@@ -53,6 +53,10 @@ const calculateAverage = (sprints, index) => {
         return acc + sprint.extra_deploys;
     }, 0);
 
+    const prInclusions = sprints.reduce((acc, sprint) => {
+        return acc + sprint.pr_inclusions;
+    }, 0);
+
     return {
         id: randomID,
         index: index,
@@ -60,6 +64,7 @@ const calculateAverage = (sprints, index) => {
         points_merged: (pointsMerged / sprints.length).toFixed(2),
         points_left: (pointsLeft / sprints.length).toFixed(2),
         extra_deploys: (extraDeploys / sprints.length).toFixed(2),
+        pr_inclusions: (prInclusions / sprints.length).toFixed(2),
     };
 };
 
@@ -71,6 +76,7 @@ const MyRow = ({ row, handleOpenSprintDialog, handleOpenRulerDialog }) => {
         points_merged,
         points_left,
         extra_deploys,
+        pr_inclusions,
         date_delay,
         process_delay,
     } = row;
@@ -101,6 +107,10 @@ const MyRow = ({ row, handleOpenSprintDialog, handleOpenRulerDialog }) => {
 
             <TableCell align="center">
                 <Typography variant="h6">{extra_deploys}</Typography>
+            </TableCell>
+
+            <TableCell align="center">
+                <Typography variant="h6">{pr_inclusions}</Typography>
             </TableCell>
 
             <TableCell align="center">
@@ -221,25 +231,31 @@ export const SprintsTable = ({
                         <MyHeadCell
                             id="total_points"
                             label={"Total Points"}
-                            width={"15%"}
+                            width={"12%"}
                         />
 
                         <MyHeadCell
                             id="points_merged"
                             label={"Merged"}
-                            width={"15%"}
+                            width={"12%"}
                         />
 
                         <MyHeadCell
                             id="points_left"
                             label={"Points Left"}
-                            width={"15%"}
+                            width={"12%"}
                         />
 
                         <MyHeadCell
                             id="extra_deploys"
                             label={"Extra Deploys"}
-                            width={"15%"}
+                            width={"12%"}
+                        />
+
+                        <MyHeadCell
+                            id="pr_inclusions"
+                            label={"PR Inclusions"}
+                            width={"12%"}
                         />
 
                         <MyHeadCell
@@ -264,7 +280,7 @@ export const SprintsTable = ({
 
                 <TableBody>
                     {loading ? (
-                        <MyLoadingRow colSpan={8} height={64} />
+                        <MyLoadingRow colSpan={9} height={64} />
                     ) : (
                         <MyRows
                             sprints={sprints}
