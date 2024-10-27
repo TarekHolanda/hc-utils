@@ -34,6 +34,7 @@ export default function Page() {
         total_points: "",
         points_merged: "",
         extra_deploys: "",
+        pr_inclusions: "",
         date_delay: false,
         process_delay: false,
     });
@@ -105,6 +106,7 @@ export default function Page() {
                 total_points: "",
                 points_merged: "",
                 extra_deploys: "",
+                pr_inclusions: "",
                 date_delay: false,
                 process_delay: false,
             });
@@ -136,6 +138,7 @@ export default function Page() {
             total_points: sprint.total_points,
             points_merged: sprint.points_merged || 0,
             extra_deploys: sprint.extra_deploys || 0,
+            pr_inclusions: sprint.pr_inclusions || 0,
             date_delay: sprint.date_delay || false,
             process_delay: sprint.process_delay || false,
             ruler: sprint.ruler || {},
