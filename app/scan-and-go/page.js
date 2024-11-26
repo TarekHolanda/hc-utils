@@ -256,7 +256,9 @@ export default function Page() {
             const marginContext = canvasWithMargin.getContext("2d");
             canvasWithMargin.width = canvas.width + 32;
 
-            const limit1 = 41 / 512 * canvas.width;
+
+            const auxMinus = canvas.width > 512 ? 3 : 1;
+            const limit1 = parseInt(1 / 12 * canvas.width) - auxMinus;
             const limit2 = 5 / 128 * canvas.width;
 
             if (descriptionSize >= limit1) {
