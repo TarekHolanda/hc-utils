@@ -163,9 +163,9 @@ export default function Page() {
     const [quality, setQuality] = useState("Q");
     const [logoOn, setLogoOn] = useState(true);
     const [size, setSize] = useState("small");
-    const [fontSize, setFontSize] = useState("48");
     const [loading, setLoading] = useState(false);
     const qrRef = useRef();
+    const qrCodesDivRef = useRef();
 
     const generatePDF = (pdfSize) => {
         let aux = [];
@@ -203,12 +203,6 @@ export default function Page() {
     if (status === "unauthenticated" || !session) {
         redirect("/signin");
     }
-
-    const updateFontSize = (event, newFontSize) => {
-        if (newFontSize && newFontSize !== fontSize) {
-            setFontSize(newFontSize);
-        }
-    };
 
     const updateSize = (event, newSize) => {
         if (newSize && newSize !== size) {
@@ -262,9 +256,12 @@ export default function Page() {
             const marginContext = canvasWithMargin.getContext("2d");
             canvasWithMargin.width = canvas.width + 32;
 
-            if (descriptionSize >= 45) {
+            const limit1 = 41 / 512 * canvas.width;
+            const limit2 = 5 / 128 * canvas.width;
+
+            if (descriptionSize >= limit1) {
                 canvasWithMargin.height = canvas.height + 184;
-            } else if (descriptionSize >= 23) {
+            } else if (descriptionSize >= limit2) {
                 canvasWithMargin.height = canvas.height + 136;
             } else {
                 canvasWithMargin.height = canvas.height + 88;
@@ -281,28 +278,28 @@ export default function Page() {
 
             // Draw the QR Code description
             const labelContext = canvasWithMargin.getContext("2d");
-            labelContext.font = fontSize + "px Arial";
+            labelContext.font = "48px Arial";
             labelContext.textBaseline = "bottom";
             labelContext.fillStyle = "#000000";
             labelContext.lineWidth = 20;
 
             labelContext.fillText(
-                qrCodes[i]["description"].substring(0, 23),
+                qrCodes[i]["description"].substring(0, limit2),
                 12,
-                592
+                canvas.height + 80
             );
             if (descriptionSize >= 23) {
                 labelContext.fillText(
-                    qrCodes[i]["description"].substring(23, 44),
+                    qrCodes[i]["description"].substring(limit2, limit1 - 1),
                     12,
-                    640
+                    canvas.height + 128
                 );
             }
             if (descriptionSize >= 45) {
                 labelContext.fillText(
-                    qrCodes[i]["description"].substring(44, descriptionSize),
+                    qrCodes[i]["description"].substring(limit1 - 1, descriptionSize),
                     12,
-                    688
+                    canvas.height + 176
                 );
             }
 
@@ -311,6 +308,9 @@ export default function Page() {
             );
             const fileName = qrCodes[i]["description"] + ".png";
             zip.file(fileName, blob);
+
+            // Dev Mode: Show QR Codes image preview
+            // showImagePreview(blob);
         }
 
         // Generate the zip file
@@ -318,6 +318,27 @@ export default function Page() {
 
         // Save the zip file
         FileSaver.saveAs(zipBlob, "QR Codes.zip");
+    };
+
+    const showImagePreview = (blob) => {
+        const qrCodeDiv = document.createElement("div");
+        qrCodeDiv.style.width = "512px";
+        qrCodeDiv.style.height = "512px";
+        qrCodeDiv.style.display = "inline-block";
+        qrCodeDiv.style.margin = "16px";
+        qrCodeDiv.style.position = "relative";
+
+        const qrCodeImage = document.createElement("img");
+        qrCodeImage.src = URL.createObjectURL(blob);
+        qrCodeImage.style.width = "512px";
+        qrCodeImage.style.height = "512px";
+        qrCodeImage.style.position = "absolute";
+        qrCodeImage.style.top = "0";
+        qrCodeImage.style.left = "0";
+
+        qrCodeDiv.appendChild(qrCodeImage);
+        qrCodesDivRef.current.innerHTML = "";
+        qrCodesDivRef.current.appendChild(qrCodeDiv);
     };
 
     const onFileUploaded = (e) => {
@@ -454,35 +475,13 @@ export default function Page() {
                                 </ToggleButton>
                             </ToggleButtonGroup>
                         </Box>
-
-                        <Divider orientation="vertical" flexItem />
-
-                        <MySpacer size={20} horizontal />
-
-                        <Box className="text-center">
-                            <Typography variant="h6">Image Font Size</Typography>
-                            <ToggleButtonGroup
-                                value={fontSize}
-                                exclusive
-                                onChange={updateFontSize}
-                                aria-label="font-size">
-                                <ToggleButton value="32" aria-label="xsmall">
-                                    <LooksOneIcon />
-                                </ToggleButton>
-
-                                <ToggleButton value="40" aria-label="small">
-                                    <LooksTwoIcon />
-                                </ToggleButton>
-
-                                <ToggleButton value="48" aria-label="medium">
-                                    <Looks3Icon />
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-                        </Box>                        
                     </Box>
                 )}
 
                 <MySpacer size={20} horizontal />
+
+                <Box ref={qrCodesDivRef}>
+                </Box>
 
                 {validCodes && (
                     <Fade in={validCodes} timeout={500}>
