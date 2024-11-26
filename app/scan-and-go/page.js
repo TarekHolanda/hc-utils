@@ -163,6 +163,7 @@ export default function Page() {
     const [quality, setQuality] = useState("Q");
     const [logoOn, setLogoOn] = useState(true);
     const [size, setSize] = useState("small");
+    const [fontSize, setFontSize] = useState("48");
     const [loading, setLoading] = useState(false);
     const qrRef = useRef();
 
@@ -202,6 +203,12 @@ export default function Page() {
     if (status === "unauthenticated" || !session) {
         redirect("/signin");
     }
+
+    const updateFontSize = (event, newFontSize) => {
+        if (newFontSize && newFontSize !== fontSize) {
+            setFontSize(newFontSize);
+        }
+    };
 
     const updateSize = (event, newSize) => {
         if (newSize && newSize !== size) {
@@ -274,7 +281,7 @@ export default function Page() {
 
             // Draw the QR Code description
             const labelContext = canvasWithMargin.getContext("2d");
-            labelContext.font = "48px Arial";
+            labelContext.font = fontSize + "px Arial";
             labelContext.textBaseline = "bottom";
             labelContext.fillStyle = "#000000";
             labelContext.lineWidth = 20;
@@ -325,6 +332,7 @@ export default function Page() {
 
                     for (let i = 0; i < results.data.length; i++) {
                         const aux = formatData(results.data[i]);
+
                         dataFormatted.push({
                             description: aux.description,
                             data: JSON.stringify(aux),
@@ -446,6 +454,31 @@ export default function Page() {
                                 </ToggleButton>
                             </ToggleButtonGroup>
                         </Box>
+
+                        <Divider orientation="vertical" flexItem />
+
+                        <MySpacer size={20} horizontal />
+
+                        <Box className="text-center">
+                            <Typography variant="h6">Image Font Size</Typography>
+                            <ToggleButtonGroup
+                                value={fontSize}
+                                exclusive
+                                onChange={updateFontSize}
+                                aria-label="font-size">
+                                <ToggleButton value="32" aria-label="xsmall">
+                                    <LooksOneIcon />
+                                </ToggleButton>
+
+                                <ToggleButton value="40" aria-label="small">
+                                    <LooksTwoIcon />
+                                </ToggleButton>
+
+                                <ToggleButton value="48" aria-label="medium">
+                                    <Looks3Icon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </Box>                        
                     </Box>
                 )}
 
