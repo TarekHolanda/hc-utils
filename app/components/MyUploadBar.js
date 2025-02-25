@@ -41,18 +41,21 @@ export function MyUploadBar(props) {
 
             <MySpacer size={20} horizontal />
 
-            <Button
-                variant="outlined"
-                size="large"
-                component="label"
-                onClick={props.togglePDF}
-                startIcon={<PdfIcon />}
-                className="pdf-button">
-                    {props.pdfLoaded ? "Preview Images" : "Preview PDF"}
-            </Button>
-            
+            {props.togglePDF && (
+                <Box>
+                    <Button
+                        variant="outlined"
+                        size="large"
+                        component="label"
+                        onClick={props.togglePDF}
+                        startIcon={<PdfIcon />}
+                        className="pdf-button">
+                            {props.pdfLoaded ? "Preview Images" : "Preview PDF"}
+                    </Button>
 
-            <MySpacer size={20} horizontal />
+                    <MySpacer size={20} horizontal />
+                </Box>
+            )}
 
             <Button
                 variant="outlined"
