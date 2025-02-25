@@ -127,6 +127,10 @@ a {
     padding-bottom: 1rem;
 }
 
+.padding-bottom-8rem {
+    padding-bottom: 8rem;
+}
+
 .padding-bottom-32 {
     padding-bottom: 32px;
 }
@@ -183,6 +187,10 @@ a {
 
 .width-256 {
     width: 256px;
+}
+
+.max-width-34rem {
+    max-width: 34rem;
 }
 
 .height-100 {

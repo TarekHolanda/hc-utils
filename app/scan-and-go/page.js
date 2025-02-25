@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
@@ -20,21 +20,22 @@ import LooksOneIcon from "@mui/icons-material/LooksOne";
 import LooksTwoIcon from "@mui/icons-material/LooksTwo";
 import Looks3Icon from "@mui/icons-material/Looks3";
 import Looks4Icon from "@mui/icons-material/Looks4";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 
 import Papa from "papaparse";
 import QRCodeCanvas from "qrcode.react";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
-import { View, Text, PDFViewer, Image } from "@react-pdf/renderer";
+import { View, Text, PDFViewer, Image, Document, Page } from "@react-pdf/renderer";
 
 import { formatData } from "./formatData";
 import { MySpacer } from "../components/MySpacer";
 import { MyLoadingPage } from "../components/MyLoadingPage";
-import { MyPdfPreview } from "../components/MyPdfPreview";
-import { styles } from "./styles";
 import { MyUploadPageCenter } from "../components/MyUploadPageCenter";
 import { MyUploadBar } from "../components/MyUploadBar";
 import { MySpeedDial } from "../components/MySpeedDial";
+import { styles } from "./styles";
 
 const QR_LOGO = {
     src: "./hc-icon-black.png",
@@ -66,7 +67,7 @@ const SIZES = {
     },
 };
 
-function PageContent(props) {
+function PageUploadBar(props) {
     if (!props.validCodes) {
         return MyUploadPageCenter(props);
     }
@@ -155,62 +156,49 @@ function buildPDF(aux, size) {
     return table;
 }
 
-export default function Page() {
+export default function MyPage() {
     const { data: session, status } = useSession();
+    const [filename, setFilename] = useState("");
     const [qrCodes, setQrCodes] = useState([]);
     const [qrCodesPDF, setQrCodesPDF] = useState(<View></View>);
+    const [pdfLoaded, setPdfLoaded] = useState(false);
     const [validCodes, setValidCodes] = useState(false);
     const [quality, setQuality] = useState("Q");
-    const [logoOn, setLogoOn] = useState(true);
-    const [size, setSize] = useState("small");
+    const [logoOn, setLogoOn] = useState(false);
+    const [size, setSize] = useState("medium");
     const [loading, setLoading] = useState(false);
+    const [pdfLoading, setPdfLoading] = useState(false);
     const qrRef = useRef();
-    const qrCodesDivRef = useRef();
 
-    const generatePDF = (pdfSize) => {
-        let aux = [];
-
-        for (let i = 0; i < qrCodes.length; i++) {
-            const canvas = qrRef?.current?.querySelector("#qrCode" + i);
-            const qrCodeDataUri = canvas.toDataURL();
-            aux.push({
-                qrCodeDataUri: qrCodeDataUri,
-                description: qrCodes[i]["description"],
-            });
-        }
-
-        const table = buildPDF(aux, pdfSize);
-
-        setQrCodesPDF(table);
-
-        setTimeout(() => {
-            setValidCodes(true);
-        }, 1000);
-
-        setTimeout(() => {
-            stopLoading();
-        }, 2000);
-    };
-
-    useEffect(() => {
-        if (qrCodes.length > 0) {
-            setTimeout(() => {
-                generatePDF(size);
-            }, 1000);
-        }
-    }, [qrCodes]);
+    if (status === "loading") {
+        return <MyLoadingPage />;
+    }
 
     if (status === "unauthenticated" || !session) {
         redirect("/signin");
     }
 
+    const togglePDF = () => {
+        startLoading();
+
+        if (!pdfLoaded) {
+            generatePDF(qrCodes);
+        } else {
+            setTimeout(() => {
+                stopLoading();
+            }, 500);
+        }
+
+        setPdfLoaded(!pdfLoaded);
+    };
+
     const updateSize = (event, newSize) => {
         if (newSize && newSize !== size) {
             setSize(newSize);
 
-            if (validCodes) {
-                setLoading(true);
-                generatePDF(newSize);
+            // Update the QR Codes PDF Preview when the size is changed
+            if (validCodes && pdfLoaded) {
+                generatePDF(qrCodes);
             }
         }
     };
@@ -219,12 +207,9 @@ export default function Page() {
         if (newLogoOn !== null && newLogoOn !== logoOn) {
             setLogoOn(newLogoOn);
 
-            if (validCodes) {
-                setLoading(true);
-
-                setTimeout(() => {
-                    generatePDF(size);
-                }, 250);
+            // Update the QR Codes PDF Preview when the logo is changed
+            if (validCodes && pdfLoaded) {
+                generatePDF(qrCodes);
             }
         }
     };
@@ -233,11 +218,9 @@ export default function Page() {
         if (newQuality && newQuality !== quality) {
             setQuality(newQuality);
 
-            if (validCodes) {
-                setLoading(true);
-                setTimeout(() => {
-                    generatePDF(size);
-                }, 250);
+            // Update the QR Codes PDF Preview when the quality is changed
+            if (validCodes && pdfLoaded) {
+                generatePDF(qrCodes);
             }
         }
     };
@@ -245,106 +228,83 @@ export default function Page() {
     const downloadQRCodes = async (e) => {
         e.preventDefault();
         const zip = new JSZip();
+        
+        let imagePromises = qrCodes.map((qrCode, index) => {
+            return new Promise((resolve) => {
+                const qrCanvas = qrRef?.current?.querySelector("#qrCode" + index);
+                const descriptionSize = qrCode.description.length;
+                
+                if (qrCanvas) {
+                    // Add margin to the QR Code
+                    const canvas = document.createElement("canvas");
+                    const marginContext = canvas.getContext("2d");
+        
+                    const limit1 = parseInt(1 / 6 * qrCanvas.width) - 3;
+                    const limit2 = 5 / 64 * qrCanvas.width;
+                    
+                    canvas.width = qrCanvas.width + 32;
+                    if (descriptionSize >= limit1) {
+                        canvas.height = qrCanvas.height + 104;
+                    } else if (descriptionSize >= limit2) {
+                        canvas.height = qrCanvas.height + 80;
+                    } else {
+                        canvas.height = qrCanvas.height + 56;
+                    }
+                    
+                    // Draw the QR Code with a white background and margin
+                    marginContext.fillStyle = "#fff";
+                    marginContext.fillRect(0, 0, canvas.width, canvas.height);
+                    marginContext.drawImage(qrCanvas, 16, 16);
+        
+                    // Draw the QR Code description
+                    const labelContext = canvas.getContext("2d");
+                    labelContext.font = "24px Arial";
+                    labelContext.textBaseline = "bottom";
+                    labelContext.fillStyle = "#000000";
+                    labelContext.lineWidth = 20;
+        
+                    labelContext.fillText(
+                        qrCode.description.substring(0, limit2),
+                        12,
+                        qrCanvas.height + 48
+                    );
+                    if (descriptionSize >= 23) {
+                        labelContext.fillText(
+                            qrCode.description.substring(limit2, limit1 - 1),
+                            12,
+                            qrCanvas.height + 72
+                        );
+                    }
+                    if (descriptionSize >= 45) {
+                        labelContext.fillText(
+                            qrCode.description.substring(limit1 - 1, descriptionSize),
+                            12,
+                            qrCanvas.height + 96
+                        );
+                    }
+        
+                    canvas.toBlob((blob) => {
+                        if (blob) {
+                            zip.file(`${qrCode.description || "QRCode_" + index}.png`, blob);
+                            resolve();
+                        }
+                    }, "image/png");
+                } else {
+                    resolve();
+                }
+            });
+        });
 
-        // Generate a QR code for each item in the array and add it to the zip
-        for (let i = 0; i < qrCodes.length; i++) {
-            const canvas = qrRef?.current?.querySelector("#qrCode" + i);
-            const descriptionSize = qrCodes[i]["description"].length;
-
-            // Add margin to the QR Code
-            const canvasWithMargin = document.createElement("canvas");
-            const marginContext = canvasWithMargin.getContext("2d");
-            canvasWithMargin.width = canvas.width + 32;
-
-
-            const auxMinus = canvas.width > 512 ? 3 : 1;
-            const limit1 = parseInt(1 / 12 * canvas.width) - auxMinus;
-            const limit2 = 5 / 128 * canvas.width;
-
-            if (descriptionSize >= limit1) {
-                canvasWithMargin.height = canvas.height + 184;
-            } else if (descriptionSize >= limit2) {
-                canvasWithMargin.height = canvas.height + 136;
-            } else {
-                canvasWithMargin.height = canvas.height + 88;
-            }
-
-            marginContext.fillStyle = "#fff";
-            marginContext.fillRect(
-                0,
-                0,
-                canvasWithMargin.width,
-                canvasWithMargin.height
-            );
-            marginContext.drawImage(canvas, 16, 16);
-
-            // Draw the QR Code description
-            const labelContext = canvasWithMargin.getContext("2d");
-            labelContext.font = "48px Arial";
-            labelContext.textBaseline = "bottom";
-            labelContext.fillStyle = "#000000";
-            labelContext.lineWidth = 20;
-
-            labelContext.fillText(
-                qrCodes[i]["description"].substring(0, limit2),
-                12,
-                canvas.height + 80
-            );
-            if (descriptionSize >= 23) {
-                labelContext.fillText(
-                    qrCodes[i]["description"].substring(limit2, limit1 - 1),
-                    12,
-                    canvas.height + 128
-                );
-            }
-            if (descriptionSize >= 45) {
-                labelContext.fillText(
-                    qrCodes[i]["description"].substring(limit1 - 1, descriptionSize),
-                    12,
-                    canvas.height + 176
-                );
-            }
-
-            const blob = await new Promise((resolve) =>
-                canvasWithMargin.toBlob(resolve)
-            );
-            const fileName = qrCodes[i]["description"] + ".png";
-            zip.file(fileName, blob);
-
-            // Dev Mode: Show QR Codes image preview
-            // showImagePreview(blob);
-        }
-
-        // Generate the zip file
-        const zipBlob = await zip.generateAsync({ type: "blob" });
-
-        // Save the zip file
-        FileSaver.saveAs(zipBlob, "QR Codes.zip");
-    };
-
-    const showImagePreview = (blob) => {
-        const qrCodeDiv = document.createElement("div");
-        qrCodeDiv.style.width = "512px";
-        qrCodeDiv.style.height = "512px";
-        qrCodeDiv.style.display = "inline-block";
-        qrCodeDiv.style.margin = "16px";
-        qrCodeDiv.style.position = "relative";
-
-        const qrCodeImage = document.createElement("img");
-        qrCodeImage.src = URL.createObjectURL(blob);
-        qrCodeImage.style.width = "512px";
-        qrCodeImage.style.height = "512px";
-        qrCodeImage.style.position = "absolute";
-        qrCodeImage.style.top = "0";
-        qrCodeImage.style.left = "0";
-
-        qrCodeDiv.appendChild(qrCodeImage);
-        qrCodesDivRef.current.innerHTML = "";
-        qrCodesDivRef.current.appendChild(qrCodeDiv);
+        Promise.all(imagePromises).then(() => {
+            zip.generateAsync({ type: "blob" }).then((content) => {
+                saveAs(content, filename + ".zip");
+            });
+        });
     };
 
     const onFileUploaded = (e) => {
         if (e.target.files.length) {
+            setPdfLoaded(false);
             startLoading();
 
             Papa.parse(e.target.files[0], {
@@ -362,21 +322,49 @@ export default function Page() {
                         });
                     }
 
+                    const filename = e.target.files[0].name.split(".").slice(0, -1).join(".");
+                    setFilename(filename);
                     setQrCodes(dataFormatted);
+                    setValidCodes(true);
+                    stopLoading();
                 },
             });
         }
     };
 
+    const generatePDF = (pdfQrCodes) => {
+        startLoading();
+        setPdfLoading(true);
+
+        let aux = [];
+        for (let i = 0; i < pdfQrCodes.length; i++) {
+            const canvas = qrRef?.current?.querySelector("#qrCode" + i);
+            const qrCodeDataUri = canvas.toDataURL();
+            aux.push({
+                qrCodeDataUri: qrCodeDataUri,
+                description: pdfQrCodes[i]["description"],
+            });
+        }
+
+        const table = buildPDF(aux, size);
+        setQrCodesPDF(table);
+        stopLoading();
+    };
+
     const clearQRCodes = () => {
         startLoading();
+        setFilename("");
         setValidCodes(false);
         setQrCodes([]);
 
         setTimeout(() => {
-            document.getElementById("upload-file-center").value = "";
+            const fileInput = document.getElementById("upload-file-center");
+            if (fileInput) {
+                fileInput.value = "";
+            }
+
             stopLoading();
-        }, 1000);
+        }, 500);
     };
 
     const startLoading = () => {
@@ -390,12 +378,13 @@ export default function Page() {
     return (
         <Fade in={true} timeout={1000}>
             <Box>
-                <PageContent
+                <PageUploadBar
                     validCodes={validCodes}
                     onFileUploaded={onFileUploaded}
                     downloadQRCodes={downloadQRCodes}
                     clearQRCodes={clearQRCodes}
-                    pdfPreview={<MyPdfPreview data={qrCodesPDF} />}
+                    togglePDF={togglePDF}
+                    pdfLoaded={pdfLoaded}
                 />
 
                 {validCodes && (
@@ -453,23 +442,19 @@ export default function Page() {
                         <MySpacer size={20} horizontal />
 
                         <Box className="text-center">
-                            <Typography variant="h6">Size</Typography>
+                            <Typography variant="h6">Size on PDF</Typography>
                             <ToggleButtonGroup
                                 value={size}
                                 exclusive
                                 onChange={updateSize}
                                 aria-label="size">
-                                <ToggleButton
-                                    value="xsmall"
-                                    aria-label="xsmall">
+                                <ToggleButton value="xsmall" aria-label="xsmall">
                                     <LooksOneIcon />
                                 </ToggleButton>
                                 <ToggleButton value="small" aria-label="small">
                                     <LooksTwoIcon />
                                 </ToggleButton>
-                                <ToggleButton
-                                    value="medium"
-                                    aria-label="medium">
+                                <ToggleButton value="medium" aria-label="medium">
                                     <Looks3Icon />
                                 </ToggleButton>
                                 <ToggleButton value="large" aria-label="large">
@@ -482,39 +467,45 @@ export default function Page() {
 
                 <MySpacer size={20} horizontal />
 
-                <Box ref={qrCodesDivRef}>
-                </Box>
-
-                {validCodes && (
-                    <Fade in={validCodes} timeout={500}>
+                {validCodes && pdfLoaded && (
+                    <Fade in={pdfLoaded} timeout={250}>
                         <Box>
-                            <PDFViewer
-                                style={{ width: "100%", height: "1192px" }}>
-                                <MyPdfPreview data={qrCodesPDF} />
+                            <PDFViewer style={{ width: "100%", height: "1192px" }}>
+                                <Document onRender={() => setPdfLoading(false)}>
+                                    <Page>{qrCodesPDF}</Page>
+                                </Document>
                             </PDFViewer>
                         </Box>
                     </Fade>
                 )}
-
-                <Box sx={{ display: "none" }} ref={qrRef}>
-                    {qrCodes.map((qrCode, index) => (
-                        <div key={"div-pdf" + index}>
-                            <QRCodeCanvas
-                                value={qrCode["data"]}
-                                key={"qrcode-pdf" + index}
-                                id={"qrCode" + index}
-                                size={512}
-                                level={quality}
-                                imageSettings={logoOn ? QR_LOGO : {}}
-                            />
-                        </div>
-                    ))}
+                
+                <Box ref={qrRef} className={!validCodes || pdfLoaded ? "display-none" : ""}>
+                    <Grid container spacing={4} justifyContent="center">
+                        {qrCodes.map((qrCode, index) => (
+                            <Grid item key={"div-pdf" + index}>
+                                <Paper elevation={3} className="bg-white padding-1rem max-width-34rem">
+                                    <QRCodeCanvas
+                                        value={qrCode["data"]}
+                                        key={"qrcode-pdf" + index}
+                                        id={"qrCode" + index}
+                                        size={512}
+                                        level={quality}
+                                        imageSettings={logoOn ? QR_LOGO : {}}
+                                    />
+                                    <Typography className="color-black">
+                                        {qrCode["description"]}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                        ))}
+                    </Grid>
                 </Box>
+
+                <MySpacer size={20} horizontal />
 
                 <MySpeedDial page={"scan-and-go"} />
 
-                {/* This loading needs to be here, so the QR Codes can load after render */}
-                {loading && <MyLoadingPage />}
+                {(loading || pdfLoading) && (<MyLoadingPage />)}
             </Box>
         </Fade>
     );

@@ -8,11 +8,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PdfIcon from "@mui/icons-material/PictureAsPdf";
-
-import { PDFDownloadLink } from "@react-pdf/renderer";
-
 import { MySpacer } from "./MySpacer";
-import { MyPdfPreview } from "./MyPdfPreview";
 
 export function MyUploadBar(props) {
     return (
@@ -43,25 +39,23 @@ export function MyUploadBar(props) {
                 Download ZIP
             </Button>
 
-            {props.pdfPreview && (
+            <MySpacer size={20} horizontal />
+
+            {props.togglePDF && (
                 <Box>
-                    <MySpacer size={20} horizontal />
                     <Button
                         variant="outlined"
                         size="large"
                         component="label"
+                        onClick={props.togglePDF}
                         startIcon={<PdfIcon />}
                         className="pdf-button">
-                        <PDFDownloadLink
-                            document={props.pdfPreview}
-                            fileName="QR Codes.pdf">
-                            {({}) => "Download PDF"}
-                        </PDFDownloadLink>
+                            {props.pdfLoaded ? "Preview Images" : "Preview PDF"}
                     </Button>
+
+                    <MySpacer size={20} horizontal />
                 </Box>
             )}
-
-            <MySpacer size={20} horizontal />
 
             <Button
                 variant="outlined"
